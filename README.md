@@ -5,7 +5,7 @@ Simple storage for passwords.
 ## Build
 
 ```bat
-npm install -g gulp-cli
+npm install -g webpack local-web-server
 npm update
-gulp
+npm run build
 ```
