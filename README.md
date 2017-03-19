@@ -6,6 +6,6 @@ Simple storage for passwords.
 
 ```bat
 npm install -g webpack local-web-server
-npm update
+npm install
 npm run build
 ```

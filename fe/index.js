@@ -1,3 +1,9 @@
-import somelib from './somelib';
+import Vue from 'vue';
 
-alert(somelib.somefunc());
+var app = new Vue({
+    el: '#app',
+    data: {
+        project_name: "Password Keeper",
+        message: 'Hello Vue!'
+    }
+});
