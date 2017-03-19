@@ -4,11 +4,16 @@ Simple storage for passwords.
 
 ## Build & Run
 
-Build
+Prerequisites
 
 ```bat
 npm install -g webpack local-web-server
 npm install
+```
+
+Build
+
+```bat
 npm run build
 ```
 
