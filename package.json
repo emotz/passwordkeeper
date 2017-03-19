@@ -1,0 +1,25 @@
+{
+  "name": "passwordkeeper",
+  "version": "1.0.0",
+  "description": "Simple storage for passwords",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MnZrK/passwordkeeper.git"
+  },
+  "keywords": [
+    "password",
+    "keeper"
+  ],
+  "author": "Dmitry Mazurok",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MnZrK/passwordkeeper/issues"
+  },
+  "homepage": "https://github.com/MnZrK/passwordkeeper#readme"
+}
