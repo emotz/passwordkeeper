@@ -2,47 +2,49 @@
 
 <head>
     <meta charset=utf-8>
+    <link href="dist/bootstrap.min.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
     <title>Password Keeper</title>
 </head>
 
 <body>
-    <div class="container" id="app">
-        <!-- Static navbar -->
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">{{ project_name }}</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li class="dropdown-header">Nav header</li>
-                                <li><a href="#">Separated link</a></li>
-                                <li><a href="#">One more separated link</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
-                        <li><a href="../navbar-static-top/">Static top</a></li>
-                        <li><a href="../navbar-fixed-top/">Fixed top</a></li>
-                    </ul>
-                </div>
-                <!--/.nav-collapse -->
+    <div id="app">
+        <div class="splash">
+            <div class="splash-content">
+                Loading
             </div>
-            <!--/.container-fluid -->
-        </nav>
-        <script src="dist/bundle.js"></script>
+        </div>
     </div>
+    <script type="text/x-template" id="app-template">
+        <div>
+            <transition name="fade">
+                <div class="splash" v-if="!loaded">
+                    <div class="splash-content">
+                        Loading
+                    </div>
+                </div>
+            </transition>
+            <transition name="fade" appear v-on:before-appear="loaded = true">
+                <div class="container">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <a class="navbar-brand" href="/">Password Keeper</a>
+                            </div>
+                            <ul class="nav navbar-nav">
+                                <router-link active-class="active" tag="li" to="/home"><a>Home</a></router-link>
+                                <router-link active-class="active" tag="li" to="/about"><a>About</a></router-link>
+                            </ul>
+                        </div>
+                        <!--/.container-fluid -->
+                    </nav>
+                    <router-view></router-view>
+                </div>
+            </transition>
+        </div>
+    </script>
+
+    <script src="dist/bundle.js"></script>
 </body>
 
 </html>

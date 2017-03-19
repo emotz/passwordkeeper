@@ -1,0 +1,29 @@
+.splash {
+    /*background-color: #e8e8e8;*/
+    width: 100%;
+    height: auto;
+    bottom: 0px;
+    top: 0px;
+    left: 0;
+    position: absolute;
+    z-index: 100;
+}
+.splash-content {
+    line-height: 50px;
+    text-align: center;
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    font-size: x-large;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -50px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
