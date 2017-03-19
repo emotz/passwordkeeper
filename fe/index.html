@@ -26,24 +26,97 @@
             </transition>
             <transition name="fade" appear v-on:before-appear="loaded = true">
                 <div class="container">
-                    <nav class="navbar navbar-default">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <a class="navbar-brand" href="/">Password Keeper</a>
-                            </div>
-                            <ul class="nav navbar-nav">
-                                <router-link active-class="active" tag="li" to="/home"><a>Home</a></router-link>
-                                <router-link active-class="active" tag="li" to="/about"><a>About</a></router-link>
-                            </ul>
-                        </div>
-                        <!--/.container-fluid -->
-                    </nav>
-                    <router-view></router-view>
+                    <app-nav></app-nav>
+                    <keep-alive>
+                        <router-view></router-view>
+                    </keep-alive>
                 </div>
             </transition>
         </div>
     </script>
+    <script type="text/x-template" id="app-nav-template">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Password Keeper</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <router-link active-class="active" tag="li" to="/home"><a>Home</a></router-link>
+                    <router-link active-class="active" tag="li" to="/about"><a>About</a></router-link>
+                </ul>
+            </div>
+            <!--/.container-fluid -->
+        </nav>
+    </script>
+    <script type="text/x-template" id="about-template">
+        <div class="jumbotron">
+            <h1>Hello, world!</h1>
+            <p>This is my super cool application!</p>
+        </div>
+    </script>
+    <script type="text/x-template" id="home-template">
+        <div>
+            <div class="jumbotron">
+                <h1>Welcome to Password Keeper</h1>
+                <p>Start filling out fields below to store some passwords</p>
+            </div>
+            <pass-list></pass-list>
+        </div>
+    </script>
+    <script type="text/x-template" id="pass-list-template">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Stored passwords</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table" style="table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>User</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in items">
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.user }}</td>
+                            <td>
+                                <span v-if="item.show_password">{{ item.password }}</span>
+                                <div v-else class="btn btn-link" @click="item.show_password = !item.show_password">show password</div>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" @click="remove(index)">delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
+                <pass-adder v-on:added="add"></pass-adder>
+            </div>
+        </div>
+    </script>
+    <script type="text/x-template" id="pass-adder-template">
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="title-input">Title</label>
+                <input type="text" class="form-control" id="title-input" placeholder="mysite.com" v-model="title">
+            </div>
+            <div class="form-group">
+                <label for="user-input">User</label>
+                <input type="text" class="form-control" id="user-input" placeholder="jane.doe@example.com" v-model="user">
+            </div>
+            <div class="form-group">
+                <label for="pass-input">Password</label>
+                <div class="input-group">
+                    <input v-if="show_password" type="text" class="form-control" id="pass-input" placeholder="Password123" v-model="password">
+                    <input v-else type="password" class="form-control" id="pass-input" placeholder="Password123" v-model="password">
+                    <div class="btn btn-default input-group-addon" @click="show_password = !show_password">...</div>
+                </div>
+            </div>
+            <button class="btn btn-default" @click="add">Add</button>
+        </div>
+    </script>
     <script src="dist/bundle.js"></script>
 </body>
 
