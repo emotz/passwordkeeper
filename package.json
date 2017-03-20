@@ -20,7 +20,7 @@
     "webpack": "^2.2.1"
   },
   "scripts": {
-    "dev": "cd fe && ws --spa index.html",
+    "dev": "cd fe && ws",
     "build": "mkdir \"fe/dist\" & cp \"node_modules/bootstrap/dist/css/bootstrap.min.css\" fe/dist && cp \"node_modules/toastr/build/toastr.min.css\" fe/dist && cp fe/index.css fe/dist && webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

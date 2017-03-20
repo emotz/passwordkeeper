@@ -5,5 +5,16 @@
             "from": "/*",
             "to": "/dist/$1"
         }
+    ],
+    "spa": "index.html",
+    "mocks": [
+        {
+            "route": "/dist/entries/:id",
+            "module": "/mocks/entry.js"
+        },
+        {
+            "route": "/dist/entries",
+            "module": "/mocks/entries.js"
+        }
     ]
 }
