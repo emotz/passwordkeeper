@@ -57,3 +57,7 @@
   height: 30px;
   background: lightgrey;
 }
+
+.force-parent-lh {
+  line-height: inherit !important;
+}

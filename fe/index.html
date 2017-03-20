@@ -2,8 +2,8 @@
 
 <head>
     <meta charset=utf-8>
-    <link href="dist/bootstrap.min.css" rel="stylesheet">
-    <link href="dist/toastr.min.css" rel="stylesheet">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="toastr.min.css" rel="stylesheet">
     <link href="index.css" rel="stylesheet">
     <title>Password Keeper</title>
 </head>
@@ -84,14 +84,14 @@
                                     {{ item.password }}
                                 </span>
                                 <button type="button" class="btn btn-default pull-right" :class="{'active': item.show_password}" :aria-pressed="item.show_password"
-                                    autocomplete="off" @click="item.show_password = !item.show_password">
-                                    show
+                                    @click="item.show_password = !item.show_password" v-if="item.password !== ''">
+                                    <span class="fa fa-eye"></span>
                                 </button>
                             </td>
                             <td>
-                                <button v-if="item.stored !== 'storing'" class="btn btn-danger" @click="remove(index)">delete</button>
-                                <span v-if="item.stored === 'storing'">Storing ...</span>
-                                <button v-if="item.stored === 'notstored'" class="btn btn-primary" @click="storeAsync(item)">retry</button>
+                                <button :disabled="item.stored === 'storing'" class="btn btn-danger" @click="remove(index)"><span class="fa fa-remove"></span></button>
+                                <button v-if="item.stored === 'notstored'" class="btn btn-primary" @click="storeAsync(item)"><span class="fa fa-refresh"></span></button>
+                                <button v-if="item.stored === 'storing'" class="btn btn-primary" disabled><span class="fa fa-refresh fa-spin"></span></button>
                             </td>
                         </tr>
                     </transition-group>
@@ -116,13 +116,14 @@
                 <div class="input-group">
                     <input v-if="show_password" type="text" class="form-control" id="pass-input" placeholder="Password123" v-model="password">
                     <input v-else type="password" class="form-control" id="pass-input" placeholder="Password123" v-model="password">
-                    <div class="btn btn-default input-group-addon" @click="show_password = !show_password">...</div>
+                    <div class="btn btn-default input-group-addon" @click="show_password = !show_password" :class="{'active': show_password}"
+                        :aria-pressed="show_password"><span class="fa fa-eye"></span></div>
                 </div>
             </div>
             <button class="btn btn-default" @click="add">Add</button>
         </div>
     </script>
-    <script src="dist/bundle.js"></script>
+    <script src="bundle.js"></script>
 </body>
 
 </html>
