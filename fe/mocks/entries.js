@@ -30,7 +30,7 @@ const mockResponses = [
     },
     {
         /* for POST requests, create a new entry and return the path to the new resource */
-        request: { method: 'POST', type: 'application/json' },
+        request: { method: 'POST' },
         response: function (ctx) {
             if (Math.random() > 0.5) {
                 ctx.status = 408;

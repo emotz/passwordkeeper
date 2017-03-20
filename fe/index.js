@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
+import VueResource from 'vue-resource';
 
 import dumb from 'bootstrap'; // TODO remove dumb
 import toastr from 'toastr';
@@ -8,6 +9,7 @@ import _ from 'lodash';
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueResource);
 
 /**
  * All properties of all objects from arr2 are merged (extended) to arr1.
@@ -53,59 +55,82 @@ const store = new Vuex.Store({
         },
         remove_entry_by_index(state, entryIndex) {
             state.entries.splice(entryIndex, 1);
+        },
+        set_entries(state, entries) {
+            state.entries = entries;
         }
     },
     actions: {
         add_entry(context, entry) {
-            return new Promise((resolve, reject) => {
-                setTimeout(function () {
-                    if (get_random_arbitrary(0, 100) > 50) {
-                        const guid = () => {
-                            function s4() {
-                                return Math.floor((1 + Math.random()) * 0x10000)
-                                    .toString(16)
-                                    .substring(1);
-                            }
-                            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                                s4() + '-' + s4() + s4() + s4();
-                        }
+            function parse_location(location) {
+                // /entries/blablabla
+                return location.split('/')[2];
+            }
 
-                        // TODO I DON'T LIKE THAT WE HAVE TO SET ID HERE BECAUSE OTHERWISE WE GET DUPLICATED ITEMS IN LIST
-                        entry.id = guid();
-                        context.commit("add_entry", {
-                            id: entry.id,
-                            user: entry.user,
-                            title: entry.title,
-                            password: entry.password
-                        });
+            return new Promise((resolve, reject) => {
+                var customActions = {
+                    add: { method: 'POST', url: 'entries' }
+                };
+
+                let resource = Vue.resource('entries', {}, customActions);
+
+                let entry_to_send = {
+                    user: entry.user,
+                    title: entry.title,
+                    password: entry.password
+                };
+                resource
+                    .add(entry_to_send)
+                    .then(response => {
+                        let id = parse_location(response.headers.map.Location[0]);
+                        entry.id = id;
+                        entry_to_send.id = entry.id;
+                        context.commit("add_entry", entry_to_send);
                         toastr.success("Item successfully stored.");
                         resolve(entry.id);
-                    } else {
-                        toastr.error("Item couldn't be stored.");
+                    }, response => {
+                        toastr.error(response.status === 408 ? 'Request timed-out when storing item.' : response.body);
                         reject();
-                    }
-                }, 1500);
+                    });
             });
         },
         remove_entry_by_id(context, id) {
             return new Promise((resolve, reject) => {
-                setTimeout(function () {
-                    if (get_random_arbitrary(0, 100) > 50) {
+                let resource = Vue.resource('entries{/id}');
+
+                resource
+                    .delete({ id: id })
+                    .then(response => {
                         const index = context.state.entries.findIndex(item => item.id === id);
-                        if (index < 0) {
-                            const reason = "Couldn't find item to remove.";
-                            toastr.error(reason);
-                            reject(reason);
-                            return;
+                        if (index >= 0) {
+                            context.commit("remove_entry_by_index", index);
                         }
-                        context.commit("remove_entry_by_index", index);
+
                         toastr.success("Item successfully removed.");
                         resolve();
-                    } else {
-                        toastr.error("Item couldn't be removed.");
-                        reject();
-                    }
-                }, 1500);
+                    }, response => {
+                        const res = response.status === 408 ? 'Request timed-out when removing item.' : response.body;
+                        toastr.error(res);
+                        reject(res);
+                    });
+            });
+        },
+        get_entries(context) {
+            let resource = Vue.resource('entries');
+
+            return new Promise((resolve, reject) => {
+                resource
+                    .get()
+                    .then(response => {
+                        console.log("response body " + JSON.stringify(response.body));
+                        context.commit("set_entries", response.body);
+                        toastr.success("Items successfully fetched.");
+                        resolve();
+                    }, response => {
+                        const res = response.status === 408 ? 'Request timed-out when fetching items.' : response.body;
+                        toastr.error(res);
+                        reject(res);
+                    });
             });
         }
     }
@@ -235,7 +260,10 @@ const app = new Vue({
         }
     },
     router,
-    store
+    store,
+    created() {
+        this.$store.dispatch('get_entries');
+    }
 });
 
 $(function () {
