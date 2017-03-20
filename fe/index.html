@@ -8,23 +8,16 @@
 </head>
 
 <body>
-    <div id="app">
-        <div class="splash">
-            <div class="splash-content">
-                Loading
-            </div>
+    <div id="splash">
+        <div class="splash-content">
+            Loading
         </div>
     </div>
+    <div id="app"></div>
+
     <script type="text/x-template" id="app-template">
         <div>
-            <transition name="fade">
-                <div class="splash" v-if="!loaded">
-                    <div class="splash-content">
-                        Loading
-                    </div>
-                </div>
-            </transition>
-            <transition name="fade" appear v-on:before-appear="loaded = true">
+            <transition name="fade" appear>
                 <div class="container">
                     <app-nav></app-nav>
                     <keep-alive>
@@ -75,21 +68,29 @@
                             <th>Title</th>
                             <th>User</th>
                             <th>Password</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="(item, index) in items">
+                    <transition-group name="only-fadein" tag="tbody">
+                        <tr v-for="(item, index) in items" :key="item" :class="{danger: item.stored==='notstored'}">
                             <td>{{ item.title }}</td>
                             <td>{{ item.user }}</td>
                             <td>
-                                <span v-if="item.show_password">{{ item.password }}</span>
-                                <div v-else class="btn btn-link" @click="item.show_password = !item.show_password">show password</div>
+                                <span :id="'item-password-' + index" :class="{'blur': !item.show_password}">
+                                    {{ item.password }}
+                                </span>
+                                <button type="button" class="btn btn-default pull-right" :class="{'active': item.show_password}" :aria-pressed="item.show_password"
+                                    autocomplete="off" @click="item.show_password = !item.show_password">
+                                    show
+                                </button>
                             </td>
                             <td>
                                 <button class="btn btn-danger" @click="remove(index)">delete</button>
+                                <span v-if="item.stored === 'storing'">Storing ...</span>
+                                <button v-if="item.stored === 'notstored'" class="btn btn-primary" @click="storeAsync(item)">retry</button>
                             </td>
                         </tr>
-                    </tbody>
+                    </transition-group>
                 </table>
 
                 <pass-adder v-on:added="add"></pass-adder>
