@@ -13,13 +13,17 @@ const PassAdder = {
     data: function () {
         return {
             title: "",
+            title_error: false,
             user: "",
+            user_error: false,
             password: "",
             show_password: false
         };
     },
     methods: {
         add: function () {
+            if (this.title.length <= 0) this.title_error = true;
+            if (this.user.length <= 0) this.user_error = true;
             if (this.title.length > 0 && this.user.length > 0) {
                 this.$emit('added', {
                     title: this.title,
@@ -27,6 +31,16 @@ const PassAdder = {
                     password: this.password
                 });
             }
+        }
+    },
+    watch: {
+        title: function (val) {
+            console.log("qwer");
+            this.title_error = false;
+        },
+        user: function (val) {
+            console.log("asdf");
+            this.user_error = false;
         }
     }
 };

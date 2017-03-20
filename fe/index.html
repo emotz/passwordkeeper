@@ -99,12 +99,12 @@
     </script>
     <script type="text/x-template" id="pass-adder-template">
         <div class="form-inline">
-            <div class="form-group">
-                <label for="title-input">Title</label>
+            <div class="form-group" :class="{'has-error': title_error}">
+                <label class="control-label" for="title-input">Title</label>
                 <input type="text" class="form-control" id="title-input" placeholder="mysite.com" v-model="title">
             </div>
-            <div class="form-group">
-                <label for="user-input">User</label>
+            <div class="form-group" :class="{'has-error': user_error}">
+                <label class="control-label" for="user-input">User</label>
                 <input type="text" class="form-control" id="user-input" placeholder="jane.doe@example.com" v-model="user">
             </div>
             <div class="form-group">
