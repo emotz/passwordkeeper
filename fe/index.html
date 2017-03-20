@@ -55,7 +55,12 @@
         <div>
             <div class="jumbotron">
                 <h1>Welcome to Password Keeper</h1>
-                <p>Start filling out fields below to store some passwords</p>
+                <p>
+                    <span v-if="num_of_entries === 0">Start filling out fields below to store some passwords</span>
+                    <span v-else-if="num_of_entries < 5">You are doing great! Keep going! Store some more passwords!</span>
+                    <span v-else-if="num_of_entries < 10">Well you should slow down, you have too many password :(</span>
+                    <span v-else-if="num_of_entries < 15">OMG you are passwordniac with so many passwords!</span>
+                </p>
             </div>
             <pass-list></pass-list>
         </div>
@@ -89,8 +94,9 @@
                                 </button>
                             </td>
                             <td>
-                                <button :disabled="item.stored === 'storing'" class="btn btn-danger" @click="remove(index)"><span class="fa fa-remove"></span></button>
-                                <button v-if="item.stored === 'notstored'" class="btn btn-primary" @click="storeAsync(item)"><span class="fa fa-refresh"></span></button>
+                                <button v-if="item.stored !== 'removing'" :disabled="item.stored === 'storing'" class="btn btn-danger" @click="remove(index)"><span class="fa fa-remove"></span></button>
+                                <button v-if="item.stored === 'removing'" class="btn btn-danger" disabled><span class="fa fa-remove fa-spin"></span></button>
+                                <button v-if="item.stored === 'notstored'" class="btn btn-primary" @click="retry_add(item)"><span class="fa fa-refresh"></span></button>
                                 <button v-if="item.stored === 'storing'" class="btn btn-primary" disabled><span class="fa fa-refresh fa-spin"></span></button>
                             </td>
                         </tr>

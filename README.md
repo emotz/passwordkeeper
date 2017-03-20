@@ -7,8 +7,9 @@ Simple storage for passwords.
 Prerequisites
 
 ```bat
-npm install -g webpack local-web-server
+npm install -g webpack local-web-server lodash
 npm install
+npm link lodash
 ```
 
 Build

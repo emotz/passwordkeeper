@@ -46,7 +46,7 @@ const mockResponses = [
             }
 
             const existingEntryIndex = entries.findIndex(entry => entry.id === id);
-            if (existingEntryIndex <= 0) {
+            if (existingEntryIndex < 0) {
                 ctx.status = 404;
                 ctx.body = { reason: "requested id wasn't found" };
                 return;
