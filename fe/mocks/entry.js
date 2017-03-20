@@ -12,6 +12,11 @@ const mockResponses = [
     {
         request: { method: 'GET' },
         response: function (ctx, id) {
+            if (Math.random() > 0.5) {
+                ctx.status = 408;
+                return;
+            }
+
             ctx.body = entries.find(entry => entry.id === Number(id));
         }
     },
@@ -20,6 +25,11 @@ const mockResponses = [
     {
         request: { method: 'PUT' },
         response: function (ctx, id) {
+            if (Math.random() > 0.5) {
+                ctx.status = 408;
+                return;
+            }
+
             id = Number(id);
             const updatedEntry = ctx.request.body;
             updatedEntry.id = id;
@@ -51,6 +61,11 @@ const mockResponses = [
     {
         request: { method: 'DELETE' },
         response: function (ctx, id) {
+            if (Math.random() > 0.5) {
+                ctx.status = 408;
+                return;
+            }
+
             const existingEntryIndex = entries.findIndex(entry => entry.id === Number(id));
             entries.splice(existingEntryIndex, 1);
             ctx.status = 200;

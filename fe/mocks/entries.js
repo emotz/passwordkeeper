@@ -11,6 +11,10 @@ const mockResponses = [
         /* for GET requests return a subset of data */
         request: { method: 'GET' },
         response: function (ctx) {
+            if (Math.random() > 0.5) {
+                ctx.status = 408;
+                return;
+            }
             ctx.body = entries;
         }
     },
@@ -18,6 +22,10 @@ const mockResponses = [
         /* for POST requests, create a new entry and return the path to the new resource */
         request: { method: 'POST', type: 'application/json' },
         response: function (ctx) {
+            if (Math.random() > 0.5) {
+                ctx.status = 408;
+                return;
+            }
             const newEntry = ctx.request.body;
             if (newEntry.id !== undefined) {
                 ctx.status = 400;
