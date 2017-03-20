@@ -30,7 +30,6 @@ const mockResponses = [
                 return;
             }
 
-            id = Number(id);
             const updatedEntry = ctx.request.body;
             updatedEntry.id = id;
 

@@ -2,6 +2,16 @@
 
 const entries = require('./entries.json');
 
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
 /* responses for /users */
 const mockResponses = [
     /* Respond with 400 Bad Request for PUT and DELETE - inappropriate on a collection */
@@ -44,7 +54,7 @@ const mockResponses = [
             }
 
             entries.push(newEntry);
-            newEntry.id = entries.length;
+            newEntry.id = guid();
             ctx.status = 201;
             ctx.response.set('Location', `/entries/${newEntry.id}`);
         }

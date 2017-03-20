@@ -60,8 +60,18 @@ const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 setTimeout(function () {
                     if (get_random_arbitrary(0, 100) > 50) {
+                        const guid = () => {
+                            function s4() {
+                                return Math.floor((1 + Math.random()) * 0x10000)
+                                    .toString(16)
+                                    .substring(1);
+                            }
+                            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                                s4() + '-' + s4() + s4() + s4();
+                        }
+
                         // TODO I DON'T LIKE THAT WE HAVE TO SET ID HERE BECAUSE OTHERWISE WE GET DUPLICATED ITEMS IN LIST
-                        entry.id = context.state.entries.length + 1;
+                        entry.id = guid();
                         context.commit("add_entry", {
                             id: entry.id,
                             user: entry.user,
