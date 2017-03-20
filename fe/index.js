@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import dumb from 'bootstrap'; // TODO remove dumb
 import VueRouter from 'vue-router';
+import toastr from 'toastr';
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
@@ -68,10 +69,12 @@ const PassList = {
             setTimeout(function () {
                 if (getRandomArbitrary(0, 100) > 50) {
                     item.stored = "stored";
+                    toastr.success("Item successfully stored.");
                 } else {
                     item.stored = "notstored";
+                    toastr.error("Item couldnt be stored.");
                 }
-            }, 3000);
+            }, 1500);
         }
     }
 };
