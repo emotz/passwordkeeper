@@ -17,16 +17,19 @@
     <div id="app"></div>
 
     <script type="text/x-template" id="app-template">
-        <div>
-            <transition name="fade" appear>
-                <div class="container">
+        <transition name="fade" appear>
+            <div class="wrapper">
+                <div class="container content">
                     <app-nav></app-nav>
                     <keep-alive>
                         <router-view></router-view>
                     </keep-alive>
                 </div>
-            </transition>
-        </div>
+                <div class="footer">
+                    © 2017 Dmitry Mazurok
+                </div>
+            </div>
+        </transition>
     </script>
     <script type="text/x-template" id="app-nav-template">
         <nav class="navbar navbar-default">
@@ -86,7 +89,7 @@
                                 </button>
                             </td>
                             <td>
-                                <button class="btn btn-danger" @click="remove(index)">delete</button>
+                                <button v-if="item.stored !== 'storing'" class="btn btn-danger" @click="remove(index)">delete</button>
                                 <span v-if="item.stored === 'storing'">Storing ...</span>
                                 <button v-if="item.stored === 'notstored'" class="btn btn-primary" @click="storeAsync(item)">retry</button>
                             </td>
