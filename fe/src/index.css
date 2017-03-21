@@ -34,13 +34,6 @@
   opacity: 0
 }
 
-.only-fadein-enter-active {
-  transition: opacity .5s
-}
-.only-fadein-enter, .only-fadein-leave-to {
-  opacity: 0
-}
-
 .content {
   flex: 1 0 auto;
 }

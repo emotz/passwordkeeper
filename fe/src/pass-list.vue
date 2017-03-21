@@ -115,3 +115,14 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.only-fadein-enter-active {
+    transition: opacity .5s
+}
+
+.only-fadein-enter,
+.only-fadein-leave-to {
+    opacity: 0
+}
+</style>
