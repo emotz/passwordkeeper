@@ -19,6 +19,8 @@
     "imports-loader": "^0.7.1",
     "less": "^2.7.2",
     "less-loader": "^3.0.0",
+    "vue-loader": "^11.1.4",
+    "vue-template-compiler": "^2.2.4",
     "webpack": "^2.2.1"
   },
   "scripts": {
