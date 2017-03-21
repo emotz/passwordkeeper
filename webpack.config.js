@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: ['font-awesome-webpack', './fe/index.js'],
+    entry: ['font-awesome-webpack', './fe/src/index.js'],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'fe', 'dist')

@@ -23,9 +23,7 @@
                         <td>{{ item.user }}</td>
                         <td>
                             <span :id="'item-password-' + index"
-                                  :class="{'blur': !item.show_password}">
-                                    {{ item.password }}
-                                </span>
+                                  :class="{'blur': !item.show_password}">{{ item.password }}</span>
                             <button type="button"
                                     class="btn btn-default pull-right"
                                     :class="{'active': item.show_password}"

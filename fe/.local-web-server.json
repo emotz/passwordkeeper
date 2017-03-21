@@ -6,7 +6,7 @@
             "to": "/dist/$1"
         }
     ],
-    "spa": "index.html",
+    "spa": "src/index.html",
     "mocks": [
         {
             "route": "/dist/entries/:id",

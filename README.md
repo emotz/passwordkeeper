@@ -7,7 +7,7 @@ Simple storage for passwords.
 Prerequisites
 
 ```bat
-npm install -g webpack local-web-server lodash
+npm install -g webpack local-web-server lodash karma-cli
 npm install
 npm link lodash
 ```
