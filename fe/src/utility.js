@@ -2,16 +2,17 @@ import _ from 'lodash';
 
 /**
  * All properties of all objects from arr2 are merged (extended) to arr1.
- * @param {[Object]} arr1 Array to merge to
- * @param {[Object]} arr2 Array to merge from
- * @param {String} prop Determines uniqueness of objects
- * @param {Function} ctr Function to construct default element to push into arr1 if element from arr2 is not found in arr1
+ * @param {Object[]} arr1 Array to merge to
+ * @param {Object[]} arr2 Array to merge from
+ * @param {String} [prop=id] Determines uniqueness of objects by value of specified property
+ * @param {Function} [ctor] Function to construct default element to push into arr1 if element from arr2 is not found in arr1
  */
-function merge_arrays_of_objects(arr1, arr2, prop, ctr) {
+function merge_arrays_of_objects(arr1, arr2, prop, ctor) {
+    prop = prop || 'id';
     arr2.forEach(function (element) {
         let item = arr1.find(item => item[prop] === element[prop]);
         if (item === undefined) {
-            item = ctr();
+            item = ctor === undefined ? {} : ctor();
             _.extend(item, element);
             arr1.push(item);
         } else {
