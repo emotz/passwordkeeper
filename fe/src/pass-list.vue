@@ -5,8 +5,7 @@
             <h3 class="panel-title">Stored passwords</h3>
         </div>
         <div class="panel-body">
-            <table class="table"
-                   style="table-layout: fixed">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -23,8 +22,6 @@
                         <td>{{ item.title }}</td>
                         <td>{{ item.user }}</td>
                         <td>
-                            <span :id="`item-password-${index}-${_uid}`"
-                                  :class="{'blur': !item.show_password}">{{ item.password }}</span>
                             <button type="button"
                                     class="btn btn-default pull-right"
                                     :class="{'active': item.show_password}"
@@ -33,6 +30,8 @@
                                     v-if="item.password !== ''">
                                 <span class="fa fa-eye"></span>
                             </button>
+                            <span :id="`item-password-${index}-${_uid}`"
+                                  :class="{'blur': !item.show_password}">{{ item.password }}</span>
                         </td>
                         <td>
                             <button v-if="item.stored !== 'removing'"
@@ -125,5 +124,10 @@ export default {
 .only-fadein-enter,
 .only-fadein-leave-to {
     opacity: 0
+}
+
+.table {
+    word-wrap: break-word;
+    table-layout: fixed
 }
 </style>
