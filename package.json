@@ -32,7 +32,7 @@
     "dev": "cd fe && ws & exit 0",
     "build": "cd fe && mkdir dist & cp \"../node_modules/bootstrap/dist/css/bootstrap.min.css\" dist && cp \"../node_modules/toastr/build/toastr.min.css\" dist && cp src/index.css dist && cp src/index.html dist && webpack & exit 0",
     "test": "cd fe && karma start & exit 0",
-    "e2e-test": "npm run build && nightwatch & exit 0",
+    "e2e-test": "npm run build && start /b cmd /c npm run dev 2>NUL & nightwatch & exit 0",
     "alltest": "npm run test && npm run e2e-test"
   },
   "repository": {
