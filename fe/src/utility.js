@@ -4,7 +4,7 @@ import _ from 'lodash';
  * All properties of all objects from arr2 are merged (extended) to arr1.
  * @param {Object[]} arr1 Array to merge to
  * @param {Object[]} arr2 Array to merge from
- * @param {String} [prop=id] Determines uniqueness of objects by value of specified property
+ * @param {string} [prop=id] Determines uniqueness of objects by value of specified property
  * @param {Function} [ctor] Function to construct default element to push into arr1 if element from arr2 is not found in arr1
  */
 function merge_arrays_of_objects(arr1, arr2, prop, ctor) {
@@ -29,4 +29,11 @@ function merge_arrays_of_objects(arr1, arr2, prop, ctor) {
     });
 }
 
-export { merge_arrays_of_objects };
+/**
+ * @returns {string} Newly created unique id
+ */
+function generateUniqueId() {
+    return _.uniqueId();
+}
+
+export { merge_arrays_of_objects, generateUniqueId };

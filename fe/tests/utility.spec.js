@@ -65,3 +65,19 @@ describe("merge_arrays_of_objects tests", function () {
         expect(result).toEqual(expected);
     });
 });
+
+describe("generateUniqueId tests", function () {
+    it("should generate non-empty id", function () {
+        const res = utls.generateUniqueId();
+        // should be non empty string
+        expect(res).not.toBeUndefined();
+        expect(res).not.toBeNull();
+        expect(typeof (res)).toEqual('string');
+        expect(res.length > 0).toBe(true);
+    });
+    if ("should generate different ids", function () {
+        const first = utls.generateUniqueId();
+        const second = utls.generateUniqueId();
+        expect(first).not.toEqual(second);
+    });
+});

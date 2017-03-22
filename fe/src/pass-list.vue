@@ -18,7 +18,7 @@
                                   tag="tbody">
                     <tr v-for="(item, index) in items"
                         :key="item"
-                        :class="{danger: item.stored==='notstored' || item.op_failed}">
+                        :class="{danger: requires_attention(item)}">
                         <td>{{ item.title }}</td>
                         <td>{{ item.user }}</td>
                         <td>
@@ -34,16 +34,15 @@
                                   :class="{'blur': !item.show_password}">{{ item.password }}</span>
                         </td>
                         <td>
-                            <button v-if="item.stored !== 'removing'"
-                                    :disabled="item.stored === 'storing'"
+                            <button v-if="can_remove(item)"
                                     class="btn btn-danger btn-pass-remove"
                                     @click="remove(index)"><span class="fa fa-remove"></span></button>
                             <button v-if="item.stored === 'removing'"
                                     class="btn btn-danger btn-pass-remove"
                                     disabled><span class="fa fa-remove fa-spin"></span></button>
-                            <button v-if="item.stored === 'notstored'"
+                            <button v-if="can_save(item)"
                                     class="btn btn-primary"
-                                    @click="retry_add(item)"><span class="fa fa-refresh"></span></button>
+                                    @click="save(item)"><span class="fa fa-refresh"></span></button>
                             <button v-if="item.stored === 'storing'"
                                     class="btn btn-primary"
                                     disabled><span class="fa fa-refresh fa-spin"></span></button>
@@ -72,7 +71,11 @@ export default {
                 password: element.password,
                 show_password: false,
                 stored: "stored",
-                op_failed: false
+                last_op: {
+                    id: undefined,
+                    status: undefined
+                },
+                editing: false
             };
         }, this);
         return {
@@ -86,33 +89,50 @@ export default {
     },
     watch: {
         state_entries: function (new_entries) {
-            utls.merge_arrays_of_objects(this.items, new_entries, "id", () => { return { show_password: false, stored: "stored", op_failed: false }; });
+            utls.merge_arrays_of_objects(this.items, new_entries, "id", () => {
+                return {
+                    show_password: false,
+                    stored: "stored",
+                    last_op: {
+                        id: undefined,
+                        status: undefined
+                    },
+                    editing: false
+                };
+            });
         }
     },
     methods: {
+        requires_attention: function (item) {
+            return item.stored === 'notstored' || item.last_op.status === 'failure';
+        },
+        can_remove: function (item) {
+            return item.stored !== 'removing';
+        },
+        can_save: function (item) {
+            return item.stored === 'notstored';
+        },
         add: function (item) {
             item.show_password = false;
             item.stored = "notstored";
             this.items.push(item);
 
-            item.stored = "storing";
-            this.$store.dispatch('add_entry', item).then((id) => {
-                item.stored = "stored";
-                item.op_failed = false;
-            }, () => {
-                item.stored = "notstored";
-                item.op_failed = true;
-            });
+            this.save(item);
         },
-        retry_add: function (item) {
+        save: function (item) {
             item.stored = "storing";
+            item.last_op = {
+                id: utls.generateUniqueId(),
+                status: 'inprogress'
+            };
             this.$store.dispatch('add_entry', item).then((id) => {
                 item.stored = "stored";
-                item.op_failed = false;
+                item.last_op.status = "success";
             }, () => {
                 item.stored = "notstored";
-                item.op_failed = true;
+                item.last_op.status = "failure";
             });
+
         },
         remove: function (index) {
             const item = this.items[index];
@@ -122,8 +142,25 @@ export default {
             }
             const oldstored = item.stored;
             item.stored = "removing";
+            item.last_op = {
+                id: utls.generateUniqueId(),
+                status: 'inprogress'
+            };
+
             this.$store.dispatch('remove_entry_by_id', item.id)
-                .then(() => { }, () => { item.stored = oldstored; });
+                .then(() => {
+                    item.stored = "notstored";
+                    item.last_op.status = "success";
+                }, () => {
+                    item.stored = oldstored;
+                    item.last_op.status = "failure";
+                    setTimeout(() => {
+                        item.last_op = {
+                            id: undefined,
+                            status: undefined
+                        };
+                    }, 5000);
+                });
         }
     }
 }

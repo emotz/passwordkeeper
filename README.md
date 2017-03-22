@@ -26,10 +26,10 @@ Start dev server
 npm run dev
 ```
 
-Run tests
+Run unit tests
 
 ```bat
-npm run test
+npm run unit-test
 ```
 
 Run e2e tests
@@ -41,5 +41,5 @@ npm run e2e-test
 Run all tests
 
 ```bat
-npm run alltest
+npm run all-test
 ```
