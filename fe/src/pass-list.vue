@@ -18,7 +18,7 @@
                                   tag="tbody">
                     <tr v-for="(item, index) in items"
                         :key="item"
-                        :class="{danger: item.stored==='notstored'}">
+                        :class="{danger: item.stored==='notstored' || item.op_failed}">
                         <td>{{ item.title }}</td>
                         <td>{{ item.user }}</td>
                         <td>
@@ -71,7 +71,8 @@ export default {
                 user: element.user,
                 password: element.password,
                 show_password: false,
-                stored: "stored"
+                stored: "stored",
+                op_failed: false
             };
         }, this);
         return {
@@ -85,7 +86,7 @@ export default {
     },
     watch: {
         state_entries: function (new_entries) {
-            utls.merge_arrays_of_objects(this.items, new_entries, "id", () => { return { show_password: false, stored: "stored" }; });
+            utls.merge_arrays_of_objects(this.items, new_entries, "id", () => { return { show_password: false, stored: "stored", op_failed: false }; });
         }
     },
     methods: {
@@ -95,11 +96,23 @@ export default {
             this.items.push(item);
 
             item.stored = "storing";
-            this.$store.dispatch('add_entry', item).then((id) => { item.stored = "stored"; }, () => { item.stored = "notstored"; });
+            this.$store.dispatch('add_entry', item).then((id) => {
+                item.stored = "stored";
+                item.op_failed = false;
+            }, () => {
+                item.stored = "notstored";
+                item.op_failed = true;
+            });
         },
         retry_add: function (item) {
             item.stored = "storing";
-            this.$store.dispatch('add_entry', item).then((id) => { item.stored = "stored"; }, () => { item.stored = "notstored"; });
+            this.$store.dispatch('add_entry', item).then((id) => {
+                item.stored = "stored";
+                item.op_failed = false;
+            }, () => {
+                item.stored = "notstored";
+                item.op_failed = true;
+            });
         },
         remove: function (index) {
             const item = this.items[index];
@@ -128,6 +141,10 @@ export default {
 
 .table {
     word-wrap: break-word;
-    table-layout: fixed
+    table-layout: fixed;
+}
+
+th:last-child {
+    width: 100px;
 }
 </style>

@@ -53,8 +53,9 @@ export default new Vuex.Store({
                         toastr.success("Item successfully stored.");
                         resolve(entry.id);
                     }, response => {
-                        toastr.error(response.status === 408 ? 'Request timed-out when storing item.' : response.body);
-                        reject();
+                        const res = response.status === 408 ? 'Request timed-out when storing item.' : (response.body || "Couldn't store item.");
+                        toastr.error(res);
+                        reject(res);
                     });
             });
         },
@@ -73,7 +74,7 @@ export default new Vuex.Store({
                         toastr.success("Item successfully removed.");
                         resolve();
                     }, response => {
-                        const res = response.status === 408 ? 'Request timed-out when removing item.' : response.body;
+                        const res = response.status === 408 ? 'Request timed-out when removing item.' : (response.body || "Couldn't remove item.");
                         toastr.error(res);
                         reject(res);
                     });
@@ -90,7 +91,7 @@ export default new Vuex.Store({
                         toastr.success("Items successfully fetched.");
                         resolve();
                     }, response => {
-                        const res = response.status === 408 ? 'Request timed-out when fetching items.' : response.body;
+                        const res = response.status === 408 ? 'Request timed-out when fetching items.' : (response.body || "Could't fetch all items");
                         toastr.error(res);
                         reject(res);
                     });
