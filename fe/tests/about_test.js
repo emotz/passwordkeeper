@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { Vue } from './vue-helper.js';
 import About from 'src/about.vue';
 
 describe("about tests", function () {

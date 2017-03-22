@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { Vue } from './vue-helper.js';
 
 import AppNav from 'src/app-nav.vue';
 import router from 'src/router.js';

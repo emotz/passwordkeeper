@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { Vue } from './vue-helper.js';
 import VueRouter from 'vue-router';
 
 describe("test-router tests", function () {

@@ -35,5 +35,13 @@ npm run test
 Run e2e tests
 
 ```bat
+npm run dev
 npm run e2e-test
+```
+
+Run all tests
+
+```bat
+npm run dev
+npm run alltest
 ```
