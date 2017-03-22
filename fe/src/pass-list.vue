@@ -58,9 +58,12 @@
 
 <script>
 import PassAdder from './pass-adder.vue';
+import visible from './directives/visible.js';
+
 import * as utls from './utility.js';
 
 export default {
+    directives: { visible },
     components: { PassAdder },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {
