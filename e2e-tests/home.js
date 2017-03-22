@@ -9,10 +9,10 @@ module.exports = {
     },
     'Home can add pass': function (browser) {
         browser
-            .setValue('#title-input', 'test title')
-            .setValue('#user-input', 'test user')
-            .setValue('#pass-input', 'test password')
-            .click('#pass-add')
+            .setValue('.pass-adder .title-input', 'test title')
+            .setValue('.pass-adder .user-input', 'test user')
+            .setValue('.pass-adder .pass-input', 'test password')
+            .click('.pass-adder .btn-pass-add')
             .useXpath().waitForElementVisible("//div[contains(@class, 'pass-list')]//td[contains(text(), 'test title')]", 1000);
     },
     'Home can remove pass': function (browser) {

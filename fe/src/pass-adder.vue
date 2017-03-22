@@ -1,39 +1,40 @@
 <template>
-    <div class="pass-adder form-inline">
+    <div class="pass-adder form-inline"
+         :id="`pass-adder-${_uid}`">
         <div class="form-group"
              :class="{'has-error': title_error}">
             <label class="control-label"
-                   for="title-input">Title</label>
+                   :for="`title-input-${_uid}`">Title</label>
             <input type="text"
-                   class="form-control"
-                   id="title-input"
+                   class="title-input form-control"
+                   :id="`title-input-${_uid}`"
                    placeholder="mysite.com"
                    v-model="title">
         </div>
         <div class="form-group"
              :class="{'has-error': user_error}">
             <label class="control-label"
-                   for="user-input">User</label>
+                   :for="`user-input-${_uid}`">User</label>
             <input type="text"
-                   class="form-control"
-                   id="user-input"
+                   class="user-input form-control"
+                   :id="`user-input-${_uid}`"
                    placeholder="jane.doe@example.com"
                    v-model="user">
         </div>
         <div class="form-group">
             <!--TODO get rid of hardcoded ids ? wouldnt be able to reuse component-->
-            <label for="pass-input">Password</label>
+            <label :for="`pass-input-${_uid}`">Password</label>
             <div class="input-group">
                 <input v-if="show_password"
                        type="text"
-                       class="form-control"
-                       id="pass-input"
+                       class="pass-input form-control"
+                       :id="`pass-input-${_uid}`"
                        placeholder="Password123"
                        v-model="password">
                 <input v-else
                        type="password"
-                       class="form-control"
-                       id="pass-input"
+                       class="pass-input form-control"
+                       :id="`pass-input-${_uid}`"
                        placeholder="Password123"
                        v-model="password">
                 <div class="btn btn-default input-group-addon"
@@ -43,7 +44,7 @@
             </div>
         </div>
         <button class="btn btn-default btn-pass-add"
-                id="pass-add"
+                :id="`pass-add-${_uid}`"
                 @click="add">Add</button>
     </div>
 </template>

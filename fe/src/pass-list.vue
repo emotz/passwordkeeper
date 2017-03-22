@@ -1,5 +1,6 @@
 <template>
-    <div class="pass-list panel panel-primary">
+    <div class="pass-list panel panel-primary"
+         :id="`pass-list-${_uid}`">
         <div class="panel-heading">
             <h3 class="panel-title">Stored passwords</h3>
         </div>
@@ -22,7 +23,7 @@
                         <td>{{ item.title }}</td>
                         <td>{{ item.user }}</td>
                         <td>
-                            <span :id="'item-password-' + index"
+                            <span :id="`item-password-${index}-${_uid}`"
                                   :class="{'blur': !item.show_password}">{{ item.password }}</span>
                             <button type="button"
                                     class="btn btn-default pull-right"

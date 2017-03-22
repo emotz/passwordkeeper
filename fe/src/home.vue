@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="home"
+         :id="`home-${_uid}`">
         <div class="jumbotron">
             <h1>Welcome to Password Keeper</h1>
             <p>
