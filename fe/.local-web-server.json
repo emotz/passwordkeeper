@@ -1,20 +1,15 @@
 {
     "port": 8000,
-    "rewrite": [
-        {
-            "from": "/*",
-            "to": "/dist/$1"
-        }
-    ],
-    "spa": "src/index.html",
+    "spa": "index.html",
+    "directory": "dist",
     "mocks": [
         {
-            "route": "/dist/entries/:id",
-            "module": "/mocks/entry.js"
+            "route": "/entries/:id",
+            "module": "../mocks/entry.js"
         },
         {
-            "route": "/dist/entries",
-            "module": "/mocks/entries.js"
+            "route": "/entries",
+            "module": "../mocks/entries.js"
         }
     ]
 }

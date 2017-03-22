@@ -1,4 +1,4 @@
-import * as utls from './../src/utility';
+import * as utls from 'src/utility';
 import _ from 'lodash';
 
 describe("merge_arrays_of_objects tests", function () {

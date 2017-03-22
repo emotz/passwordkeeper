@@ -2,13 +2,14 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: ['font-awesome-webpack', './fe/src/index.js'],
+    entry: ['font-awesome-webpack', './src/index.js'],
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'fe', 'dist')
+        path: path.resolve(__dirname, 'dist')
     },
     resolve: {
         alias: {
+            'src': './src',
             'vue$': 'vue/dist/vue.esm.js' // required to bundle vue with compiler so it can process templates
         }
     },

@@ -4,7 +4,9 @@ Simple storage for passwords.
 
 ## Build & Run
 
-Prerequisites
+Install [nightwatch](http://nightwatchjs.org/getingstarted#installation)
+
+Then additional requirements:
 
 ```bat
 npm install -g webpack local-web-server lodash karma-cli
@@ -22,4 +24,16 @@ Start dev server
 
 ```bat
 npm run dev
+```
+
+Run tests
+
+```bat
+npm run test
+```
+
+Run e2e tests
+
+```bat
+npm run e2e-test
 ```

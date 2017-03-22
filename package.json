@@ -29,9 +29,10 @@
     "webpack": "^2.2.1"
   },
   "scripts": {
-    "dev": "cd fe && ws",
-    "build": "mkdir \"fe/dist\" & cp \"node_modules/bootstrap/dist/css/bootstrap.min.css\" fe/dist && cp \"node_modules/toastr/build/toastr.min.css\" fe/dist && cp fe/src/index.css fe/dist && webpack",
-    "test": "cd fe && karma start & exit 0"
+    "dev": "cd fe && ws & exit 0",
+    "build": "cd fe && mkdir dist & cp \"../node_modules/bootstrap/dist/css/bootstrap.min.css\" dist && cp \"../node_modules/toastr/build/toastr.min.css\" dist && cp src/index.css dist && cp src/index.html dist && webpack & exit 0",
+    "test": "cd fe && karma start & exit 0",
+    "e2e-test": "nightwatch & exit 0"
   },
   "repository": {
     "type": "git",
