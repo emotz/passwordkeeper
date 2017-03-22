@@ -1,5 +1,5 @@
 <template>
-    <div class="form-inline">
+    <div class="pass-adder form-inline">
         <div class="form-group"
              :class="{'has-error': title_error}">
             <label class="control-label"
@@ -21,6 +21,7 @@
                    v-model="user">
         </div>
         <div class="form-group">
+            <!--TODO get rid of hardcoded ids ? wouldnt be able to reuse component-->
             <label for="pass-input">Password</label>
             <div class="input-group">
                 <input v-if="show_password"
@@ -41,7 +42,8 @@
                      :aria-pressed="show_password"><span class="fa fa-eye"></span></div>
             </div>
         </div>
-        <button class="btn btn-default"
+        <button class="btn btn-default btn-pass-add"
+                id="pass-add"
                 @click="add">Add</button>
     </div>
 </template>

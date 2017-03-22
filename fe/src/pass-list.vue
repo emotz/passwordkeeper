@@ -1,5 +1,5 @@
 <template>
-    <div class="panel panel-primary">
+    <div class="pass-list panel panel-primary">
         <div class="panel-heading">
             <h3 class="panel-title">Stored passwords</h3>
         </div>
@@ -36,10 +36,10 @@
                         <td>
                             <button v-if="item.stored !== 'removing'"
                                     :disabled="item.stored === 'storing'"
-                                    class="btn btn-danger"
+                                    class="btn btn-danger btn-pass-remove"
                                     @click="remove(index)"><span class="fa fa-remove"></span></button>
                             <button v-if="item.stored === 'removing'"
-                                    class="btn btn-danger"
+                                    class="btn btn-danger btn-pass-remove"
                                     disabled><span class="fa fa-remove fa-spin"></span></button>
                             <button v-if="item.stored === 'notstored'"
                                     class="btn btn-primary"
