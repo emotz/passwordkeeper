@@ -42,10 +42,10 @@
                                     disabled><span class="fa fa-remove fa-spin"></span></button>
                             <button v-if="can_save(item)"
                                     class="btn btn-primary"
-                                    @click="save(item)"><span class="fa fa-refresh"></span></button>
+                                    @click="save(item)"><span class="fa fa-save"></span></button>
                             <button v-if="item.stored === 'storing'"
                                     class="btn btn-primary"
-                                    disabled><span class="fa fa-refresh fa-spin"></span></button>
+                                    disabled><span class="fa fa-save fa-spin"></span></button>
                         </td>
                     </tr>
                 </transition-group>

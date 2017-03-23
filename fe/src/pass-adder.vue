@@ -45,7 +45,7 @@
         </div>
         <button class="btn btn-default btn-pass-add"
                 :id="`pass-add-${_uid}`"
-                @click="add">Add</button>
+                @click="add"><span class="fa fa-plus force-parent-lh"></span></button>
     </div>
 </template>
 
