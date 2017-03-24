@@ -163,17 +163,17 @@ describe("make_fn_singleton tests", function () {
                 }, 1000);
             });
         });
-        let onbefore = jasmine.createSpy('spy');
-        fn.watch(onbefore);
+        let watch = jasmine.createSpy('spy');
+        fn.watch(watch);
 
         fn().then(val => {
             expect(val).toBe(expectedcounter);
-            expect(onbefore).toHaveBeenCalledTimes(1);
+            expect(watch).toHaveBeenCalledTimes(2);
             expect(fn.is_executing()).toBe(false);
             done();
         });
         expect(fn.is_executing()).toBe(true);
-        expect(onbefore).toHaveBeenCalledTimes(1);
+        expect(watch).toHaveBeenCalledTimes(1);
     });
     it("should unregister watch 1", function (done) {
         let counter = 0;

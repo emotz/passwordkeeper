@@ -159,7 +159,7 @@ export default {
                 }, () => {
                     item.stored = oldstored;
                     item.last_op.status = "failure";
-                    setTimeout(() => {
+                    _.delay(() => {
                         if (item.last_op.id === this_op_id) {
                             // means no other operation was performed since we tried
                             item.last_op = oldlastop;

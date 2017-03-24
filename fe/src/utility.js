@@ -39,13 +39,14 @@ function generateUniqueId() {
 /**
  * Makes async function to be 'singleton'. If it is called before last call is finished (before Promise is resolved/rejected),
  * then it simply returns Promise from last call instead of executing again. Has property functions watch and unwatch to allow
- * to register callbacks on be called right after start of action execution.
+ * to register callbacks to be called when `is_executing` value is changed.
  * @param {function} fn Async function (expected to return Promise)
  * @returns {function} Proxified async function and only one instance of it can be running at the same time
  */
 function make_fn_singleton(fn) {
     function on_any(val) {
         fn.last_op.is_fulfilled = true;
+        watched.forEach(w => w());
         return val;
     }
 
@@ -64,6 +65,7 @@ function make_fn_singleton(fn) {
             unwatch(w);
         };
     };
+
     let is_executing = function () {
         return fn.last_op.is_fulfilled === false;
     };
