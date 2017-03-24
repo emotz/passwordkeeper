@@ -36,4 +36,30 @@ function generateUniqueId() {
     return _.uniqueId();
 }
 
-export { merge_arrays_of_objects, generateUniqueId };
+/**
+ * Makes async function to be 'singleton'. If it is called before last call is finished (before Promise is resolved/rejected),
+ * then it simply returns Promise from last call instead of executing again.
+ * @param {function} fn Async function (expected to return Promise)
+ * @returns {function} Proxified async function and only one instance of it can be running at the same time
+ */
+function make_fn_singleton(fn) {
+    function on_any(val) {
+        fn.last_op.is_fulfilled = true;
+        return val;
+    }
+
+    fn.last_op = {
+        promise: undefined,
+        is_fulfilled: undefined
+    };
+    return function () {
+        if (fn.last_op.promise === undefined || fn.last_op.is_fulfilled) {
+            fn.last_op.is_fulfilled = false;
+            fn.last_op.promise = fn.apply(this).then(on_any, on_any);
+            return fn.last_op.promise;
+        }
+        return fn.last_op.promise;
+    };
+}
+
+export { merge_arrays_of_objects, generateUniqueId, make_fn_singleton };

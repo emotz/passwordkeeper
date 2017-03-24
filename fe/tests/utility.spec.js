@@ -81,3 +81,76 @@ describe("generateUniqueId tests", function () {
         expect(first).not.toEqual(second);
     });
 });
+
+describe("make_fn_singleton tests", function () {
+    it("should pass async test", function (done) {
+        const expectedstr = "hello";
+        const fn = () => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(expectedstr);
+                }, 1000);
+            });
+        };
+        fn().then(str => {
+            expect(str).toEqual(expectedstr);
+            done();
+        });
+    });
+    it("should chain promises", function (done) {
+        const expectedstr = "hello";
+        const fn = () => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(expectedstr);
+                }, 1000);
+            });
+        };
+        fn().then(str => {
+            expect(str).toEqual(expectedstr);
+            return fn();
+        }).then(str => {
+            expect(str).toEqual(expectedstr);
+            done();
+        });
+    });
+    it("should make a function 'singleton'", function (done) {
+        let counter = 0;
+        const expectedcounter = 1;
+        const fn = utls.make_fn_singleton(() => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(++counter);
+                }, 1000);
+            });
+        });
+
+        const p1 = fn().then(val => {
+            expect(val).toBe(expectedcounter);
+        });
+        const p2 = fn().then(val => {
+            expect(val).toBe(expectedcounter);
+        });
+        Promise.all([p1, p2]).then(() => { done(); });
+    });
+    it("should be able to reexecute if already finished", function (done) {
+        let counter = 0;
+        const expectedcounter1 = 1;
+        const expectedcounter2 = 2;
+        const fn = utls.make_fn_singleton(() => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(++counter);
+                }, 1000);
+            });
+        });
+
+        fn().then(val => {
+            expect(val).toBe(expectedcounter1);
+            return fn();
+        }).then(val => {
+            expect(val).toBe(expectedcounter2);
+            done();
+        });
+    });
+});
