@@ -1,10 +1,9 @@
 <template>
-    <button :disabled="!canExecute"
+    <button :disabled="!canExecute || executing"
             @click="execute">
-        <slot v-show="executing"
-              name="executing"></slot>
-        <slot v-show="!executing"
-              name="notexecuting"></slot>
+        <span v-show="executing"><slot name="executing"></slot></span>
+        <span v-show="!executing"><slot name="notexecuting"></slot></span>
+        <slot></slot>
     </button>
 </template>
 
@@ -21,11 +20,7 @@ export default {
     },
     methods: {
         execute: function () {
-            this.action().then(val => {
-                this.$emit('success', val);
-            }, val => {
-                this.$emit('failure', val);
-            });
+            this.$emit('promise', this.action());
         },
     },
     watch: {

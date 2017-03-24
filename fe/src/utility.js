@@ -45,12 +45,12 @@ function generateUniqueId() {
  */
 function make_fn_singleton(fn) {
     function on_any(val) {
-        fn.last_op.is_fulfilled = true;
+        last_op.is_fulfilled = true;
         watched.forEach(w => w());
         return val;
     }
 
-    fn.last_op = {
+    let last_op = {
         promise: undefined,
         is_fulfilled: undefined
     };
@@ -67,17 +67,17 @@ function make_fn_singleton(fn) {
     };
 
     let is_executing = function () {
-        return fn.last_op.is_fulfilled === false;
+        return last_op.is_fulfilled === false;
     };
 
     let res = function () {
-        if (fn.last_op.promise === undefined || fn.last_op.is_fulfilled) {
-            fn.last_op.is_fulfilled = false;
-            fn.last_op.promise = fn.apply(this).then(on_any, on_any);
+        if (last_op.promise === undefined || last_op.is_fulfilled) {
+            last_op.is_fulfilled = false;
+            last_op.promise = fn.call(this).then(on_any, on_any);
             watched.forEach(w => w());
-            return fn.last_op.promise;
+            return last_op.promise;
         }
-        return fn.last_op.promise;
+        return last_op.promise;
     };
     res.watch = watch;
     res.unwatch = unwatch;
