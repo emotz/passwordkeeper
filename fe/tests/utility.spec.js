@@ -153,4 +153,67 @@ describe("make_fn_singleton tests", function () {
             done();
         });
     });
+    it("should register watch", function (done) {
+        let counter = 0;
+        const expectedcounter = 1;
+        const fn = utls.make_fn_singleton(() => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(++counter);
+                }, 1000);
+            });
+        });
+        let onbefore = jasmine.createSpy('spy');
+        fn.watch(onbefore);
+
+        fn().then(val => {
+            expect(val).toBe(expectedcounter);
+            expect(onbefore).toHaveBeenCalledTimes(1);
+            done();
+        });
+        expect(onbefore).toHaveBeenCalledTimes(1);
+    });
+    it("should unregister watch 1", function (done) {
+        let counter = 0;
+        const expectedcounter = 1;
+        const fn = utls.make_fn_singleton(() => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(++counter);
+                }, 1000);
+            });
+        });
+        let onbefore = jasmine.createSpy('spy');
+        fn.watch(onbefore)();
+
+        fn().then(val => {
+            expect(val).toBe(expectedcounter);
+            expect(onbefore).not.toHaveBeenCalled();
+            done();
+        });
+        expect(onbefore).not.toHaveBeenCalled();
+    });
+    it("should unregister watch 2", function (done) {
+        let counter = 0;
+        const expectedcounter = 1;
+        const fn = utls.make_fn_singleton(() => {
+            return new Promise((resolve, reject) => {
+                _.defer(() => {
+                    resolve(++counter);
+                }, 1000);
+            });
+        });
+        let onbefore = jasmine.createSpy('spy');
+        fn.watch(onbefore);
+        fn.unwatch(onbefore);
+
+        fn().then(val => {
+            expect(val).toBe(expectedcounter);
+            expect(onbefore).not.toHaveBeenCalled();
+            done();
+        });
+        expect(onbefore).not.toHaveBeenCalled();
+    });
+
+
 });
