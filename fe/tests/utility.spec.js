@@ -169,8 +169,10 @@ describe("make_fn_singleton tests", function () {
         fn().then(val => {
             expect(val).toBe(expectedcounter);
             expect(onbefore).toHaveBeenCalledTimes(1);
+            expect(fn.is_executing()).toBe(false);
             done();
         });
+        expect(fn.is_executing()).toBe(true);
         expect(onbefore).toHaveBeenCalledTimes(1);
     });
     it("should unregister watch 1", function (done) {
@@ -189,8 +191,10 @@ describe("make_fn_singleton tests", function () {
         fn().then(val => {
             expect(val).toBe(expectedcounter);
             expect(onbefore).not.toHaveBeenCalled();
+            expect(fn.is_executing()).toBe(false);
             done();
         });
+        expect(fn.is_executing()).toBe(true);
         expect(onbefore).not.toHaveBeenCalled();
     });
     it("should unregister watch 2", function (done) {
@@ -210,8 +214,10 @@ describe("make_fn_singleton tests", function () {
         fn().then(val => {
             expect(val).toBe(expectedcounter);
             expect(onbefore).not.toHaveBeenCalled();
+            expect(fn.is_executing()).toBe(false);
             done();
         });
+        expect(fn.is_executing()).toBe(true);
         expect(onbefore).not.toHaveBeenCalled();
     });
 
