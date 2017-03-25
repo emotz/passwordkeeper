@@ -10,6 +10,7 @@ import store from './store.js';
 import 'bootstrap';
 import 'bootstrap.css';
 import 'toastr.css';
+import './app.css';
 
 const app = new Vue({
     el: '#app',

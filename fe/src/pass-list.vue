@@ -76,7 +76,8 @@ export default {
                 stored: "stored",
                 last_op: {
                     id: undefined,
-                    status: undefined
+                    status: undefined,
+                    prev_op_status: undefined
                 },
                 editing: false
             };
@@ -98,7 +99,8 @@ export default {
                     stored: "stored",
                     last_op: {
                         id: undefined,
-                        status: undefined
+                        status: undefined,
+                        prev_op_status: undefined
                     },
                     editing: false
                 };
@@ -107,7 +109,7 @@ export default {
     },
     methods: {
         requires_attention: function (item) {
-            return item.stored === 'notstored' || item.last_op.status === 'failure';
+            return item.stored === 'notstored' || item.last_op.status === 'failure' || (item.last_op.status === 'inprogress' && item.last_op.prev_op_status === 'failure');
         },
         can_remove: function (item) {
             return item.stored !== 'removing';
@@ -118,6 +120,12 @@ export default {
         add: function (item) {
             item.show_password = false;
             item.stored = "notstored";
+            item.editing = false;
+            item.last_op = {
+                id: undefined,
+                status: undefined,
+                prev_op_status: undefined
+            };
             this.items.push(item);
 
             this.save(item);
@@ -126,7 +134,8 @@ export default {
             item.stored = "storing";
             this.$set(item, 'last_op', {
                 id: utls.generateUniqueId(),
-                status: 'inprogress'
+                status: 'inprogress',
+                prev_op_status: item.last_op.status
             });
             this.$store.dispatch('add_entry', item).then((id) => {
                 item.stored = "stored";
@@ -148,7 +157,8 @@ export default {
             const oldlastop = item.last_op;
             this.$set(item, 'last_op', {
                 id: utls.generateUniqueId(),
-                status: 'inprogress'
+                status: 'inprogress',
+                prev_op_status: item.last_op.status
             });
 
             const this_op_id = item.last_op.id;

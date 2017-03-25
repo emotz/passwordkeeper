@@ -16,7 +16,7 @@ module.exports = {
             'bootstrap.css$': 'bootstrap/dist/css/bootstrap.min.css'
         }
     },
-    //devtool: 'cheap-module-eval-source-map',
+    devtool: 'cheap-module-eval-source-map',
     plugins: [
         // for proper bootstrap loading
         new webpack.ProvidePlugin({
