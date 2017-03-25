@@ -124,10 +124,10 @@ export default {
         },
         save: function (item) {
             item.stored = "storing";
-            item.last_op = {
+            this.$set(item, 'last_op', {
                 id: utls.generateUniqueId(),
                 status: 'inprogress'
-            };
+            });
             this.$store.dispatch('add_entry', item).then((id) => {
                 item.stored = "stored";
                 item.last_op.status = "success";
@@ -146,10 +146,11 @@ export default {
             const oldstored = item.stored;
             item.stored = "removing";
             const oldlastop = item.last_op;
-            item.last_op = {
+            this.$set(item, 'last_op', {
                 id: utls.generateUniqueId(),
                 status: 'inprogress'
-            };
+            });
+
             const this_op_id = item.last_op.id;
 
             this.$store.dispatch('remove_entry_by_id', item.id)
@@ -162,7 +163,7 @@ export default {
                     _.delay(() => {
                         if (item.last_op.id === this_op_id) {
                             // means no other operation was performed since we tried
-                            item.last_op = oldlastop;
+                            this.$set(item, 'last_op', oldlastop);
                             // making impression like we never tried
                         }
                     }, 5000);
