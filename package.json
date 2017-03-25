@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "bootstrap-webpack": "0.0.6",
+    "copy-webpack-plugin": "^4.0.1",
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
@@ -34,9 +35,10 @@
   },
   "scripts": {
     "dev": "cd fe && ws & exit 0",
-    "build": "cd fe && mkdir dist & cp src/index.css dist && cp src/index.html dist && webpack & exit 0",
+    "build": "cd fe && webpack & exit 0",
+    "build-watch": "cd fe && webpack --watch --progress --color & exit 0",
     "unit-test": "cd fe && karma start & exit 0",
-    "e2e-test": "npm run build && start /b cmd /c npm run dev 2>NUL & nightwatch & exit 0",
+    "e2e-test": "nightwatch & exit 0",
     "all-test": "npm run unit-test && npm run e2e-test"
   },
   "repository": {

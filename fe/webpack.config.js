@@ -1,5 +1,6 @@
-var path = require('path');
-var webpack = require('webpack');
+let path = require('path');
+let webpack = require('webpack');
+let CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: ['font-awesome-webpack', './src/index.js'],
@@ -24,8 +25,18 @@ module.exports = {
         }),
         new webpack.EnvironmentPlugin({
             NODE_ENV: 'development'
-        })
+        }),
+        new CopyWebpackPlugin([
+            { from: 'src/index.html' },
+            { from: 'src/index.css' }
+        ])
     ],
+    watch: false,
+    watchOptions: {
+        aggregateTimeout: 300,
+        // poll: 1000,
+        ignored: /node_modules/
+    },
     module: {
         loaders: [
             // the url-loader uses DataUrls. 
