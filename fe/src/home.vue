@@ -8,7 +8,7 @@
                 <span v-else-if="num_of_entries < 5">You are doing great! Keep going! Store some more passwords!</span>
                 <span v-else-if="num_of_entries < 10">Well you should slow down, you have too many password :(</span>
                 <span v-else-if="num_of_entries < 15">OMG you are passwordniac with so many passwords!</span>
-                <async-button class="btn btn-primary"
+                <async-button class="btn btn-primary btn-refresh-all-pass"
                               :can-execute="true"
                               :action="get_entries">
                     <slot>Fetch all passwords from server</slot>

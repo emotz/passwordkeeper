@@ -17,7 +17,7 @@ const mockResponses = [
             //     return;
             // }
 
-            ctx.body = entries.find(entry => entry.id === Number(id));
+            ctx.body = entries.find(entry => entry.id === id);
         }
     },
 
@@ -65,7 +65,7 @@ const mockResponses = [
             //     return;
             // }
 
-            const existingEntryIndex = entries.findIndex(entry => entry.id === Number(id));
+            const existingEntryIndex = entries.findIndex(entry => entry.id === id);
             entries.splice(existingEntryIndex, 1);
             ctx.status = 200;
         }

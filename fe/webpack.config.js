@@ -13,6 +13,7 @@ module.exports = {
             'vue$': 'vue/dist/vue.esm.js' // required to bundle vue with compiler so it can process templates
         }
     },
+    //devtool: 'cheap-module-eval-source-map',
     plugins: [
         // for proper bootstrap loading
         new webpack.ProvidePlugin({
