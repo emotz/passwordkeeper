@@ -1,6 +1,12 @@
 <template>
     <div class="pass-list panel panel-primary"
          :id="`pass-list-${_uid}`">
+        <pass-editor :show="show_edit"
+                     :title="editing_title"
+                     :user="editing_user"
+                     :password="editing_password"
+                     @cancel="cancel_edit"
+                     @edit="edit"></pass-editor>
         <div class="panel-heading">
             <h3 class="panel-title">Stored passwords</h3>
         </div>
@@ -34,6 +40,9 @@
                                   :class="{'blur': !item.show_password}">{{ item.password }}</span>
                         </td>
                         <td>
+                            <button :disabled="editing_item !== undefined"
+                                    class="btn btn-default"
+                                    @click="editing_item = item"><span class="fa fa-edit"></span></button>
                             <button v-if="can_remove(item)"
                                     class="btn btn-danger btn-pass-remove"
                                     @click="remove(index)"><span class="fa fa-remove"></span></button>
@@ -58,13 +67,14 @@
 
 <script>
 import PassAdder from './pass-adder.vue';
+import PassEditor from './pass-editor.vue';
 import visible from './directives/visible.js';
 
 import * as utls from './utility.js';
 
 export default {
     directives: { visible },
-    components: { PassAdder },
+    components: { PassAdder, PassEditor },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {
             return {
@@ -78,17 +88,29 @@ export default {
                     id: undefined,
                     status: undefined,
                     prev_op_status: undefined
-                },
-                editing: false
+                }
             };
         }, this);
         return {
-            items: items
+            items: items,
+            editing_item: undefined
         };
     },
     computed: {
         state_entries() {
             return this.$store.state.entries;
+        },
+        show_edit() {
+            return this.editing_item !== undefined;
+        },
+        editing_title() {
+            return (this.editing_item || {}).title;
+        },
+        editing_user() {
+            return (this.editing_item || {}).user;
+        },
+        editing_password() {
+            return (this.editing_item || {}).password;
         }
     },
     watch: {
@@ -101,8 +123,7 @@ export default {
                         id: undefined,
                         status: undefined,
                         prev_op_status: undefined
-                    },
-                    editing: false
+                    }
                 };
             });
         }
@@ -120,7 +141,6 @@ export default {
         add: function (item) {
             item.show_password = false;
             item.stored = "notstored";
-            item.editing = false;
             item.last_op = {
                 id: undefined,
                 status: undefined,
@@ -129,6 +149,17 @@ export default {
             this.items.push(item);
 
             this.save(item);
+        },
+        edit: function (item) {
+            this.editing_item.title = item.title;
+            this.editing_item.user = item.user;
+            this.editing_item.password = item.password;
+            this.editing_item.stored = "notstored";
+
+            this.save(this.editing_item);
+        },
+        cancel_edit: function () {
+            this.editing_item = undefined;
         },
         save: function (item) {
             item.stored = "storing";
@@ -199,6 +230,6 @@ export default {
 }
 
 th:last-child {
-    width: 100px;
+    width: 140px;
 }
 </style>
