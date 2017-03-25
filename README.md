@@ -6,6 +6,8 @@ Simple storage for passwords.
 
 Install [nightwatch](http://nightwatchjs.org/getingstarted#installation)
 
+Put selenium-related jars into `bin` directory in the root.
+
 Then additional requirements:
 
 ```bat
