@@ -13,12 +13,12 @@ module.exports = {
             .setValue('.pass-adder .user-input', 'test user')
             .setValue('.pass-adder .pass-input', 'test password')
             .click('.pass-adder .btn-pass-add')
-            .useXpath().waitForElementVisible("//div[contains(@class, 'pass-list')]//td[contains(text(), 'test title')]", 1000);
+            .useXpath().waitForElementVisible("//div[contains(@class, 'pass-list')]//td[contains(text(), 'test title')]", 1000).useCss();
     },
     'Home can remove pass': function (browser) {
         browser
-            .useXpath().click("//tr[td[contains(text(), 'test title')]]/td/button[contains(@class, 'btn-pass-remove')]")
-            .useXpath().waitForElementNotPresent("//tr[td[contains(text(), 'test title')]]", 1000);
+            .useXpath().click("//tr[td[contains(text(), 'test title')]]/td/button[contains(@class, 'btn-pass-remove')]").useCss()
+            .useXpath().waitForElementNotPresent("//tr[td[contains(text(), 'test title')]]", 1000).useCss();
     },
     'end': function (browser) {
         browser.end();

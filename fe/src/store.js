@@ -17,6 +17,10 @@ export default new Vuex.Store({
         add_entry(state, entry) {
             state.entries.push(entry);
         },
+        update_entry(state, entry) {
+            let i = state.entries.findIndex(e => e.id === entry.id);
+            state.entries.splice(i, 1, entry);
+        },
         remove_entry_by_index(state, entryIndex) {
             state.entries.splice(entryIndex, 1);
         },
@@ -58,6 +62,30 @@ export default new Vuex.Store({
                         reject(res);
                     });
             });
+        },
+        update_entry(context, entry) {
+            return new Promise((resolve, reject) => {
+                let resource = Vue.resource('entries{/id}');
+
+                let entry_to_send = {
+                    id: entry.id,
+                    user: entry.user,
+                    title: entry.title,
+                    password: entry.password
+                };
+                resource
+                    .update({ id: entry_to_send.id }, entry_to_send)
+                    .then(response => {
+                        context.commit("update_entry", entry_to_send);
+                        toastr.success("Item successfully updated.");
+                        resolve(entry);
+                    }, response => {
+                        const res = response.status === 408 ? 'Request timed-out when updating item.' : (response.body || "Couldn't update item.");
+                        toastr.error(res);
+                        reject(res);
+                    });
+            });
+
         },
         remove_entry_by_id(context, id) {
             return new Promise((resolve, reject) => {

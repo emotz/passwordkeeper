@@ -4,6 +4,9 @@ module.exports = {
             .url(browser.launchUrl + '/home')
             .waitForElementVisible('#footer', 1000);
     },
+    'wait': function (browser) {
+        browser.waitForElementVisible('.pass-adder .btn-pass-add', 1000);
+    },
     'add passes': function (browser) {
         browser
             .setValue('.pass-adder .title-input', 'first title')

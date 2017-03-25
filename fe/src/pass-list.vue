@@ -40,8 +40,8 @@
                                   :class="{'blur': !item.show_password}">{{ item.password }}</span>
                         </td>
                         <td>
-                            <button :disabled="editing_item !== undefined"
-                                    class="btn btn-default"
+                            <button :disabled="!can_edit(item)"
+                                    class="btn btn-default btn-pass-edit"
                                     @click="editing_item = item"><span class="fa fa-edit"></span></button>
                             <button v-if="can_remove(item)"
                                     class="btn btn-danger btn-pass-remove"
@@ -132,6 +132,9 @@ export default {
         requires_attention: function (item) {
             return item.stored === 'notstored' || item.last_op.status === 'failure' || (item.last_op.status === 'inprogress' && item.last_op.prev_op_status === 'failure');
         },
+        can_edit: function (item) {
+            return this.editing_item === undefined && item.last_op.status !== 'inprogress';
+        },
         can_remove: function (item) {
             return item.stored !== 'removing';
         },
@@ -156,7 +159,23 @@ export default {
             this.editing_item.password = item.password;
             this.editing_item.stored = "notstored";
 
-            this.save(this.editing_item);
+            let updating_item = this.editing_item;
+            this.editing_item = undefined;
+
+            updating_item.stored = "storing";
+            // TODO: there is a possibility (theoretical) that last_op will be rewritten by another operation before this one finishes
+            this.$set(updating_item, 'last_op', {
+                id: utls.generateUniqueId(),
+                status: 'inprogress',
+                prev_op_status: updating_item.last_op.status
+            });
+            this.$store.dispatch('update_entry', updating_item).then(() => {
+                updating_item.stored = "stored";
+                updating_item.last_op.status = "success";
+            }, () => {
+                updating_item.stored = "notstored";
+                updating_item.last_op.status = "failure";
+            });
         },
         cancel_edit: function () {
             this.editing_item = undefined;
