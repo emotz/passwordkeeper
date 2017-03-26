@@ -8,7 +8,7 @@ Vue.use(Vuex);
 Vue.use(VueResource);
 
 export default new Vuex.Store({
-    strict: true, // TODO Only for Debug (process.env.NODE_ENV !== 'production')
+    strict: process.env.NODE_ENV === 'development',
 
     state: {
         entries: []

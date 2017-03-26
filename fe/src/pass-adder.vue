@@ -22,7 +22,6 @@
                    v-model="user">
         </div>
         <div class="form-group">
-            <!--TODO get rid of hardcoded ids ? wouldnt be able to reuse component-->
             <label :for="`pass-input-${_uid}`">Password</label>
             <div class="input-group">
                 <input v-if="show_password"
@@ -50,6 +49,8 @@
 </template>
 
 <script>
+import * as PassValidator from './pass-validator.js';
+
 export default {
     data: function () {
         return {
@@ -63,14 +64,17 @@ export default {
     },
     methods: {
         add: function () {
-            if (this.title.length <= 0) this.title_error = true;
-            if (this.user.length <= 0) this.user_error = true;
-            if (this.title.length > 0 && this.user.length > 0) {
-                this.$emit('added', {
-                    title: this.title,
-                    user: this.user,
-                    password: this.password
-                });
+            let item_to_add = {
+                title: this.title,
+                user: this.user,
+                password: this.password
+            };
+
+            let validation_result = PassValidator.validate(item_to_add);
+            if (validation_result.title_errors.length > 0) this.title_error = true;
+            if (validation_result.user_errors.length > 0) this.user_error = true;
+            if (validation_result.is_valid()) {
+                this.$emit('added', item_to_add);
             }
         }
     },

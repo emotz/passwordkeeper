@@ -2,7 +2,7 @@
     <div class="pass-editor"
          :id="`pass-editor-${_uid}`">
         <modal title="Edit password entry"
-               :show="show_modal()"
+               :show="show"
                @ok="ok"
                @cancel="cancel">
             <div class="form-group"
@@ -26,7 +26,6 @@
                        v-model="editable_user">
             </div>
             <div class="form-group">
-                <!--TODO get rid of hardcoded ids ? wouldnt be able to reuse component-->
                 <label :for="`pass-input-${_uid}`">Password</label>
                 <div class="input-group">
                     <input v-if="show_password"
@@ -52,7 +51,7 @@
 </template>
 
 <script>
-
+import * as PassValidator from './pass-validator.js';
 import Modal from 'vue-bootstrap-modal';
 
 export default {
@@ -69,18 +68,18 @@ export default {
         };
     },
     methods: {
-        show_modal: function () {
-            return this.show;
-        },
         ok: function () {
-            if (this.editable_title.length <= 0) this.title_error = true;
-            if (this.editable_user.length <= 0) this.user_error = true;
-            if (this.editable_title.length > 0 && this.editable_user.length > 0) {
-                this.$emit('edit', {
-                    title: this.editable_title,
-                    user: this.editable_user,
-                    password: this.editable_password
-                });
+            let item_to_add = {
+                title: this.editable_title,
+                user: this.editable_user,
+                password: this.editable_password
+            };
+
+            let validation_result = PassValidator.validate(item_to_add);
+            if (validation_result.title_errors.length > 0) this.title_error = true;
+            if (validation_result.user_errors.length > 0) this.user_error = true;
+            if (validation_result.is_valid()) {
+                this.$emit('edit', item_to_add);
             }
         },
         cancel: function () {
