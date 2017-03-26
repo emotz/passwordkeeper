@@ -1,4 +1,5 @@
 import toastr from 'toastr';
+import 'toastr.css';
 
 function success(message) {
     toastr.success(message);

@@ -7,9 +7,10 @@ import AppNav from './app-nav.vue';
 import router from './router.js';
 import store from './store.js';
 
+import './progressbar.js';
+
 import 'bootstrap';
 import 'bootstrap.css';
-import 'toastr.css';
 import './app.css';
 
 const app = new Vue({

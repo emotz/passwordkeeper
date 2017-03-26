@@ -13,7 +13,8 @@ module.exports = {
             'src': './src',
             'vue$': 'vue/dist/vue.esm.js', // required to bundle vue with compiler so it can process templates
             'toastr.css$': 'toastr/build/toastr.min.css',
-            'bootstrap.css$': 'bootstrap/dist/css/bootstrap.min.css'
+            'bootstrap.css$': 'bootstrap/dist/css/bootstrap.min.css',
+            'nprogress.css$': 'nprogress/nprogress.css'
         }
     },
     devtool: 'cheap-module-eval-source-map',
