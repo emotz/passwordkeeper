@@ -10,7 +10,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-            'src': './src',
+            'src': path.resolve(__dirname, 'src'),
             'vue$': 'vue/dist/vue.esm.js', // required to bundle vue with compiler so it can process templates
             'toastr.css$': 'toastr/build/toastr.min.css',
             'bootstrap.css$': 'bootstrap/dist/css/bootstrap.min.css',

@@ -32,7 +32,7 @@ class DispatchManager {
             let params = this.queue.splice(0, 1)[0];
             if (params === undefined) return;
             do_work(...params);
-        }
+        };
 
         let do_work = (dispatchobj, name, payload, resolve, reject) => {
             /** @type {DispatchCommand} */

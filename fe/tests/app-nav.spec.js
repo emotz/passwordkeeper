@@ -1,6 +1,6 @@
 import { Vue } from './vue-helper.js';
 
-import AppNav from 'src/app-nav.vue';
+import AppNav from 'src/components/app-nav.vue';
 import router from 'src/router.js';
 
 describe("app-nav tests", function () {

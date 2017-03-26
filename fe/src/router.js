@@ -3,8 +3,8 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-import Home from './home.vue';
-import About from './about.vue';
+import Home from 'src/components/home.vue';
+import About from 'src/components/about.vue';
 
 const routes = [
     { path: '', redirect: "/home" },

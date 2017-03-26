@@ -22,7 +22,7 @@
 <script>
 import PassList from './pass-list.vue';
 import AsyncButton from './async-button.vue';
-import * as utls from './utility.js';
+import * as utls from 'src/utility.js';
 
 export default {
     components: { PassList, AsyncButton },

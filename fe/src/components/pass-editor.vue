@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import * as PassValidator from './pass-validator.js';
+import * as PassValidator from 'src/pass-validator.js';
 import Modal from 'vue-bootstrap-modal';
 
 export default {

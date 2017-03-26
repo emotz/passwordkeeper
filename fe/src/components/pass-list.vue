@@ -68,10 +68,10 @@
 <script>
 import PassAdder from './pass-adder.vue';
 import PassEditor from './pass-editor.vue';
-import Visible from './directives/visible.js';
+import Visible from 'src/directives/visible.js';
 
-import * as dispatcher from './dispatcher.js';
-import * as utls from './utility.js';
+import * as dispatcher from 'src/dispatcher.js';
+import * as utls from 'src/utility.js';
 
 export default {
     directives: { Visible },

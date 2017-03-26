@@ -1,9 +1,11 @@
+import * as utls from './utility.js';
+
 /**
  * Has to be Plain Object class to use as Vue data
  */
 class DispatchOp {
     constructor(status, name) {
-        this.id = _.uniqueId();
+        this.id = utls.generateUniqueId();
         /** 
          * Can be one of 'inprogress', 'success', 'failure'
          * @type {string} 

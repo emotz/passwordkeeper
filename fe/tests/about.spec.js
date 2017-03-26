@@ -1,5 +1,5 @@
 import { Vue } from './vue-helper.js';
-import About from 'src/about.vue';
+import About from 'src/components/about.vue';
 
 describe("about tests", function () {
     it("should contain greeting message", function () {

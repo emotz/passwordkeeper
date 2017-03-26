@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import * as PassValidator from './pass-validator.js';
+import * as PassValidator from 'src/pass-validator.js';
 
 export default {
     data: function () {
