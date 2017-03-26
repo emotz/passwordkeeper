@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 
-import toastr from 'toastr';
+import notify from './notify.js';
 
 Vue.use(Vuex);
 Vue.use(VueResource);
@@ -54,11 +54,11 @@ export default new Vuex.Store({
                         entry.id = id;
                         entry_to_send.id = entry.id;
                         context.commit("add_entry", entry_to_send);
-                        toastr.success("Item stored.");
+                        notify.success("Item stored.");
                         resolve(entry.id);
                     }, response => {
                         const res = response.status === 408 ? 'Request timed-out when storing item.' : (response.body || "Couldn't store item.");
-                        toastr.error(res);
+                        notify.error(res);
                         reject(res);
                     });
             });
@@ -77,11 +77,11 @@ export default new Vuex.Store({
                     .update({ id: entry_to_send.id }, entry_to_send)
                     .then(response => {
                         context.commit("update_entry", entry_to_send);
-                        toastr.success("Item updated.");
+                        notify.success("Item updated.");
                         resolve(entry);
                     }, response => {
                         const res = response.status === 408 ? 'Request timed-out when updating item.' : (response.body || "Couldn't update item.");
-                        toastr.error(res);
+                        notify.error(res);
                         reject(res);
                     });
             });
@@ -99,11 +99,11 @@ export default new Vuex.Store({
                             context.commit("remove_entry_by_index", index);
                         }
 
-                        toastr.success("Item removed.");
+                        notify.success("Item removed.");
                         resolve();
                     }, response => {
                         const res = response.status === 408 ? 'Request timed-out when removing item.' : (response.body || "Couldn't remove item.");
-                        toastr.error(res);
+                        notify.error(res);
                         reject(res);
                     });
             });
@@ -116,11 +116,11 @@ export default new Vuex.Store({
                     .get()
                     .then(response => {
                         context.commit("set_entries", response.body);
-                        toastr.success("Items fetched.");
+                        notify.success("Items fetched.");
                         resolve();
                     }, response => {
                         const res = response.status === 408 ? 'Request timed-out when fetching items.' : (response.body || "Could't fetch all items");
-                        toastr.error(res);
+                        notify.error(res);
                         reject(res);
                     });
             });

@@ -69,7 +69,6 @@
 import PassAdder from './pass-adder.vue';
 import PassEditor from './pass-editor.vue';
 import Visible from './directives/visible.js';
-import toastr from 'toastr';
 
 import * as dispatcher from './dispatcher.js';
 import * as utls from './utility.js';
