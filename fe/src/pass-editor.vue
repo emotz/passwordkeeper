@@ -13,7 +13,7 @@
                        class="title-input form-control"
                        :id="`title-input-${_uid}`"
                        placeholder="mysite.com"
-                       v-model="editable_title">
+                       v-model="title">
             </div>
             <div class="form-group"
                  :class="{'has-error': user_error}">
@@ -23,7 +23,7 @@
                        class="user-input form-control"
                        :id="`user-input-${_uid}`"
                        placeholder="jane.doe@example.com"
-                       v-model="editable_user">
+                       v-model="user">
             </div>
             <div class="form-group">
                 <label :for="`pass-input-${_uid}`">Password</label>
@@ -33,13 +33,13 @@
                            class="pass-input form-control"
                            :id="`pass-input-${_uid}`"
                            placeholder="Password123"
-                           v-model="editable_password">
+                           v-model="password">
                     <input v-else
                            type="password"
                            class="pass-input form-control"
                            :id="`pass-input-${_uid}`"
                            placeholder="Password123"
-                           v-model="editable_password">
+                           v-model="password">
                     <div class="btn btn-default input-group-addon"
                          @click="show_password = !show_password"
                          :class="{'active': show_password}"
@@ -56,12 +56,13 @@ import Modal from 'vue-bootstrap-modal';
 
 export default {
     components: { Modal },
-    props: ['title', 'user', 'password', 'show'],
+    props: ['item', 'show'],
     data: function () {
+        let item = this.item === undefined ? {} : this.item;
         return {
-            editable_title: this.title,
-            editable_user: this.user,
-            editable_password: this.password,
+            title: item.title,
+            user: item.user,
+            password: item.password,
             title_error: false,
             user_error: false,
             show_password: false
@@ -70,9 +71,9 @@ export default {
     methods: {
         ok: function () {
             let item_to_add = {
-                title: this.editable_title,
-                user: this.editable_user,
-                password: this.editable_password
+                title: this.title,
+                user: this.user,
+                password: this.password
             };
 
             let validation_result = PassValidator.validate(item_to_add);
@@ -87,16 +88,16 @@ export default {
         }
     },
     watch: {
-        title: function (val) {
+        'item.title': function (val) {
             this.title_error = false;
-            this.editable_title = val;
+            this.title = val;
         },
-        user: function (val) {
+        'item.user': function (val) {
             this.user_error = false;
-            this.editable_user = val;
+            this.user = val;
         },
-        password: function (val) {
-            this.editable_password = val;
+        'item.password': function (val) {
+            this.password = val;
         }
     }
 }

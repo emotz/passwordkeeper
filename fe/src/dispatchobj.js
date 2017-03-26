@@ -38,6 +38,18 @@ function get_last_op(dispatchobj) {
 /**
  * 
  * @param {DispatchObj} dispatchobj 
+ * @returns {DispatchOp} Returns operation object of operation preceeding last one or empty object if no operations were handled yet.
+ */
+function get_last_last_op(dispatchobj) {
+    let l = dispatchobj.history.length;
+    if (l <= 1) return {};
+    let last_op = dispatchobj.history[l - 2];
+    return last_op;
+}
+
+/**
+ * 
+ * @param {DispatchObj} dispatchobj 
  * @param {DispatchOp} op 
  * @returns {DispatchOp} Newly added operation object
  */
@@ -56,4 +68,4 @@ function update_op_status(dispatchobj, op, status) {
     op.status = status;
 }
 
-export { DispatchOp, DispatchObj, get_last_op, add_new_op, update_op_status };
+export { DispatchOp, DispatchObj, get_last_op, add_new_op, update_op_status, get_last_last_op };

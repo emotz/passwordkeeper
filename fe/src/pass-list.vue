@@ -1,12 +1,10 @@
 <template>
     <div class="pass-list panel panel-primary"
          :id="`pass-list-${_uid}`">
-        <pass-editor :show="show_edit"
-                     :title="editing_title"
-                     :user="editing_user"
-                     :password="editing_password"
+        <pass-editor :show="editing_item !== undefined"
+                     :item="editing_item"
                      @cancel="cancel_edit"
-                     @edit="edit"></pass-editor>
+                     @edit="apply_edit"></pass-editor>
         <div class="panel-heading">
             <h3 class="panel-title">Stored passwords</h3>
         </div>
@@ -43,18 +41,20 @@
                             <button :disabled="!can_edit(item)"
                                     class="btn btn-default btn-pass-edit"
                                     @click="editing_item = item"><span class="fa fa-edit"></span></button>
-                            <button v-if="can_remove(item)"
-                                    class="btn btn-danger btn-pass-remove"
-                                    @click="remove(index)"><span class="fa fa-remove"></span></button>
-                            <button v-if="item.stored === 'removing'"
+                            <button v-if="is_removing(item)"
                                     class="btn btn-danger btn-pass-remove"
                                     disabled><span class="fa fa-remove fa-spin"></span></button>
-                            <button v-if="can_save(item)"
-                                    class="btn btn-primary"
-                                    @click="save(item)"><span class="fa fa-save"></span></button>
-                            <button v-if="item.stored === 'storing'"
+                            <button v-else
+                                    v-visible="can_remove(item)"
+                                    class="btn btn-danger btn-pass-remove"
+                                    @click="remove(item)"><span class="fa fa-remove"></span></button>
+                            <button v-if="is_saving(item)"
                                     class="btn btn-primary"
                                     disabled><span class="fa fa-save fa-spin"></span></button>
+                            <button v-else
+                                    v-visible="can_save(item)"
+                                    class="btn btn-primary"
+                                    @click="save(item)"><span class="fa fa-save"></span></button>
                         </td>
                     </tr>
                 </transition-group>
@@ -68,12 +68,14 @@
 <script>
 import PassAdder from './pass-adder.vue';
 import PassEditor from './pass-editor.vue';
-import visible from './directives/visible.js';
+import Visible from './directives/visible.js';
+import toastr from 'toastr';
 
+import * as dispatcher from './dispatcher.js';
 import * as utls from './utility.js';
 
 export default {
-    directives: { visible },
+    directives: { Visible },
     components: { PassAdder, PassEditor },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {
@@ -84,11 +86,7 @@ export default {
                 password: element.password,
                 show_password: false,
                 stored: "stored",
-                last_op: {
-                    id: undefined,
-                    status: undefined,
-                    prev_op_status: undefined
-                }
+                dispatcher: new dispatcher.DispatchObj()
             };
         }, this);
         return {
@@ -96,138 +94,139 @@ export default {
             editing_item: undefined
         };
     },
+    created() {
+        let that = this;
+
+        this._dispatch_manager = new dispatcher.DispatchManager({
+            dummy: {
+                action() { return Promise.resolve(); }
+            },
+            add: {
+                action(item) {
+                    that.items.push(item);
+                    // TODO: here store.dispatch assigns id to item on success by itself :(
+                    return that.$store.dispatch('add_entry', item).then((id) => {
+                        item.stored = "stored";
+                        return id;
+                    });
+                }
+            },
+            save: {
+                action(item) {
+                    // TODO: here store.dispatch assigns id to item on success by itself :(
+                    return that.$store.dispatch('add_entry', item).then((id) => {
+                        item.stored = "stored";
+                        return id;
+                    });
+                }
+            },
+            update: {
+                action(item) {
+                    item.stored = "notstored";
+                    return that.$store.dispatch('update_entry', item).then(val => {
+                        item.stored = "stored";
+                        return val;
+                    });
+                }
+            },
+            remove: {
+                action(item) {
+                    if (item.id === undefined) {
+                        let index = that.items.indexOf(item);
+                        that.items.splice(index, 1);
+                        return Promise.resolve();
+                    }
+
+                    let promise = that.$store.dispatch('remove_entry_by_id', item.id);
+                    let op_id = that.get_last_op(item).id;
+
+                    return promise
+                        .then(val => {
+                            item.stored = "notstored";
+                            return val;
+                        }, val => {
+                            _.delay(() => {
+                                let last_op_id = that.get_last_op(item).id;
+                                if (op_id === last_op_id) {
+                                    // means no other operation was performed since we tried
+                                    that._dispatch_manager.enqueue(item.dispatcher, 'dummy');
+                                    // adding dummy operation to shut up `requires_attention`
+                                }
+                            }, 5000);
+                            throw val;
+                        });
+                }
+            }
+        });
+    },
     computed: {
         state_entries() {
             return this.$store.state.entries;
-        },
-        show_edit() {
-            return this.editing_item !== undefined;
-        },
-        editing_title() {
-            return (this.editing_item || {}).title;
-        },
-        editing_user() {
-            return (this.editing_item || {}).user;
-        },
-        editing_password() {
-            return (this.editing_item || {}).password;
         }
     },
     watch: {
-        state_entries: function (new_entries) {
+        state_entries(new_entries) {
             utls.merge_arrays_of_objects(this.items, new_entries, "id", () => {
                 return {
                     show_password: false,
                     stored: "stored",
-                    last_op: {
-                        id: undefined,
-                        status: undefined,
-                        prev_op_status: undefined
-                    }
+                    dispatcher: new dispatcher.DispatchObj()
                 };
             });
         }
     },
     methods: {
-        requires_attention: function (item) {
-            return item.stored === 'notstored' || item.last_op.status === 'failure' || (item.last_op.status === 'inprogress' && item.last_op.prev_op_status === 'failure');
+        get_last_op(item) {
+            return dispatcher.get_last_op(item.dispatcher);
         },
-        can_edit: function (item) {
-            return this.editing_item === undefined && item.last_op.status !== 'inprogress';
+        get_last_last_op(item) {
+            return dispatcher.get_last_last_op(item.dispatcher);
         },
-        can_remove: function (item) {
-            return item.stored !== 'removing';
+        requires_attention(item) {
+            let last_op = this.get_last_op(item);
+            return (item.stored === 'notstored' && !this.is_saving(item)) || last_op.status === 'failure' || (last_op.status === 'inprogress' && this.get_last_last_op(item).status === 'failure');
         },
-        can_save: function (item) {
-            return item.stored === 'notstored';
+        cancel_edit() {
+            this.editing_item = undefined;
         },
-        add: function (item) {
+        can_edit(item) {
+            return this.editing_item === undefined && this._dispatch_manager.can_dispatch(item.dispatcher);
+        },
+        can_remove(item) {
+            return this._dispatch_manager.can_dispatch(item.dispatcher);
+        },
+        is_removing(item) {
+            let last_op = this.get_last_op(item);
+            return last_op.name === 'remove' && last_op.status === 'inprogress';
+        },
+        can_save(item) {
+            return item.stored === 'notstored' && this._dispatch_manager.can_dispatch(item.dispatcher);
+        },
+        is_saving(item) {
+            let last_op = this.get_last_op(item);
+            return (last_op.name === 'save' || last_op.name === 'add') && last_op.status === 'inprogress';
+        },
+        add(item) {
             item.show_password = false;
             item.stored = "notstored";
-            item.last_op = {
-                id: undefined,
-                status: undefined,
-                prev_op_status: undefined
-            };
-            this.items.push(item);
-
-            this.save(item);
+            item.dispatcher = new dispatcher.DispatchObj();
+            this._dispatch_manager.dispatch(item.dispatcher, 'add', item);
         },
-        edit: function (item) {
+        apply_edit(item) {
             this.editing_item.title = item.title;
             this.editing_item.user = item.user;
             this.editing_item.password = item.password;
-            this.editing_item.stored = "notstored";
 
-            let updating_item = this.editing_item;
+            item = this.editing_item;
             this.editing_item = undefined;
 
-            updating_item.stored = "storing";
-            // TODO: there is a possibility (theoretical) that last_op will be rewritten by another operation before this one finishes
-            this.$set(updating_item, 'last_op', {
-                id: utls.generateUniqueId(),
-                status: 'inprogress',
-                prev_op_status: updating_item.last_op.status
-            });
-            this.$store.dispatch('update_entry', updating_item).then(() => {
-                updating_item.stored = "stored";
-                updating_item.last_op.status = "success";
-            }, () => {
-                updating_item.stored = "notstored";
-                updating_item.last_op.status = "failure";
-            });
+            this._dispatch_manager.dispatch(item.dispatcher, 'update', item);
         },
-        cancel_edit: function () {
-            this.editing_item = undefined;
+        save(item) {
+            this._dispatch_manager.dispatch(item.dispatcher, 'save', item);
         },
-        save: function (item) {
-            item.stored = "storing";
-            this.$set(item, 'last_op', {
-                id: utls.generateUniqueId(),
-                status: 'inprogress',
-                prev_op_status: item.last_op.status
-            });
-            this.$store.dispatch('add_entry', item).then((id) => {
-                item.stored = "stored";
-                item.last_op.status = "success";
-            }, () => {
-                item.stored = "notstored";
-                item.last_op.status = "failure";
-            });
-
-        },
-        remove: function (index) {
-            const item = this.items[index];
-            if (item.id === undefined) {
-                this.items.splice(index, 1);
-                return;
-            }
-            const oldstored = item.stored;
-            item.stored = "removing";
-            const oldlastop = item.last_op;
-            this.$set(item, 'last_op', {
-                id: utls.generateUniqueId(),
-                status: 'inprogress',
-                prev_op_status: item.last_op.status
-            });
-
-            const this_op_id = item.last_op.id;
-
-            this.$store.dispatch('remove_entry_by_id', item.id)
-                .then(() => {
-                    item.stored = "notstored";
-                    item.last_op.status = "success";
-                }, () => {
-                    item.stored = oldstored;
-                    item.last_op.status = "failure";
-                    _.delay(() => {
-                        if (item.last_op.id === this_op_id) {
-                            // means no other operation was performed since we tried
-                            this.$set(item, 'last_op', oldlastop);
-                            // making impression like we never tried
-                        }
-                    }, 5000);
-                });
+        remove(item) {
+            this._dispatch_manager.dispatch(item.dispatcher, 'remove', item);
         }
     }
 }
