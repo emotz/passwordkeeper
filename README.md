@@ -1,6 +1,6 @@
 # PasswordKeeper
 
-Simple storage for passwords.
+Simple storage for passwords. Но это не точно!
 
 ## Tech description
 
