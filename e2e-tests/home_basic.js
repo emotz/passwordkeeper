@@ -13,6 +13,7 @@ module.exports = {
             .setValue('.pass-adder .user-input', 'test user')
             .setValue('.pass-adder .pass-input', 'test password')
             .click('.pass-adder .btn-pass-add')
+            .pause(600)
             .useXpath().waitForElementVisible("//div[contains(@class, 'pass-list')]//td[contains(text(), 'test title')]", 1000).useCss()
             .verify.elementNotPresent("tr.danger");
     },

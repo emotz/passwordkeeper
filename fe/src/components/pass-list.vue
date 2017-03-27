@@ -44,15 +44,13 @@
                             <button v-if="is_removing(item)"
                                     class="btn btn-danger btn-pass-remove"
                                     disabled><span class="fa fa-remove fa-spin"></span></button>
-                            <button v-else
-                                    v-visible="can_remove(item)"
+                            <button v-else-if="can_remove(item)"
                                     class="btn btn-danger btn-pass-remove"
                                     @click="remove(item)"><span class="fa fa-remove"></span></button>
                             <button v-if="is_saving(item)"
                                     class="btn btn-primary"
                                     disabled><span class="fa fa-save fa-spin"></span></button>
-                            <button v-else
-                                    v-visible="can_save(item)"
+                            <button v-else-if="can_save(item)"
                                     class="btn btn-primary"
                                     @click="save(item)"><span class="fa fa-save"></span></button>
                         </td>
@@ -98,7 +96,8 @@ export default {
 
         this._dispatch_manager = new dispatcher.DispatchManager({
             dummy: {
-                action() { return Promise.resolve(); }
+                action() { return Promise.resolve(); },
+                with_delay: false
             },
             add: {
                 action(item) {
@@ -108,7 +107,8 @@ export default {
                         item.stored = "stored";
                         return id;
                     });
-                }
+                },
+                with_delay: true
             },
             save: {
                 action(item) {
@@ -117,16 +117,20 @@ export default {
                         item.stored = "stored";
                         return id;
                     });
-                }
+                },
+                with_delay: true
             },
             update: {
                 action(item) {
-                    item.stored = "notstored";
                     return that.$store.dispatch('update_entry', item).then(val => {
                         item.stored = "stored";
                         return val;
+                    }, val => {
+                        item.stored = "notstored";
+                        throw val;
                     });
-                }
+                },
+                with_delay: true
             },
             remove: {
                 action(item) {
@@ -154,7 +158,8 @@ export default {
                             }, 5000);
                             throw val;
                         });
-                }
+                },
+                with_delay: true
             }
         });
     },
@@ -203,7 +208,7 @@ export default {
         },
         is_saving(item) {
             let last_op = this.get_last_op(item);
-            return (last_op.name === 'save' || last_op.name === 'add') && last_op.status === 'inprogress';
+            return (last_op.name === 'save' || last_op.name === 'add' || last_op.name === 'update') && last_op.status === 'inprogress';
         },
         add(item) {
             item.show_password = false;

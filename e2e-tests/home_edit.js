@@ -13,6 +13,7 @@ module.exports = {
             .setValue('.pass-adder .user-input', 'test user')
             .setValue('.pass-adder .pass-input', 'test password')
             .click('.pass-adder .btn-pass-add')
+            .pause(600)
             .useXpath().waitForElementVisible("//div[contains(@class, 'pass-list')]//td[contains(text(), 'test title')]", 1000).useCss();
     },
     'edit pass': function (browser) {
@@ -22,6 +23,7 @@ module.exports = {
             .clearValue('.pass-editor .title-input')
             .setValue('.pass-editor .title-input', 'new title')
             .useXpath().click("//div[contains(@class, 'pass-editor')]//button[contains(text(), 'OK')]").useCss()
+            .pause(600)
             .useXpath().waitForElementVisible("//div[contains(@class, 'pass-list')]//td[contains(text(), 'new title')]", 1000).useCss()
             .useXpath().verify.elementNotPresent("//div[contains(@class, 'pass-list')]//td[contains(text(), 'test title')]").useCss();
     },
