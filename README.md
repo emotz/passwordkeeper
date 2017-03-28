@@ -1,6 +1,6 @@
 # PasswordKeeper
 
-Simple storage for passwords. Has i18n.
+Simple storage for passwords.
 
 ## Tech description
 
