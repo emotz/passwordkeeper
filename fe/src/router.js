@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import progressbar from './progressbar.js';
 
 Vue.use(VueRouter);
 
@@ -14,7 +15,16 @@ const routes = [
     { path: '/config', component: Config }
 ];
 
-export default new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     routes
 });
+router.beforeEach((to, from, next) => {
+    progressbar.start();
+    next();
+});
+router.afterEach((to, from) => {
+    progressbar.stop();
+});
+
+export default router;

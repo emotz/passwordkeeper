@@ -35,12 +35,14 @@ module.exports = function (config) {
             resolve: {
                 alias: {
                     'src': path.resolve(__dirname, 'src'),
-                    'vue$': 'vue/dist/vue.esm.js' // required to bundle vue with compiler so it can process templates
+                    'vue$': 'vue/dist/vue.esm.js', // required to bundle vue with compiler so it can process templates
+                    'nprogress.css$': 'nprogress/nprogress.css'
                 }
             },
             module: {
                 loaders: [
-                    { test: /\.vue$/, loader: 'vue-loader' }
+                    { test: /\.vue$/, loader: 'vue-loader' },
+                    { test: /\.css$/, use: ['style-loader', 'css-loader'] }
                 ]
             }
         },
