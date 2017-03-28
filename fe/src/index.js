@@ -4,6 +4,7 @@ import 'bootstrap.css';
 import Vue from 'vue';
 
 import './progressbar.js';
+import './i18n.js';
 
 import App from 'src/components/app.vue';
 

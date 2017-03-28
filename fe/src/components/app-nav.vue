@@ -12,6 +12,9 @@
                              to="/home"><a>Home</a></router-link>
                 <router-link active-class="active"
                              tag="li"
+                             to="/config"><a>Config</a></router-link>
+                <router-link active-class="active"
+                             tag="li"
                              to="/about"><a>About</a></router-link>
             </ul>
         </div>

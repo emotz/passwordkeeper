@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 
 import notify from './notify.js';
+import i18n from './i18n.js';
 
 Vue.use(Vuex);
 Vue.use(VueResource);
@@ -11,7 +12,8 @@ export default new Vuex.Store({
     strict: process.env.NODE_ENV === 'development',
 
     state: {
-        entries: []
+        entries: [],
+        locale: ""
     },
     mutations: {
         add_entry(state, entry) {
@@ -26,6 +28,10 @@ export default new Vuex.Store({
         },
         set_entries(state, entries) {
             state.entries = entries;
+        },
+        set_locale(state, new_locale) {
+            state.locale = new_locale;
+            i18n.set_locale(new_locale);
         }
     },
     actions: {

@@ -4,9 +4,9 @@
         <div class="wrapper">
             <div class="container content">
                 <app-nav></app-nav>
-                <keep-alive>
-                    <router-view></router-view>
-                </keep-alive>
+                <!--<keep-alive>-->
+                <router-view></router-view>
+                <!--</keep-alive>-->
             </div>
             <div id="footer">
                 © 2017 Dmitry Mazurok
@@ -29,6 +29,7 @@ export default {
     store,
     created() {
         this.$store.dispatch('get_entries');
+        this.$store.commit('set_locale', 'en');
     }
 }
 </script>
