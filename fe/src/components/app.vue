@@ -29,7 +29,7 @@ export default {
     store,
     created() {
         this.$store.dispatch('get_entries');
-        this.$store.commit('set_locale', 'en');
+        this.$store.commit('locale/set_locale', 'en');
     }
 }
 </script>

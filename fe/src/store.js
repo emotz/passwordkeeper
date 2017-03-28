@@ -8,12 +8,26 @@ import i18n from './i18n.js';
 Vue.use(Vuex);
 Vue.use(VueResource);
 
+const locale = {
+    namespaced: true,
+    state: {
+        locale: ""
+    },
+    mutations: {
+        set_locale(state, new_locale) {
+            state.locale = new_locale;
+            i18n.set_locale(new_locale);
+        }
+    }
+};
+
 export default new Vuex.Store({
     strict: process.env.NODE_ENV === 'development',
-
+    modules: {
+        locale
+    },
     state: {
-        entries: [],
-        locale: ""
+        entries: []
     },
     mutations: {
         add_entry(state, entry) {
@@ -28,10 +42,6 @@ export default new Vuex.Store({
         },
         set_entries(state, entries) {
             state.entries = entries;
-        },
-        set_locale(state, new_locale) {
-            state.locale = new_locale;
-            i18n.set_locale(new_locale);
         }
     },
     actions: {
