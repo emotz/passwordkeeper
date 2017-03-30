@@ -10,6 +10,8 @@ Front-end unit-test specifications are located at `fe/tests`.
 
 End-to-end tests specifications are located at `e2e-tests`.
 
+End-to-end test Page Objects are located at `e2e-po`. These objects are helpers for the e2e-tests.
+
 `Webpack` is used to precompile js scripts and bundle them into single giant js at `fe/dist`. This directory also contains a bunch of precompiled fonts required for `bootstrap` and `index.html` which is an entry point for our SPA app. Webpack config file is `fe/webpack.config.js`.
 
 Development server is `local-web-server`. It is simple http server, designed to be easily mockable and configurable for easy startup. Its config file along with registered routes is `fe/local-web-server.json`. Route-handlers are located at `fe/mocks`.
