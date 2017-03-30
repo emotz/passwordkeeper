@@ -4,14 +4,14 @@
         <div class="jumbotron">
             <h1 v-html="$formatMessage({id: 'home_greeting'})"></h1>
             <p>
-                <span v-if="num_of_entries === 0">Start filling out fields below to store some passwords</span>
-                <span v-else-if="num_of_entries < 5">You are doing great! Keep going! Store some more passwords!</span>
-                <span v-else-if="num_of_entries < 10">Well you should slow down, you have too many password :(</span>
-                <span v-else>OMG you are passwordniac with so many passwords!</span>
+                <span v-if="num_of_entries === 0">{{ $formatMessage({id: 'home_description_nopasswords'}) }}</span>
+                <span v-else-if="num_of_entries < 5">{{ $formatMessage({id: 'home_description_fewpasswords'}) }}</span>
+                <span v-else-if="num_of_entries < 10">{{ $formatMessage({id: 'home_description_manypasswords'}) }}</span>
+                <span v-else>{{ $formatMessage({id: 'home_description_toomanypasswords'}) }}</span>
                 <async-button class="btn btn-primary btn-refresh-all-pass"
                               :can-execute="true"
                               :action="get_entries">
-                    <slot>Fetch all passwords from server</slot>
+                    <slot>{{ $formatMessage({id: 'home_fetch_all_passwords'}) }}</slot>
                 </async-button>
             </p>
         </div>

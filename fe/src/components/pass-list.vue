@@ -6,15 +6,16 @@
                      @cancel="cancel_edit"
                      @edit="apply_edit"></pass-editor>
         <div class="panel-heading">
-            <h3 class="panel-title">Stored passwords</h3>
+            <h3 class="panel-title">{{ $formatMessage({id: 'passlist_panel_title'}) }}</h3>
         </div>
         <div class="panel-body">
-            <table class="table">
+            <table class="table"
+                   v-if="show_passlist">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>User</th>
-                        <th>Password</th>
+                        <th>{{ $formatMessage({id: 'label_title'}) }}</th>
+                        <th>{{ $formatMessage({id: 'label_user'}) }}</th>
+                        <th>{{ $formatMessage({id: 'label_password'}) }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -166,6 +167,9 @@ export default {
     computed: {
         state_entries() {
             return this.$store.state.entries;
+        },
+        show_passlist() {
+            return this.items.length > 0;
         }
     },
     watch: {

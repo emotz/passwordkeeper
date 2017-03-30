@@ -36,7 +36,8 @@ module.exports = function (config) {
                 alias: {
                     'src': path.resolve(__dirname, 'src'),
                     'vue$': 'vue/dist/vue.esm.js', // required to bundle vue with compiler so it can process templates
-                    'nprogress.css$': 'nprogress/nprogress.css'
+                    'nprogress.css$': 'nprogress/nprogress.css', // TODO: I dont like that we need to add css files for unit tests. Should work on some ways to mock em
+                    'toastr.css$': 'toastr/build/toastr.min.css',
                 }
             },
             module: {

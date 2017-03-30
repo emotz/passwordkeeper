@@ -7,20 +7,20 @@
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Configration parameters</h3>
+                <h3 class="panel-title">{{ $formatMessage({id: 'config_panel_title'}) }}</h3>
             </div>
             <div class="panel-body">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label :for="`config-locale-${_uid}`"
-                               class="col-sm-2 control-label">Locale</label>
+                               class="col-sm-2 control-label">{{ $formatMessage({id: 'config_label_language'}) }}</label>
                         <div class="col-sm-1">
-                            <select class="form-control"
+                            <select class="form-control config-locale-input"
                                     :id="`config-locale-${_uid}`"
                                     v-model="locale">
                                 <!--TODO: fill in options using available ones-->
-                                <option>en</option>
-                                <option>ru</option>
+                                <option value="en">en</option>
+                                <option value="ru">ru</option>
                             </select>
                         </div>
                     </div>

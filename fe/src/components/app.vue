@@ -9,7 +9,7 @@
                 <!--</keep-alive>-->
             </div>
             <div id="footer">
-                © 2017 Dmitry Mazurok
+                © 2017 emotz
             </div>
         </div>
     </transition>

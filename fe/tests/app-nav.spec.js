@@ -1,6 +1,7 @@
 import { Vue } from './vue-helper.js';
 
 import AppNav from 'src/components/app-nav.vue';
+import store from 'src/store.js';
 import router from 'src/router.js';
 
 describe("app-nav tests", function () {
@@ -29,7 +30,7 @@ describe("app-nav tests", function () {
     it("should not contain non-registered links", function () {
         const Component = Vue.extend(AppNav);
 
-        const component = new Component({ router }).$mount();
+        const component = new Component({ router, store }).$mount();
 
         component.$children.forEach(function (child) {
             const location = child._props.to;

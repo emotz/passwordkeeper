@@ -70,10 +70,13 @@ export default new Vuex.Store({
                         entry.id = id;
                         entry_to_send.id = entry.id;
                         context.commit("add_entry", entry_to_send);
-                        notify.success("Item stored.");
+                        notify.success(i18n.formatMessage({ id: "notify_itemstored" }));
                         resolve(entry.id);
                     }, response => {
-                        const res = response.status === 408 ? 'Request timed-out when storing item.' : (response.body || "Couldn't store item.");
+                        // TODO: translate response.body ???
+                        const res = response.status === 408 ?
+                            i18n.formatMessage({ id: "notify_itemstored_timeout" }) :
+                            (response.body || i18n.formatMessage({ id: "notify_itemstored_unknown" }));
                         notify.error(res);
                         reject(res);
                     });
@@ -93,10 +96,13 @@ export default new Vuex.Store({
                     .update({ id: entry_to_send.id }, entry_to_send)
                     .then(response => {
                         context.commit("update_entry", entry_to_send);
-                        notify.success("Item updated.");
+                        notify.success(i18n.formatMessage({ id: "notify_itemupdated" }));
                         resolve(entry);
                     }, response => {
-                        const res = response.status === 408 ? 'Request timed-out when updating item.' : (response.body || "Couldn't update item.");
+                        // TODO: translate response.body ???
+                        const res = response.status === 408 ?
+                            i18n.formatMessage({ id: "notify_itemupdated_timeout" }) :
+                            (response.body || i18n.formatMessage({ id: "notify_itemupdated_unknown" }));
                         notify.error(res);
                         reject(res);
                     });
@@ -115,10 +121,13 @@ export default new Vuex.Store({
                             context.commit("remove_entry_by_index", index);
                         }
 
-                        notify.success("Item removed.");
+                        notify.success(i18n.formatMessage({ id: "notify_itemremoved" }));
                         resolve();
                     }, response => {
-                        const res = response.status === 408 ? 'Request timed-out when removing item.' : (response.body || "Couldn't remove item.");
+                        // TODO: translate response.body ???
+                        const res = response.status === 408 ?
+                            i18n.formatMessage({ id: "notify_itemremoved_timeout" }) :
+                            (response.body || i18n.formatMessage({ id: "notify_itemremoved_unknown" }));
                         notify.error(res);
                         reject(res);
                     });
@@ -132,10 +141,13 @@ export default new Vuex.Store({
                     .get()
                     .then(response => {
                         context.commit("set_entries", response.body);
-                        notify.success("Items fetched.");
+                        notify.success(i18n.formatMessage({ id: "notify_itemsfetched" }));
                         resolve();
                     }, response => {
-                        const res = response.status === 408 ? 'Request timed-out when fetching items.' : (response.body || "Could't fetch all items");
+                        // TODO: translate response.body ???
+                        const res = response.status === 408 ?
+                            i18n.formatMessage({ id: "notify_itemsfetched_timeout" }) :
+                            (response.body || i18n.formatMessage({ id: "notify_itemsfetched_unknown" }));
                         notify.error(res);
                         reject(res);
                     });
