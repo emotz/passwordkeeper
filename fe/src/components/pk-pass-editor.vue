@@ -1,11 +1,13 @@
 <template>
     <div class="pk-pass-editor"
          :id="`pk-pass-editor-${_uid}`">
-        <modal title="Edit password entry"
+        <modal :title="$formatMessage({id: 'editor_title'})"
                :show="show"
                @ok="ok"
                @cancel="cancel"
-               okClass="btn btn-primary pk-btn-editor-ok">
+               okClass="btn btn-primary pk-btn-editor-ok"
+               :okText="$formatMessage({id: 'button_ok'})"
+               :cancelText="$formatMessage({id: 'button_cancel'})">
             <div class="form-group"
                  :class="{'has-error': title_error}">
                 <label class="control-label"

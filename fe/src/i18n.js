@@ -36,6 +36,9 @@ function init() {
         notify_itemsfetched: "Записи получены.",
         notify_itemsfetched_timeout: "Время запроса истекло при попытке получить записи.",
         notify_itemsfetched_unknown: "Записи не были получены.",
+        button_ok: "Ok",
+        button_cancel: "Отмена",
+        editor_title: "Редактирование записи"
     });
     Vue.registerMessages('en', {
         home_greeting: "Welcome to Password Keeper",
@@ -69,7 +72,9 @@ function init() {
         notify_itemsfetched: "Items fetched.",
         notify_itemsfetched_timeout: "Request timed-out when fetching items.",
         notify_itemsfetched_unknown: "Couldn't fetch all items.",
-
+        button_ok: "Ok",
+        button_cancel: "Cancel",
+        editor_title: "Edit password entry"
     });
     set_locale('en');
 }
