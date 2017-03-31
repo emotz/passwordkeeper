@@ -25,7 +25,7 @@ module.exports = new base({
                 .clearValue('.pk-pass-editor .pk-pass-input')
                 .setValue('.pk-pass-editor .pk-pass-input', pass.password)
                 .click('@editorOkBtn');
-            this.expect.element('.pk-pass-editor').to.not.be.present.after();
+            this.expect.element('.pk-pass-editor').to.not.be.visible.after();
             this.assertContainsPass(pass);
             return this;
         },

@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import i18n from 'src/i18n.js';
-
 export default {
     render: function (createElement) {
         return createElement('h1', 'hello wolrd');

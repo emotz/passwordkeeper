@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 
-import notify from './notify.js';
+import loader from './loader.js';
 import i18n from './i18n.js';
 
 Vue.use(Vuex);
@@ -51,68 +51,64 @@ export default new Vuex.Store({
                 return location.split('/')[2];
             }
 
-            return new Promise((resolve, reject) => {
-                var customActions = {
-                    add: { method: 'POST', url: 'entries' }
-                };
+            var customActions = {
+                add: { method: 'POST', url: 'entries' }
+            };
 
-                let resource = Vue.resource('entries', {}, customActions);
+            let resource = Vue.resource('entries', {}, customActions);
 
-                let entry_to_send = {
-                    user: entry.user,
-                    title: entry.title,
-                    password: entry.password
-                };
+            let entry_to_send = {
+                user: entry.user,
+                title: entry.title,
+                password: entry.password
+            };
+            return loader.perform(
                 resource
                     .add(entry_to_send)
                     .then(response => {
+                        console.log("Success");
                         let id = parse_location(response.headers.map.Location[0]);
                         entry.id = id;
                         entry_to_send.id = entry.id;
                         context.commit("add_entry", entry_to_send);
-                        notify.success(i18n.formatMessage({ id: "notify_itemstored" }));
-                        resolve(entry.id);
+                        return entry.id;
                     }, response => {
+                        console.log("Failure");
                         // TODO: translate response.body ???
                         const res = response.status === 408 ?
                             i18n.formatMessage({ id: "notify_itemstored_timeout" }) :
                             (response.body || i18n.formatMessage({ id: "notify_itemstored_unknown" }));
-                        notify.error(res);
-                        reject(res);
-                    });
-            });
+                        throw res;
+                    }),
+                () => i18n.formatMessage({ id: "notify_itemstored" }));
         },
         update_entry(context, entry) {
-            return new Promise((resolve, reject) => {
-                let resource = Vue.resource('entries{/id}');
+            let resource = Vue.resource('entries{/id}');
 
-                let entry_to_send = {
-                    id: entry.id,
-                    user: entry.user,
-                    title: entry.title,
-                    password: entry.password
-                };
+            let entry_to_send = {
+                id: entry.id,
+                user: entry.user,
+                title: entry.title,
+                password: entry.password
+            };
+            return loader.perform(
                 resource
                     .update({ id: entry_to_send.id }, entry_to_send)
                     .then(response => {
                         context.commit("update_entry", entry_to_send);
-                        notify.success(i18n.formatMessage({ id: "notify_itemupdated" }));
-                        resolve(entry);
+                        return entry;
                     }, response => {
                         // TODO: translate response.body ???
-                        const res = response.status === 408 ?
+                        throw response.status === 408 ?
                             i18n.formatMessage({ id: "notify_itemupdated_timeout" }) :
                             (response.body || i18n.formatMessage({ id: "notify_itemupdated_unknown" }));
-                        notify.error(res);
-                        reject(res);
-                    });
-            });
-
+                    }),
+                () => i18n.formatMessage({ id: "notify_itemupdated" }));
         },
         remove_entry_by_id(context, id) {
-            return new Promise((resolve, reject) => {
-                let resource = Vue.resource('entries{/id}');
+            let resource = Vue.resource('entries{/id}');
 
+            return loader.perform(
                 resource
                     .delete({ id: id })
                     .then(response => {
@@ -120,38 +116,30 @@ export default new Vuex.Store({
                         if (index >= 0) {
                             context.commit("remove_entry_by_index", index);
                         }
-
-                        notify.success(i18n.formatMessage({ id: "notify_itemremoved" }));
-                        resolve();
+                        return;
                     }, response => {
                         // TODO: translate response.body ???
-                        const res = response.status === 408 ?
+                        throw response.status === 408 ?
                             i18n.formatMessage({ id: "notify_itemremoved_timeout" }) :
                             (response.body || i18n.formatMessage({ id: "notify_itemremoved_unknown" }));
-                        notify.error(res);
-                        reject(res);
-                    });
-            });
+                    }),
+                () => i18n.formatMessage({ id: "notify_itemremoved" }));
         },
         get_entries(context) {
             let resource = Vue.resource('entries');
 
-            return new Promise((resolve, reject) => {
+            return loader.perform(
                 resource
                     .get()
                     .then(response => {
                         context.commit("set_entries", response.body);
-                        notify.success(i18n.formatMessage({ id: "notify_itemsfetched" }));
-                        resolve();
                     }, response => {
                         // TODO: translate response.body ???
-                        const res = response.status === 408 ?
+                        throw response.status === 408 ?
                             i18n.formatMessage({ id: "notify_itemsfetched_timeout" }) :
                             (response.body || i18n.formatMessage({ id: "notify_itemsfetched_unknown" }));
-                        notify.error(res);
-                        reject(res);
-                    });
-            });
+                    }),
+                () => i18n.formatMessage({ id: "notify_itemsfetched" }));
         }
     }
 });

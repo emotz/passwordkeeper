@@ -1,8 +1,7 @@
 <template>
     <div class="pk-pass-list panel panel-primary"
          :id="`pk-pass-list-${_uid}`">
-        <pk-pass-editor v-if="editing_item !== undefined"
-                        :show="editing_item !== undefined"
+        <pk-pass-editor :show="editing_item !== undefined"
                         :item="editing_item"
                         @cancel="cancel_edit"
                         @edit="apply_edit"></pk-pass-editor>
@@ -70,7 +69,6 @@ import PkPassAdder from './pk-pass-adder.vue';
 // import PkPassEditor from './pk-pass-editor.vue';
 import Visible from 'src/directives/visible.js';
 
-import progressbar from 'src/progressbar.js';
 import * as dispatcher from 'src/dispatcher.js';
 import * as utls from 'src/utility.js';
 
@@ -78,7 +76,7 @@ export default {
     directives: { Visible },
     components: {
         PkPassAdder,
-        PkPassEditor: progressbar.decorate_resolve((resolve) => { require(['./pk-pass-editor.vue'], resolve) })
+        PkPassEditor: (resolve) => { require(['./pk-pass-editor.vue'], resolve) }
     },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {
