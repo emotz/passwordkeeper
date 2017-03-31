@@ -1,4 +1,4 @@
-{
+module.exports = {
     "src_folders": [
         "e2e-tests"
     ],
@@ -14,6 +14,12 @@
         "port": 4444,
         "cli_args": {
             "webdriver.chrome.driver": "bin/chromedriver.exe"
+        }
+    },
+    "test_runner": {
+        "type": "mocha",
+        "options": {
+            // "grep": "config"
         }
     },
     "test_settings": {
