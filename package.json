@@ -1,62 +1,63 @@
 {
-  "name": "passwordkeeper",
-  "version": "1.0.0",
-  "description": "Simple storage for passwords",
-  "main": "src/main.js",
-  "dependencies": {
-    "bootstrap": "^3.3.7",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.2.0",
-    "nprogress": "^0.2.0",
-    "toastr": "^2.1.2",
-    "vue": "^2.2.4",
-    "vue-bootstrap-modal": "MnZrK/vue-bootstrap-modal",
-    "vue-intl": "^2.0.0",
-    "vue-resource": "^1.2.1",
-    "vue-router": "^2.3.0",
-    "vuex": "^2.2.1"
-  },
-  "devDependencies": {
-    "bootstrap-webpack": "0.0.6",
-    "copy-webpack-plugin": "^4.0.1",
-    "exports-loader": "^0.6.4",
-    "extract-text-webpack-plugin": "^2.1.0",
-    "file-loader": "^0.10.1",
-    "font-awesome-webpack": "0.0.5-beta.2",
-    "imports-loader": "^0.7.1",
-    "jasmine-core": "^2.5.2",
-    "karma": "^1.5.0",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-jasmine": "^1.1.0",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.3",
-    "less": "^2.7.2",
-    "less-loader": "^3.0.0",
-    "url-loader": "^0.5.8",
-    "vue-loader": "^11.1.4",
-    "vue-template-compiler": "^2.2.4",
-    "webpack": "^2.2.1"
-  },
-  "scripts": {
-    "dev": "cd fe && ws & exit 0",
-    "build": "cd fe && webpack & exit 0",
-    "build-watch": "cd fe && webpack --watch --progress --color & exit 0",
-    "unit-test": "cd fe && karma start & exit 0",
-    "e2e-test": "nightwatch & exit 0",
-    "all-test": "npm run unit-test && npm run e2e-test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MnZrK/passwordkeeper.git"
-  },
-  "keywords": [
-    "password",
-    "keeper"
-  ],
-  "author": "Dmitry Mazurok",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/MnZrK/passwordkeeper/issues"
-  },
-  "homepage": "https://github.com/MnZrK/passwordkeeper#readme"
+    "name": "passwordkeeper",
+    "version": "1.0.0",
+    "description": "Simple storage for passwords",
+    "main": "src/main.js",
+    "dependencies": {
+        "bootstrap": "^3.3.7",
+        "font-awesome": "^4.7.0",
+        "jquery": "^3.2.0",
+        "nprogress": "^0.2.0",
+        "toastr": "^2.1.2",
+        "vue": "^2.2.4",
+        "vue-bootstrap-modal": "MnZrK/vue-bootstrap-modal",
+        "vue-intl": "^2.0.0",
+        "vue-resource": "^1.2.1",
+        "vue-router": "^2.3.0",
+        "vuex": "^2.2.1"
+    },
+    "devDependencies": {
+        "bootstrap-webpack": "0.0.6",
+        "copy-webpack-plugin": "^4.0.1",
+        "exports-loader": "^0.6.4",
+        "extract-text-webpack-plugin": "^2.1.0",
+        "file-loader": "^0.10.1",
+        "font-awesome-webpack": "0.0.5-beta.2",
+        "imports-loader": "^0.7.1",
+        "jasmine-core": "^2.5.2",
+        "karma": "^1.5.0",
+        "karma-chrome-launcher": "^2.0.0",
+        "karma-jasmine": "^1.1.0",
+        "karma-sourcemap-loader": "^0.3.7",
+        "karma-webpack": "^2.0.3",
+        "less": "^2.7.2",
+        "less-loader": "^3.0.0",
+        "url-loader": "^0.5.8",
+        "vue-loader": "^11.1.4",
+        "vue-template-compiler": "^2.2.4",
+        "webpack": "^2.2.1"
+    },
+    "scripts": {
+        "dev": "cd fe && ws & exit 0",
+        "build": "cd fe && webpack & exit 0",
+        "build-watch": "cd fe && webpack --watch --progress --color & exit 0",
+        "unit-test": "cd fe && karma start & exit 0",
+        "unit-test-watch": "cd fe && karma start --single-run=false --auto-watch & exit 0",
+        "e2e-test": "nightwatch & exit 0",
+        "all-test": "npm run unit-test && npm run e2e-test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MnZrK/passwordkeeper.git"
+    },
+    "keywords": [
+        "password",
+        "keeper"
+    ],
+    "author": "Dmitry Mazurok",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/MnZrK/passwordkeeper/issues"
+    },
+    "homepage": "https://github.com/MnZrK/passwordkeeper#readme"
 }

@@ -66,7 +66,7 @@
 
 <script>
 import PkPassAdder from './pk-pass-adder.vue';
-// import PkPassEditor from './pk-pass-editor.vue';
+import PkPassEditor from './pk-pass-editor.vue';
 import Visible from 'src/directives/visible.js';
 
 import * as dispatcher from 'src/dispatcher.js';
@@ -76,7 +76,7 @@ export default {
     directives: { Visible },
     components: {
         PkPassAdder,
-        PkPassEditor: (resolve) => { require(['./pk-pass-editor.vue'], resolve) }
+        PkPassEditor
     },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {

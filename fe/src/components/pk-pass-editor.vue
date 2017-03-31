@@ -60,7 +60,7 @@ import Modal from 'vue-bootstrap-modal';
 export default {
     components: { Modal },
     props: ['item', 'show'],
-    data: function () {
+    data() {
         let item = this.item === undefined ? {} : this.item;
         return {
             title: item.title,
@@ -72,7 +72,7 @@ export default {
         };
     },
     methods: {
-        ok: function () {
+        ok() {
             let item_to_add = {
                 title: this.title,
                 user: this.user,
@@ -86,20 +86,20 @@ export default {
                 this.$emit('edit', item_to_add);
             }
         },
-        cancel: function () {
+        cancel() {
             this.$emit("cancel");
         }
     },
     watch: {
-        'item.title': function (val) {
+        'item.title'(val) {
             this.title_error = false;
             this.title = val;
         },
-        'item.user': function (val) {
+        'item.user'(val) {
             this.user_error = false;
             this.user = val;
         },
-        'item.password': function (val) {
+        'item.password'(val) {
             this.password = val;
         }
     }
