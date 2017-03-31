@@ -4,7 +4,8 @@
         <modal title="Edit password entry"
                :show="show"
                @ok="ok"
-               @cancel="cancel">
+               @cancel="cancel"
+               okClass="btn btn-primary pk-btn-editor-ok">
             <div class="form-group"
                  :class="{'has-error': title_error}">
                 <label class="control-label"

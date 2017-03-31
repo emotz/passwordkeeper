@@ -1,17 +1,17 @@
 module.exports = {
+    before(browser) {
+        browser.page.home().load();
+    },
     'can add and remove pass'(browser) {
         let page = browser.page.home();
 
-        page.load()
-            .addPass({
-                title: 'test title',
-                user: 'test user',
-                password: 'test password'
-            })
+        page.addPass({
+            title: 'test title',
+            user: 'test user',
+            password: 'test password'
+        })
             .removeLastPass()
             .assertNoPasses();
-
-        browser.end();
     },
     'bug with delete'(browser) {
         let page = browser.page.home();
@@ -27,8 +27,7 @@ module.exports = {
             password: 'second password'
         };
 
-        page.load()
-            .addPass(pass1)
+        page.addPass(pass1)
             .addPass(pass2)
             .removePass(pass1)
             .refreshAllPasses()
@@ -36,8 +35,6 @@ module.exports = {
             .assertContainsPass(pass2)
             .removeLastPass()
             .assertNoPasses();
-
-        browser.end();
     },
     'can edit'(browser) {
         let page = browser.page.home();
@@ -54,15 +51,15 @@ module.exports = {
             password: 'updated password'
         };
 
-        page.load()
-            .addPass(pass)
+        page.addPass(pass)
             .editLastPass(updatedPass)
             .refreshAllPasses()
             .assertContainsPass(updatedPass)
             .assertNotContainsPass(pass)
             .removeLastPass()
             .assertNoPasses();
-
+    },
+    after(browser) {
         browser.end();
     }
 };

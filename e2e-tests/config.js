@@ -1,12 +1,17 @@
 module.exports = {
+    before(browser) {
+        browser.page.config().load();
+    },
+
     'can switch locale'(browser) {
         var page = browser.page.config();
 
-        page.load()
-            .waitForEnglishLocale()
+        page.waitForEnglishLocale()
             .selectLocale("ru")
             .waitForRussianLocale();
 
+    },
+    after(browser) {
         browser.end();
     }
 };

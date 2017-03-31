@@ -83,9 +83,6 @@ module.exports = new base({
         adderPasswordInput: '.pk-pass-adder .pk-pass-input',
         adderAddBtn: '.pk-pass-adder .pk-btn-pass-add',
         refreshAllBtn: '.pk-btn-refresh-all-pass',
-        editorOkBtn: {
-            locateStrategy: 'xpath',
-            selector: "//div[contains(@class, 'pk-pass-editor')]//button[contains(text(), 'OK')]"
-        }
+        editorOkBtn: '.pk-pass-editor .pk-btn-editor-ok'
     }
 });
