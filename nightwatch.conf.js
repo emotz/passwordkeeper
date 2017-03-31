@@ -1,4 +1,4 @@
-{
+module.exports = {
     "src_folders": [
         "e2e-tests"
     ],
@@ -16,7 +16,12 @@
             "webdriver.chrome.driver": "bin/chromedriver.exe"
         }
     },
-    "test_runner": "mocha",
+    "test_runner": {
+        "type": "mocha",
+        "options": {
+            // "grep": "config"
+        }
+    },
     "test_settings": {
         "default": {
             "launch_url": "http://localhost:8000",
