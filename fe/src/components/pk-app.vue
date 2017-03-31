@@ -3,7 +3,7 @@
                 appear>
         <div class="wrapper">
             <div class="container content">
-                <app-nav></app-nav>
+                <pk-app-nav></pk-app-nav>
                 <!--<keep-alive>-->
                 <router-view></router-view>
                 <!--</keep-alive>-->
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import AppNav from './app-nav.vue';
+import PkAppNav from './pk-app-nav.vue';
 import router from 'src/router.js';
 import store from 'src/store.js';
 
 export default {
-    components: { AppNav },
+    components: { PkAppNav },
     data: {
         project_name: "Password Keeper"
     },

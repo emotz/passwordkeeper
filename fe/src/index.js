@@ -6,7 +6,7 @@ import Vue from 'vue';
 import './progressbar.js';
 import './i18n.js';
 
-import App from 'src/components/app.vue';
+import App from 'src/components/pk-app.vue';
 
 const app = new Vue(App).$mount("#app");
 

@@ -1,6 +1,6 @@
 <template>
-    <div class="about jumbotron"
-         :id="`about-${_uid}`">
+    <div class="pk-about jumbotron"
+         :id="`pk-about-${_uid}`">
         <h1>{{ $formatMessage({id: 'about_greeting'}) }}</h1>
         <p>{{ $formatMessage({id: 'about_description'}) }}</p>
     </div>

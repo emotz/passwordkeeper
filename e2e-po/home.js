@@ -16,22 +16,22 @@ module.exports = new base({
         editLastPass(pass) {
             this.expect.element('@lastPassEntryEditBtn').to.be.enabled.after();
             this.click('@lastPassEntryEditBtn');
-            this.expect.element(".pass-editor .title-input").to.be.visible.after();
+            this.expect.element(".pk-pass-editor .pk-title-input").to.be.visible.after();
             this
-                .clearValue('.pass-editor .title-input')
-                .setValue('.pass-editor .title-input', pass.title)
-                .clearValue('.pass-editor .user-input')
-                .setValue('.pass-editor .user-input', pass.user)
-                .clearValue('.pass-editor .pass-input')
-                .setValue('.pass-editor .pass-input', pass.password)
+                .clearValue('.pk-pass-editor .pk-title-input')
+                .setValue('.pk-pass-editor .pk-title-input', pass.title)
+                .clearValue('.pk-pass-editor .pk-user-input')
+                .setValue('.pk-pass-editor .pk-user-input', pass.user)
+                .clearValue('.pk-pass-editor .pk-pass-input')
+                .setValue('.pk-pass-editor .pk-pass-input', pass.password)
                 .click('@editorOkBtn');
-            this.expect.element('.pass-editor').to.not.be.visible.after();
+            this.expect.element('.pk-pass-editor').to.not.be.present.after();
             this.assertContainsPass(pass);
             return this;
         },
         removePass(pass) {
             let xpath_title = `//tr[td[contains(text(), '${pass.title}')]]`;
-            let xpath = xpath_title + "/td/button[contains(@class, 'btn-pass-remove')]";
+            let xpath = xpath_title + "/td/button[contains(@class, 'pk-btn-pass-remove')]";
             this.api
                 .useXpath()
                 .waitForElementVisible(xpath)
@@ -73,19 +73,19 @@ module.exports = new base({
         }
     },
     elements: {
-        lastPassEntry: '.pass-list tbody tr:last-child',
-        lastPassEntryRemoveBtn: '.pass-list tbody tr:last-child .btn-pass-remove',
-        lastPassEntryEditBtn: '.pass-list tbody tr:last-child .btn-pass-edit',
-        passEntries: '.pass-list tbody tr',
-        passEntriesRemoveBtn: '.pass-list tbody tr .btn-pass-remove',
-        adderTitleInput: '.pass-adder .title-input',
-        adderUserInput: '.pass-adder .user-input',
-        adderPasswordInput: '.pass-adder .pass-input',
-        adderAddBtn: '.pass-adder .btn-pass-add',
-        refreshAllBtn: '.btn-refresh-all-pass',
+        lastPassEntry: '.pk-pass-list tbody tr:last-child',
+        lastPassEntryRemoveBtn: '.pk-pass-list tbody tr:last-child .pk-btn-pass-remove',
+        lastPassEntryEditBtn: '.pk-pass-list tbody tr:last-child .pk-btn-pass-edit',
+        passEntries: '.pk-pass-list tbody tr',
+        passEntriesRemoveBtn: '.pk-pass-list tbody tr .pk-btn-pass-remove',
+        adderTitleInput: '.pk-pass-adder .pk-title-input',
+        adderUserInput: '.pk-pass-adder .pk-user-input',
+        adderPasswordInput: '.pk-pass-adder .pk-pass-input',
+        adderAddBtn: '.pk-pass-adder .pk-btn-pass-add',
+        refreshAllBtn: '.pk-btn-refresh-all-pass',
         editorOkBtn: {
             locateStrategy: 'xpath',
-            selector: "//div[contains(@class, 'pass-editor')]//button[contains(text(), 'OK')]"
+            selector: "//div[contains(@class, 'pk-pass-editor')]//button[contains(text(), 'OK')]"
         }
     }
 });

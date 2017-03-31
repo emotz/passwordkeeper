@@ -1,5 +1,5 @@
 import { Vue } from './vue-helper.js';
-import AsyncButton from 'src/components/async-button.vue';
+import PkAsyncButton from 'src/components/pk-async-button.vue';
 
 describe("general vue tests", function () {
     it("should call watch on changed data", function (done) {

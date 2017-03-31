@@ -1,6 +1,6 @@
 <template>
-    <div class="config"
-         :id="`config-${_uid}`">
+    <div class="pk-config"
+         :id="`pk-config-${_uid}`">
         <div class=" jumbotron">
             <h1 v-html="$formatMessage({id: 'config_greeting'})"></h1>
             <p>{{ $formatMessage({id: 'config_description'}) }} </p>
@@ -12,11 +12,11 @@
             <div class="panel-body">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label :for="`config-locale-${_uid}`"
+                        <label :for="`pk-config-locale-${_uid}`"
                                class="col-sm-2 control-label">{{ $formatMessage({id: 'config_label_language'}) }}</label>
                         <div class="col-sm-1">
-                            <select class="form-control config-locale-input"
-                                    :id="`config-locale-${_uid}`"
+                            <select class="form-control pk-config-locale-input"
+                                    :id="`pk-config-locale-${_uid}`"
                                     v-model="locale">
                                 <!--TODO: fill in options using available ones-->
                                 <option value="en">en</option>
@@ -34,6 +34,10 @@
 import i18n from 'src/i18n.js';
 
 export default {
+    render: function (createElement) {
+        return createElement('h1', 'hello wolrd');
+    },
+
     computed: {
         locale: {
             get() {

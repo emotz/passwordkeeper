@@ -4,15 +4,11 @@ import progressbar from './progressbar.js';
 
 Vue.use(VueRouter);
 
-import Home from 'src/components/home.vue';
-import About from 'src/components/about.vue';
-import Config from 'src/components/config.vue';
-
 const routes = [
     { path: '', redirect: "/home" },
-    { path: '/home', component: Home },
-    { path: '/about', component: About },
-    { path: '/config', component: Config }
+    { path: '/home', component: (resolve) => require(['src/components/pk-home.vue'], resolve) },
+    { path: '/about', component: (resolve) => require(['src/components/pk-about.vue'], resolve) },
+    { path: '/config', component: (resolve) => require(['src/components/pk-config.vue'], resolve) }
 ];
 
 const router = new VueRouter({

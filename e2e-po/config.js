@@ -10,14 +10,14 @@ let commands = {
         return this;
     },
     selectLocale(locale) {
-        let sel = `select.config-locale-input option[value="${locale}"]`;
+        let sel = `select.pk-config-locale-input option[value="${locale}"]`;
         this.expect.element(sel).to.be.visible.after();
         return this.click(sel);
     }
 };
 
 let elements = {
-    activeMenuItem: '.app-nav ul.navbar-nav li.active'
+    activeMenuItem: '.pk-app-nav ul.navbar-nav li.active'
 };
 
 module.exports = new base({

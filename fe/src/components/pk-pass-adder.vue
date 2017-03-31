@@ -1,23 +1,23 @@
 <template>
-    <div class="pass-adder form-inline"
-         :id="`pass-adder-${_uid}`">
+    <div class="pk-pass-adder form-inline"
+         :id="`pk-pass-adder-${_uid}`">
         <div class="form-group"
              :class="{'has-error': title_error}">
             <label class="control-label"
-                   :for="`title-input-${_uid}`">{{ $formatMessage({id: 'label_title'}) }}</label>
+                   :for="`pk-title-input-${_uid}`">{{ $formatMessage({id: 'label_title'}) }}</label>
             <input type="text"
-                   class="title-input form-control"
-                   :id="`title-input-${_uid}`"
+                   class="pk-title-input form-control"
+                   :id="`pk-title-input-${_uid}`"
                    placeholder="mysite.com"
                    v-model="title">
         </div>
         <div class="form-group"
              :class="{'has-error': user_error}">
             <label class="control-label"
-                   :for="`user-input-${_uid}`">{{ $formatMessage({id: 'label_user'}) }}</label>
+                   :for="`pk-user-input-${_uid}`">{{ $formatMessage({id: 'label_user'}) }}</label>
             <input type="text"
-                   class="user-input form-control"
-                   :id="`user-input-${_uid}`"
+                   class="pk-user-input form-control"
+                   :id="`pk-user-input-${_uid}`"
                    placeholder="jane.doe@example.com"
                    v-model="user">
         </div>
@@ -26,14 +26,14 @@
             <div class="input-group">
                 <input v-if="show_password"
                        type="text"
-                       class="pass-input form-control"
-                       :id="`pass-input-${_uid}`"
+                       class="pk-pass-input form-control"
+                       :id="`pk-pass-input-${_uid}`"
                        placeholder="Password123"
                        v-model="password">
                 <input v-else
                        type="password"
-                       class="pass-input form-control"
-                       :id="`pass-input-${_uid}`"
+                       class="pk-pass-input form-control"
+                       :id="`pk-pass-input-${_uid}`"
                        placeholder="Password123"
                        v-model="password">
                 <div class="btn btn-default input-group-addon"
@@ -42,8 +42,8 @@
                      :aria-pressed="show_password"><span class="fa fa-eye"></span></div>
             </div>
         </div>
-        <button class="btn btn-default btn-pass-add"
-                :id="`pass-add-${_uid}`"
+        <button class="btn btn-default pk-btn-pass-add"
+                :id="`pk-pass-add-${_uid}`"
                 @click="add"><span class="fa fa-plus force-parent-lh"></span></button>
     </div>
 </template>

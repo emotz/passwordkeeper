@@ -1,6 +1,6 @@
 <template>
-    <nav class="app-nav navbar navbar-default"
-         :id="`app-nav-${_uid}`">
+    <nav class="pk-app-nav navbar navbar-default"
+         :id="`pk-app-nav-${_uid}`">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand"

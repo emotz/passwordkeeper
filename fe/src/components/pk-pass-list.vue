@@ -1,10 +1,11 @@
 <template>
-    <div class="pass-list panel panel-primary"
-         :id="`pass-list-${_uid}`">
-        <pass-editor :show="editing_item !== undefined"
-                     :item="editing_item"
-                     @cancel="cancel_edit"
-                     @edit="apply_edit"></pass-editor>
+    <div class="pk-pass-list panel panel-primary"
+         :id="`pk-pass-list-${_uid}`">
+        <pk-pass-editor v-if="editing_item !== undefined"
+                        :show="editing_item !== undefined"
+                        :item="editing_item"
+                        @cancel="cancel_edit"
+                        @edit="apply_edit"></pk-pass-editor>
         <div class="panel-heading">
             <h3 class="panel-title">{{ $formatMessage({id: 'passlist_panel_title'}) }}</h3>
         </div>
@@ -35,18 +36,18 @@
                                     v-if="item.password !== ''">
                                 <span class="fa fa-eye"></span>
                             </button>
-                            <span :id="`item-password-${index}-${_uid}`"
+                            <span :id="`pk-item-password-${index}-${_uid}`"
                                   :class="{'blur': !item.show_password}">{{ item.password }}</span>
                         </td>
                         <td>
                             <button :disabled="!can_edit(item)"
-                                    class="btn btn-default btn-pass-edit"
+                                    class="btn btn-default pk-btn-pass-edit"
                                     @click="editing_item = item"><span class="fa fa-edit"></span></button>
                             <button v-if="is_removing(item)"
-                                    class="btn btn-danger btn-pass-remove"
+                                    class="btn btn-danger pk-btn-pass-remove"
                                     disabled><span class="fa fa-remove fa-spin"></span></button>
                             <button v-else-if="can_remove(item)"
-                                    class="btn btn-danger btn-pass-remove"
+                                    class="btn btn-danger pk-btn-pass-remove"
                                     @click="remove(item)"><span class="fa fa-remove"></span></button>
                             <button v-if="is_saving(item)"
                                     class="btn btn-primary"
@@ -59,22 +60,26 @@
                 </transition-group>
             </table>
     
-            <pass-adder v-on:added="add"></pass-adder>
+            <pk-pass-adder @added="add"></pk-pass-adder>
         </div>
     </div>
 </template>
 
 <script>
-import PassAdder from './pass-adder.vue';
-import PassEditor from './pass-editor.vue';
+import PkPassAdder from './pk-pass-adder.vue';
+// import PkPassEditor from './pk-pass-editor.vue';
 import Visible from 'src/directives/visible.js';
 
+import progressbar from 'src/progressbar.js';
 import * as dispatcher from 'src/dispatcher.js';
 import * as utls from 'src/utility.js';
 
 export default {
     directives: { Visible },
-    components: { PassAdder, PassEditor },
+    components: {
+        PkPassAdder,
+        PkPassEditor: progressbar.decorate_resolve((resolve) => { require(['./pk-pass-editor.vue'], resolve) })
+    },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {
             return {
