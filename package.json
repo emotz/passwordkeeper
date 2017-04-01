@@ -7,10 +7,11 @@
         "bootstrap": "^3.3.7",
         "font-awesome": "^4.7.0",
         "jquery": "^3.2.0",
+        "lodash": "^4.17.4",
         "nprogress": "^0.2.0",
         "toastr": "^2.1.2",
         "vue": "^2.2.4",
-        "vue-bootstrap-modal": "MnZrK/vue-bootstrap-modal",
+        "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#3d408c923ae95d3217a29e06396976d0d3958014",
         "vue-intl": "^2.0.0",
         "vue-resource": "^1.2.1",
         "vue-router": "^2.3.0",
@@ -35,6 +36,9 @@
         "url-loader": "^0.5.8",
         "vue-loader": "^11.1.4",
         "vue-template-compiler": "^2.2.4",
+        "wdio-jasmine-framework": "^0.3.0",
+        "wdio-selenium-standalone-service": "0.0.8",
+        "webdriverio": "^4.6.2",
         "webpack": "^2.2.1"
     },
     "scripts": {
@@ -43,7 +47,7 @@
         "build-watch": "cd fe && webpack --watch --progress --color & exit 0",
         "unit-test": "cd fe && karma start & exit 0",
         "unit-test-watch": "cd fe && karma start --single-run=false --auto-watch & exit 0",
-        "e2e-test": "nightwatch & exit 0",
+        "e2e-test": "wdio & exit 0",
         "all-test": "npm run unit-test && npm run e2e-test"
     },
     "repository": {
@@ -54,7 +58,7 @@
         "password",
         "keeper"
     ],
-    "author": "Dmitry Mazurok",
+    "author": "emotz",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/MnZrK/passwordkeeper/issues"

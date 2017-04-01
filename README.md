@@ -20,18 +20,24 @@ Development server is `local-web-server`. It is simple http server, designed to 
 
 `Nightwatch` is used to run end-to-end tests (full-stack tests). It uses Selenium as engine.
 
+## e2e tests set up
+
+Install Java 8 SDK.
+
+From elevated CMD (with Administrator rights):
+
+```bat
+npm install --global --production windows-build-tools
+npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone-service
+```
+
 ## Build & Run
-
-Install [nightwatch](http://nightwatchjs.org/getingstarted#installation)
-
-Put selenium-related jars and driver exe into `bin` directory in the root.
 
 Then additional requirements:
 
 ```bat
-npm install -g webpack local-web-server lodash karma-cli
+npm install -g webpack local-web-server karma-cli
 npm install
-npm link lodash
 ```
 
 Build
@@ -56,6 +62,7 @@ Run e2e tests
 
 ```bat
 npm run dev
+npm run selenium
 npm run e2e-test
 ```
 
@@ -63,5 +70,6 @@ Run all tests
 
 ```bat
 npm run dev
+npm run selenium
 npm run all-test
 ```
