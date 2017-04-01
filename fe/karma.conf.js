@@ -45,7 +45,13 @@ module.exports = function (config) {
                     { test: /\.vue$/, loader: 'vue-loader' },
                     { test: /\.css$/, use: ['style-loader', 'css-loader'] }
                 ]
-            }
+            },
+            watch: true,
+            watchOptions: {
+                aggregateTimeout: 300,
+                // poll: 1000,
+                ignored: /node_modules/
+            },
         },
 
         webpackMiddleware: {

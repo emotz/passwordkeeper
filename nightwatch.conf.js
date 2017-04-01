@@ -19,7 +19,8 @@ module.exports = {
     "test_runner": {
         "type": "mocha",
         "options": {
-            // "grep": "config"
+            // "grep": "can search",
+            "bail": true
         }
     },
     "test_settings": {
@@ -45,4 +46,4 @@ module.exports = {
             }
         }
     }
-}
+};

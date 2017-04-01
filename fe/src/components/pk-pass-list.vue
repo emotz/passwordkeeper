@@ -9,55 +9,66 @@
             <h3 class="panel-title">{{ $formatMessage({id: 'passlist_panel_title'}) }}</h3>
         </div>
         <div class="panel-body">
-            <table class="table"
-                   v-if="show_passlist">
-                <thead>
-                    <tr>
-                        <th>{{ $formatMessage({id: 'label_title'}) }}</th>
-                        <th>{{ $formatMessage({id: 'label_user'}) }}</th>
-                        <th>{{ $formatMessage({id: 'label_password'}) }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <transition-group name="only-fadein"
-                                  tag="tbody">
-                    <tr v-for="(item, index) in items"
-                        :key="item"
-                        :class="{danger: requires_attention(item)}">
-                        <td>{{ item.title }}</td>
-                        <td>{{ item.user }}</td>
-                        <td>
-                            <button type="button"
-                                    class="btn btn-default pull-right"
-                                    :class="{'active': item.show_password}"
-                                    :aria-pressed="item.show_password"
-                                    @click="item.show_password = !item.show_password"
-                                    v-if="item.password !== ''">
-                                <span class="fa fa-eye"></span>
-                            </button>
-                            <span :id="`pk-item-password-${index}-${_uid}`"
-                                  :class="{'blur': !item.show_password}">{{ item.password }}</span>
-                        </td>
-                        <td>
-                            <button :disabled="!can_edit(item)"
-                                    class="btn btn-default pk-btn-pass-edit"
-                                    @click="editing_item = item"><span class="fa fa-edit"></span></button>
-                            <button v-if="is_removing(item)"
-                                    class="btn btn-danger pk-btn-pass-remove"
-                                    disabled><span class="fa fa-remove fa-spin"></span></button>
-                            <button v-else-if="can_remove(item)"
-                                    class="btn btn-danger pk-btn-pass-remove"
-                                    @click="remove(item)"><span class="fa fa-remove"></span></button>
-                            <button v-if="is_saving(item)"
-                                    class="btn btn-primary"
-                                    disabled><span class="fa fa-save fa-spin"></span></button>
-                            <button v-else-if="can_save(item)"
-                                    class="btn btn-primary"
-                                    @click="save(item)"><span class="fa fa-save"></span></button>
-                        </td>
-                    </tr>
-                </transition-group>
-            </table>
+            <transition name="fade">
+                <div v-if="show_filter">
+                    <pk-pass-filter v-model="filter_query"></pk-pass-filter>
+                    <transition name="fade"
+                                mode="out-in">
+                        <table class="table"
+                               v-if="show_passlist">
+                            <thead>
+                                <tr>
+                                    <th>{{ $formatMessage({id: 'label_title'}) }}</th>
+                                    <th>{{ $formatMessage({id: 'label_user'}) }}</th>
+                                    <th>{{ $formatMessage({id: 'label_password'}) }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <transition-group name="fade"
+                                              tag="tbody">
+                                <tr v-for="(item, index) in filtered_items"
+                                    :key="item"
+                                    :class="{danger: requires_attention(item)}">
+                                    <td>{{ item.title }}</td>
+                                    <td>{{ item.user }}</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-default pull-right"
+                                                :class="{'active': item.show_password}"
+                                                :aria-pressed="item.show_password"
+                                                @click="item.show_password = !item.show_password"
+                                                v-if="item.password !== ''">
+                                            <span class="fa fa-eye"></span>
+                                        </button>
+                                        <span :id="`pk-item-password-${index}-${_uid}`"
+                                              :class="{'blur': !item.show_password}">{{ item.password }}</span>
+                                    </td>
+                                    <td>
+                                        <button :disabled="!can_edit(item)"
+                                                class="btn btn-default pk-btn-pass-edit"
+                                                @click="editing_item = item"><span class="fa fa-edit"></span></button>
+                                        <button v-if="is_removing(item)"
+                                                class="btn btn-danger pk-btn-pass-remove"
+                                                disabled><span class="fa fa-remove fa-spin"></span></button>
+                                        <button v-else-if="can_remove(item)"
+                                                class="btn btn-danger pk-btn-pass-remove"
+                                                @click="remove(item)"><span class="fa fa-remove"></span></button>
+                                        <button v-if="is_saving(item)"
+                                                class="btn btn-primary"
+                                                disabled><span class="fa fa-save fa-spin"></span></button>
+                                        <button v-else-if="can_save(item)"
+                                                class="btn btn-primary"
+                                                @click="save(item)"><span class="fa fa-save"></span></button>
+                                    </td>
+                                </tr>
+                            </transition-group>
+                        </table>
+                        <p v-else>
+                            <em>{{$formatMessage({id: "no_passwords_found"})}}</em>
+                        </p>
+                    </transition>
+                </div>
+            </transition>
     
             <pk-pass-adder @added="add"></pk-pass-adder>
         </div>
@@ -67,6 +78,7 @@
 <script>
 import PkPassAdder from './pk-pass-adder.vue';
 import PkPassEditor from './pk-pass-editor.vue';
+import PkPassFilter from './pk-pass-filter.vue';
 import Visible from 'src/directives/visible.js';
 
 import * as dispatcher from 'src/dispatcher.js';
@@ -76,7 +88,8 @@ export default {
     directives: { Visible },
     components: {
         PkPassAdder,
-        PkPassEditor
+        PkPassEditor,
+        PkPassFilter
     },
     data: function () {
         const items = this.$store.state.entries.map(function (element) {
@@ -92,7 +105,8 @@ export default {
         }, this);
         return {
             items: items,
-            editing_item: undefined
+            editing_item: undefined,
+            filter_query: ""
         };
     },
     created() {
@@ -171,8 +185,14 @@ export default {
         state_entries() {
             return this.$store.state.entries;
         },
-        show_passlist() {
+        show_filter() {
             return this.items.length > 0;
+        },
+        show_passlist() {
+            return this.filtered_items.length > 0;
+        },
+        filtered_items() {
+            return this.items.filter((item) => item.title.toLowerCase().indexOf(this.filter_query.toLowerCase()) >= 0);
         }
     },
     watch: {

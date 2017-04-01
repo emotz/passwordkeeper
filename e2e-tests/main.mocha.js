@@ -46,11 +46,12 @@ describe('main', function () {
         });
 
         it('can add and remove pass', function (browser) {
-            page.addPass({
-                title: 'test title',
-                user: 'test user',
-                password: 'test password'
-            })
+            page.assertNoPasses()
+                .addPass({
+                    title: 'test title',
+                    user: 'test user',
+                    password: 'test password'
+                })
                 .removeLastPass()
                 .assertNoPasses();
         });
@@ -66,7 +67,8 @@ describe('main', function () {
                 password: 'second password'
             };
 
-            page.addPass(pass1)
+            page.assertNoPasses()
+                .addPass(pass1)
                 .addPass(pass2)
                 .removePass(pass1)
                 .refreshAllPasses()
@@ -88,11 +90,32 @@ describe('main', function () {
                 password: 'updated password'
             };
 
-            page.addPass(pass)
+            page.assertNoPasses()
+                .addPass(pass)
                 .editLastPass(updatedPass)
                 .refreshAllPasses()
                 .assertContainsPass(updatedPass)
                 .assertNotContainsPass(pass)
+                .removeLastPass()
+                .assertNoPasses();
+        });
+        it('can search', function (browser) {
+            let pass = {
+                title: 'test title',
+                user: 'test user',
+                password: 'test password'
+            };
+            let passing_query = "tit";
+            let failing_query = "lalala";
+
+            page.assertNoPasses()
+                .addPass(pass)
+                .searchPass(passing_query)
+                .assertContainsPass(pass)
+                .searchPass(failing_query)
+                .assertNoPasses()
+                .searchPass("")
+                .assertContainsPass(pass)
                 .removeLastPass()
                 .assertNoPasses();
         });

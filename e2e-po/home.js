@@ -13,6 +13,17 @@ module.exports = new base({
 
             return this;
         },
+        searchPass(query) {
+            this.expect.element('@searchInput').to.be.visible.after();
+            if (query === "") {
+                // HACK: clearValue doesnt trigger event so we manually adding a 'a' and deleting it right away to trigger search
+                this.clearValue('@searchInput').setValue('@searchInput', ["a", this.api.Keys.BACK_SPACE]);
+            } else {
+                this.clearValue('@searchInput').setValue('@searchInput', query);
+            }
+
+            return this;
+        },
         editLastPass(pass) {
             this.expect.element('@lastPassEntryEditBtn').to.be.enabled.after();
             this.click('@lastPassEntryEditBtn');
@@ -73,6 +84,7 @@ module.exports = new base({
         }
     },
     elements: {
+        searchInput: '.pk-pass-filter-input',
         lastPassEntry: '.pk-pass-list tbody tr:last-child',
         lastPassEntryRemoveBtn: '.pk-pass-list tbody tr:last-child .pk-btn-pass-remove',
         lastPassEntryEditBtn: '.pk-pass-list tbody tr:last-child .pk-btn-pass-edit',

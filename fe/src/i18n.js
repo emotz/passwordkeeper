@@ -38,7 +38,10 @@ function init() {
         notify_itemsfetched_unknown: "Записи не были получены.",
         button_ok: "Ok",
         button_cancel: "Отмена",
-        editor_title: "Редактирование записи"
+        editor_title: "Редактирование записи",
+        search_placeholder: "Поиск",
+        no_passwords_found: "Совпадений не найдено."
+
     });
     Vue.registerMessages('en', {
         home_greeting: "Welcome to Password Keeper",
@@ -74,7 +77,9 @@ function init() {
         notify_itemsfetched_unknown: "Couldn't fetch all items.",
         button_ok: "Ok",
         button_cancel: "Cancel",
-        editor_title: "Edit password entry"
+        editor_title: "Edit password entry",
+        search_placeholder: "Search",
+        no_passwords_found: "No matched passwords."
     });
     set_locale('en');
 }

@@ -1,0 +1,29 @@
+<template>
+    <div class="pk-pass-filter"
+         :id="`pk-pass-filter-${_uid}`">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><span class="fa fa-search"></span></div>
+                <input type="text"
+                       class="form-control pk-pass-filter-input"
+                       :bind="value"
+                       @input="updateValue($event.target.value)"
+                       :placeholder="$formatMessage({id: 'search_placeholder'})">
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import 'src/i18n.js';
+import _ from 'lodash';
+
+export default {
+    props: ['value'],
+    methods: {
+        updateValue: _.debounce(function (new_value) {
+            this.$emit("input", new_value);
+        }, 300)
+    }
+}
+</script>
