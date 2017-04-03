@@ -52,6 +52,7 @@ npm install
 Build
 
 ```bat
+set NODE_ENV=development
 npm run build
 ```
 
@@ -81,6 +82,13 @@ Run all tests
 npm run dev
 npm run selenium
 npm run all-test
+```
+
+## Production build
+
+```bat
+set NODE_ENV=production
+npm run build
 ```
 
 ## Clean

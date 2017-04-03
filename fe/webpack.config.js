@@ -1,7 +1,30 @@
-let path = require('path');
-let webpack = require('webpack');
-let CopyWebpackPlugin = require('copy-webpack-plugin');
-var LiveReloadPlugin = require('webpack-livereload-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
+const BabiliPlugin = require("babili-webpack-plugin");
+
+const isDev = process.env.NODE_ENV === 'development';
+const plugins = [
+    // for proper bootstrap loading
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery"
+    }),
+    new webpack.EnvironmentPlugin({
+        NODE_ENV: process.env.NODE_ENV || 'development'
+    }),
+    new CopyWebpackPlugin([
+        { from: 'src/index.html' },
+        { from: 'src/index.css' }
+    ]),
+    new LiveReloadPlugin({
+        port: 35729
+    })
+];
+if (!isDev) {
+    plugins.push(new BabiliPlugin());
+}
 
 module.exports = {
     entry: ['./src/index.js'],
@@ -18,24 +41,8 @@ module.exports = {
             'nprogress.css$': 'nprogress/nprogress.css'
         }
     },
-    devtool: 'cheap-module-eval-source-map',
-    plugins: [
-        // for proper bootstrap loading
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        }),
-        new webpack.EnvironmentPlugin({
-            NODE_ENV: 'development'
-        }),
-        new CopyWebpackPlugin([
-            { from: 'src/index.html' },
-            { from: 'src/index.css' }
-        ]),
-        new LiveReloadPlugin({
-            port: 35729
-        })
-    ],
+    devtool: isDev ? 'cheap-module-eval-source-map' : false,
+    plugins,
     watch: false,
     watchOptions: {
         aggregateTimeout: 300,
