@@ -17,7 +17,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/*.spec.js'
+            'tests/test_index.js'
         ],
 
         // list of files to exclude
@@ -27,30 +27,24 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'tests/*.spec.js': ['webpack', 'sourcemap'],
+            'tests/test_index.js': ['webpack'],
         },
 
         webpack: {
-            devtool: 'inline-source-map',
+            devtool: 'cheap-module-source-map',
             resolve: {
                 alias: {
                     'src': path.resolve(__dirname, 'src'),
                     'vue$': 'vue/dist/vue.esm.js', // required to bundle vue with compiler so it can process templates
-                    'nprogress.css$': 'nprogress/nprogress.css', // TODO: I dont like that we need to add css files for unit tests. Should work on some ways to mock em
-                    'toastr.css$': 'toastr/build/toastr.min.css',
+                    'nprogress.css$': path.resolve(__dirname, 'tests/dummy.css'),
+                    'toastr.css$': path.resolve(__dirname, 'tests/dummy.css'),
                 }
             },
             module: {
                 loaders: [
                     { test: /\.vue$/, loader: 'vue-loader' },
-                    { test: /\.css$/, use: ['style-loader', 'css-loader'] }
+                    { test: /\.css$/, loader: 'null-loader' }
                 ]
-            },
-            watch: true,
-            watchOptions: {
-                aggregateTimeout: 300,
-                // poll: 1000,
-                ignored: /node_modules/
             },
         },
 
