@@ -17,8 +17,8 @@
 
 <script>
 import PkAppNav from './pk-app-nav.vue';
-import router from 'src/router.js';
-import store from 'src/store.js';
+import router from 'src/plugins/router.js';
+import store from 'src/plugins/store.js';
 
 export default {
     components: { PkAppNav },

@@ -41,3 +41,4 @@ fe/dist
 bin
 selenium-debug.log
 errorShots
+typings

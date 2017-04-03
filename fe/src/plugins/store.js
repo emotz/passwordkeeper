@@ -2,8 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 
-import loader from './loader.js';
-import i18n from './i18n.js';
+import * as i18n from './i18n.js';
+import * as loader from 'src/services/loader.js';
 
 Vue.use(Vuex);
 Vue.use(VueResource);
@@ -20,7 +20,7 @@ const locale = {
         }
     }
 };
-
+// TODO: move notifications to app.vue or whatever
 export default new Vuex.Store({
     strict: process.env.NODE_ENV === 'development',
     modules: {
@@ -76,11 +76,11 @@ export default new Vuex.Store({
                         console.log("Failure");
                         // TODO: translate response.body ???
                         const res = response.status === 408 ?
-                            i18n.formatMessage({ id: "notify_itemstored_timeout" }) :
-                            (response.body || i18n.formatMessage({ id: "notify_itemstored_unknown" }));
+                            i18n.t("notify_itemstored_timeout") :
+                            (response.body || i18n.t("notify_itemstored_unknown"));
                         throw res;
                     }),
-                () => i18n.formatMessage({ id: "notify_itemstored" }));
+                () => i18n.t("notify_itemstored"));
         },
         update_entry(context, entry) {
             let resource = Vue.resource('entries{/id}');
@@ -100,10 +100,10 @@ export default new Vuex.Store({
                     }, response => {
                         // TODO: translate response.body ???
                         throw response.status === 408 ?
-                            i18n.formatMessage({ id: "notify_itemupdated_timeout" }) :
-                            (response.body || i18n.formatMessage({ id: "notify_itemupdated_unknown" }));
+                            i18n.t("notify_itemupdated_timeout") :
+                            (response.body || i18n.t("notify_itemupdated_unknown"));
                     }),
-                () => i18n.formatMessage({ id: "notify_itemupdated" }));
+                () => i18n.t("notify_itemupdated"));
         },
         remove_entry_by_id(context, id) {
             let resource = Vue.resource('entries{/id}');
@@ -120,10 +120,10 @@ export default new Vuex.Store({
                     }, response => {
                         // TODO: translate response.body ???
                         throw response.status === 408 ?
-                            i18n.formatMessage({ id: "notify_itemremoved_timeout" }) :
-                            (response.body || i18n.formatMessage({ id: "notify_itemremoved_unknown" }));
+                            i18n.t("notify_itemremoved_timeout") :
+                            (response.body || i18n.t("notify_itemremoved_unknown"));
                     }),
-                () => i18n.formatMessage({ id: "notify_itemremoved" }));
+                () => i18n.t("notify_itemremoved"));
         },
         get_entries(context) {
             let resource = Vue.resource('entries');
@@ -136,10 +136,10 @@ export default new Vuex.Store({
                     }, response => {
                         // TODO: translate response.body ???
                         throw response.status === 408 ?
-                            i18n.formatMessage({ id: "notify_itemsfetched_timeout" }) :
-                            (response.body || i18n.formatMessage({ id: "notify_itemsfetched_unknown" }));
+                            i18n.t("notify_itemsfetched_timeout") :
+                            (response.body || i18n.t("notify_itemsfetched_unknown"));
                     }),
-                () => i18n.formatMessage({ id: "notify_itemsfetched" }));
+                () => i18n.t("notify_itemsfetched"));
         }
     }
 });

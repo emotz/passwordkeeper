@@ -1,8 +1,8 @@
 import { Vue } from './vue-helper.js';
 
 import PkAppNav from 'src/components/pk-app-nav.vue';
-import store from 'src/store.js';
-import router from 'src/router.js';
+import store from 'src/plugins/store.js';
+import router from 'src/plugins/router.js';
 
 describe("app-nav tests", function () {
     function is_there_route_for_location(location) {

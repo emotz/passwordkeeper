@@ -8,14 +8,13 @@
                        class="form-control pk-pass-filter-input"
                        :bind="value"
                        @input="updateValue($event.target.value)"
-                       :placeholder="$formatMessage({id: 'search_placeholder'})">
+                       :placeholder="$t('search_placeholder')">
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import 'src/i18n.js';
 import _ from 'lodash';
 
 export default {

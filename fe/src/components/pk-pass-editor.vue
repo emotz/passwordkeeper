@@ -1,17 +1,17 @@
 <template>
     <div class="pk-pass-editor"
          :id="`pk-pass-editor-${_uid}`">
-        <modal :title="$formatMessage({id: 'editor_title'})"
+        <modal :title="$t('editor_title')"
                :show="show"
                @ok="ok"
                @cancel="cancel"
                okClass="btn btn-primary pk-btn-editor-ok"
-               :okText="$formatMessage({id: 'button_ok'})"
-               :cancelText="$formatMessage({id: 'button_cancel'})">
+               :okText="$t('button_ok')"
+               :cancelText="$t('button_cancel')">
             <div class="form-group"
                  :class="{'has-error': title_error}">
                 <label class="control-label"
-                       :for="`pk-title-input-${_uid}`">{{ $formatMessage({id: 'label_title'}) }}</label>
+                       :for="`pk-title-input-${_uid}`">{{ $t('label_title') }}</label>
                 <input type="text"
                        class="pk-title-input form-control"
                        :id="`pk-title-input-${_uid}`"
@@ -21,7 +21,7 @@
             <div class="form-group"
                  :class="{'has-error': user_error}">
                 <label class="control-label"
-                       :for="`pk-user-input-${_uid}`">{{ $formatMessage({id: 'label_user'}) }}</label>
+                       :for="`pk-user-input-${_uid}`">{{ $t('label_user') }}</label>
                 <input type="text"
                        class="pk-user-input form-control"
                        :id="`pk-user-input-${_uid}`"
@@ -29,7 +29,7 @@
                        v-model="user">
             </div>
             <div class="form-group">
-                <label :for="`pk-pass-input-${_uid}`">{{ $formatMessage({id: 'label_password'}) }}</label>
+                <label :for="`pk-pass-input-${_uid}`">{{ $t('label_password') }}</label>
                 <div class="input-group">
                     <input v-if="show_password"
                            type="text"

@@ -4,7 +4,7 @@
         <div class="form-group"
              :class="{'has-error': title_error}">
             <label class="control-label"
-                   :for="`pk-title-input-${_uid}`">{{ $formatMessage({id: 'label_title'}) }}</label>
+                   :for="`pk-title-input-${_uid}`">{{ $t('label_title') }}</label>
             <input type="text"
                    class="pk-title-input form-control"
                    :id="`pk-title-input-${_uid}`"
@@ -14,7 +14,7 @@
         <div class="form-group"
              :class="{'has-error': user_error}">
             <label class="control-label"
-                   :for="`pk-user-input-${_uid}`">{{ $formatMessage({id: 'label_user'}) }}</label>
+                   :for="`pk-user-input-${_uid}`">{{ $t('label_user') }}</label>
             <input type="text"
                    class="pk-user-input form-control"
                    :id="`pk-user-input-${_uid}`"
@@ -22,7 +22,7 @@
                    v-model="user">
         </div>
         <div class="form-group">
-            <label :for="`pass-input-${_uid}`">{{ $formatMessage({id: 'label_password'}) }}</label>
+            <label :for="`pass-input-${_uid}`">{{ $t('label_password') }}</label>
             <div class="input-group">
                 <input v-if="show_password"
                        type="text"

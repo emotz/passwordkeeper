@@ -6,7 +6,7 @@
                         @cancel="cancel_edit"
                         @edit="apply_edit"></pk-pass-editor>
         <div class="panel-heading">
-            <h3 class="panel-title">{{ $formatMessage({id: 'passlist_panel_title'}) }}</h3>
+            <h3 class="panel-title">{{ $t('passlist_panel_title') }}</h3>
         </div>
         <div class="panel-body">
             <transition name="fade">
@@ -18,9 +18,9 @@
                                v-if="show_passlist">
                             <thead>
                                 <tr>
-                                    <th>{{ $formatMessage({id: 'label_title'}) }}</th>
-                                    <th>{{ $formatMessage({id: 'label_user'}) }}</th>
-                                    <th>{{ $formatMessage({id: 'label_password'}) }}</th>
+                                    <th>{{ $t('label_title') }}</th>
+                                    <th>{{ $t('label_user') }}</th>
+                                    <th>{{ $t('label_password') }}</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -64,7 +64,7 @@
                             </transition-group>
                         </table>
                         <p v-else>
-                            <em>{{$formatMessage({id: "no_passwords_found"})}}</em>
+                            <em>{{$t("no_passwords_found")}}</em>
                         </p>
                     </transition>
                 </div>
@@ -79,13 +79,11 @@
 import PkPassAdder from './pk-pass-adder.vue';
 import PkPassEditor from './pk-pass-editor.vue';
 import PkPassFilter from './pk-pass-filter.vue';
-import Visible from 'src/directives/visible.js';
 
 import * as dispatcher from 'src/dispatcher.js';
 import * as utls from 'src/utility.js';
 
 export default {
-    directives: { Visible },
     components: {
         PkPassAdder,
         PkPassEditor,

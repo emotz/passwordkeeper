@@ -4,6 +4,10 @@ Simple storage for passwords. Но это не точно!
 
 ## Tech description
 
+`fe/jsconfig.json` is a Visual Studio Code file for project definition.
+
+`fe/tests/typings.json` configuration file for `typings` - it is used to provide intellisense.
+
 Front-end source files are located at `fe/src`.
 
 Front-end unit-test specifications are located at `fe/tests`.
@@ -28,6 +32,11 @@ From elevated CMD (with Administrator rights):
 
 ```bat
 npm install --global --production windows-build-tools
+```
+
+From usual CMD:
+
+```bat
 npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone-service
 ```
 
@@ -36,7 +45,7 @@ npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone
 Then additional requirements:
 
 ```bat
-npm install -g webpack local-web-server karma-cli
+npm install -g webpack local-web-server karma-cli typings
 npm install
 ```
 

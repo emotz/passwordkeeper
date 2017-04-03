@@ -10,7 +10,7 @@ class Page {
         browser.waitForVisible('#splash', undefined, true);
     }
     waitForSuccessNotification(content) {
-        browser.$('.toast-success').waitForText(content);
+        browser.$(`.toast-success=${content}`).waitForVisible();
     }
 }
 module.exports = Page;

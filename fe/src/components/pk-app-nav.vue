@@ -9,31 +9,15 @@
             <ul class="nav navbar-nav">
                 <router-link active-class="active"
                              tag="li"
-                             to="/home"><a>{{ $formatMessage({id: 'link_home'}) }}</a></router-link>
+                             to="/home"><a>{{ $t('link_home') }}</a></router-link>
                 <router-link active-class="active"
                              tag="li"
-                             to="/config"><a>{{ $formatMessage({id: 'link_config'}) }}</a></router-link>
+                             to="/config"><a>{{ $t('link_config') }}</a></router-link>
                 <router-link active-class="active"
                              tag="li"
-                             to="/about"><a>{{ $formatMessage({id: 'link_about'}) }}</a></router-link>
+                             to="/about"><a>{{ $t('link_about') }}</a></router-link>
             </ul>
         </div>
         <!--/.container-fluid -->
     </nav>
 </template>
-
-<script>
-export default {
-    computed: {
-        state_locale() {
-            return this.$store.state.locale.locale;
-        }
-    },
-    watch: {
-        state_locale() {
-            // TODO: very hacky way of dealing with locale change. Probably need to switch to another i18n library
-            this.$forceUpdate();
-        }
-    }
-}
-</script>
