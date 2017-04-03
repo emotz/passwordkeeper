@@ -29,7 +29,9 @@ export default {
     router,
     store,
     created() {
-        this.$store.commit('locale/set_locale', 'en');
+        if (this.$store.state.locale.locale === "") {
+            this.$store.commit('locale/set_locale', 'en');
+        }
     },
     watch: {
         '$store.state.locale.locale'(new_locale) {

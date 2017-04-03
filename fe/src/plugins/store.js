@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 
-//TODO: move i18n and loader to the app.vue on watch ?
+//HACK: I dont like to have notifications and translations here, but I dont see a way to watch over action execution in app.vue
 import * as i18n from './i18n.js';
 import * as loader from 'src/services/loader.js';
 

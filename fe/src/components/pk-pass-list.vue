@@ -108,7 +108,9 @@ export default {
         };
     },
     created() {
-        this.$store.dispatch('get_entries');
+        if (this.items.length <= 0) {
+            this.$store.dispatch('get_entries');
+        }
 
         let that = this;
 
