@@ -18,9 +18,8 @@
                             <select class="form-control pk-config-locale-input"
                                     :id="`pk-config-locale-${_uid}`"
                                     v-model="locale">
-                                <!--TODO: fill in options using available ones-->
-                                <option value="en">en</option>
-                                <option value="ru">ru</option>
+                                <option v-for="lang in locales"
+                                        :value="lang">{{ lang }}</option>
                             </select>
                         </div>
                     </div>
@@ -31,11 +30,14 @@
 </template>
 
 <script>
-export default {
-    render: function (createElement) {
-        return createElement('h1', 'hello wolrd');
-    },
+import * as i18n from 'src/plugins/i18n.js';
 
+export default {
+    data() {
+        return {
+            locales: i18n.get_locales()
+        }
+    },
     computed: {
         locale: {
             get() {

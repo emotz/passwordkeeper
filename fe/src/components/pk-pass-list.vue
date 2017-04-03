@@ -108,6 +108,8 @@ export default {
         };
     },
     created() {
+        this.$store.dispatch('get_entries');
+
         let that = this;
 
         this._dispatch_manager = new dispatcher.DispatchManager({

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
 
+//TODO: move i18n and loader to the app.vue on watch ?
 import * as i18n from './i18n.js';
 import * as loader from 'src/services/loader.js';
 
@@ -16,7 +17,6 @@ const locale = {
     mutations: {
         set_locale(state, new_locale) {
             state.locale = new_locale;
-            i18n.set_locale(new_locale);
         }
     }
 };

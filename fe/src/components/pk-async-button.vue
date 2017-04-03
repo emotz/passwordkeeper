@@ -12,7 +12,7 @@
 <script>
 
 export default {
-    props: ['can-execute', 'action'], // TODO: object props (required etc)
+    props: ['can-execute', 'action'],
     data: function () {
         this._unwatches = [];
         this._unwatches.push(this.action.watch(() => { this.executing = this.action.is_executing(); }));
@@ -28,7 +28,6 @@ export default {
     watch: {
         action: function (new_action, old_action) {
             for (let unw; uwn = this._unwatches.pop(); unw());
-            // TODO: check memory leaks
             this.executing = new_action.is_executing();
             this._unwatches.push(new_action.watch(() => { this.executing = this.action.is_executing(); }));
         }
