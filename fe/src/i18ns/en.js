@@ -1,35 +1,49 @@
 export default {
-    home_greeting: "Welcome to Password Keeper",
-    home_description_nopasswords: "Start filling out fields below to store some passwords",
-    home_description_fewpasswords: "You are doing great! Keep going! Store some more passwords!",
-    home_description_manypasswords: "Well you should slow down, you have too many password :(",
-    home_description_toomanypasswords: "OMG you are passwordniac with so many passwords!",
-    home_fetch_all_passwords: "Fetch all passwords from server",
-    passlist_panel_title: "Stored passwords",
-    about_greeting: "Hello, world!",
-    about_description: "App for storing login/passwords",
-    config_greeting: "Configuration page",
-    config_description: "Here you can set up configuration parameters",
-    config_panel_title: "Configration parameters",
-    config_label_language: "Language",
-    link_home: "Home",
-    link_config: "Config",
-    link_about: "About",
+    home: {
+        greeting: "Welcome to Password Keeper",
+        description: {
+            nopasswords: "Start filling out fields below to store some passwords",
+            fewpasswords: "You are doing great! Keep going! Store some more passwords!",
+            manypasswords: "Well you should slow down, you have too many password :(",
+            toomanypasswords: "OMG you are passwordniac with so many passwords!"
+        },
+        fetch_all_passwords: "Fetch all passwords from server"
+    },
+    passlist: {
+        panel_title: "Stored passwords"
+    },
+    about: {
+        greeting: "Hello, world!",
+        description: "App for storing login/passwords"
+    },
+    config: {
+        greeting: "Configuration page",
+        description: "Here you can set up configuration parameters",
+        panel_title: "Configration parameters",
+        label_language: "Language"
+    },
+    link: {
+        home: "Home",
+        config: "Config",
+        about: "About"
+    },
+    notify: {
+        itemstored: "Item stored.",
+        itemstored_timeout: "Request timed-out when storing item.",
+        itemstored_unknown: "Couldn't store item.",
+        itemupdated: "Item updated.",
+        itemupdated_timeout: "Request timed-out when updating item.",
+        itemupdated_unknown: "Couldn't update item.",
+        itemremoved: "Item removed.",
+        itemremoved_timeout: "Request timed-out when removing item.",
+        itemremoved_unknown: "Couldn't remove item.",
+        itemsfetched: "Items fetched.",
+        itemsfetched_timeout: "Request timed-out when fetching items.",
+        itemsfetched_unknown: "Couldn't fetch all items."
+    },
     label_title: "Title",
     label_user: "User",
     label_password: "Password",
-    notify_itemstored: "Item stored.",
-    notify_itemstored_timeout: "Request timed-out when storing item.",
-    notify_itemstored_unknown: "Couldn't store item.",
-    notify_itemupdated: "Item updated.",
-    notify_itemupdated_timeout: "Request timed-out when updating item.",
-    notify_itemupdated_unknown: "Couldn't update item.",
-    notify_itemremoved: "Item removed.",
-    notify_itemremoved_timeout: "Request timed-out when removing item.",
-    notify_itemremoved_unknown: "Couldn't remove item.",
-    notify_itemsfetched: "Items fetched.",
-    notify_itemsfetched_timeout: "Request timed-out when fetching items.",
-    notify_itemsfetched_unknown: "Couldn't fetch all items.",
     button_ok: "Ok",
     button_cancel: "Cancel",
     editor_title: "Edit password entry",

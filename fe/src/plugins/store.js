@@ -75,11 +75,11 @@ export default new Vuex.Store({
                     }, response => {
                         console.log("Failure");
                         const res = response.status === 408 ?
-                            i18n.t("notify_itemstored_timeout") :
-                            (i18n.t(response.body) || i18n.t("notify_itemstored_unknown"));
+                            i18n.t('notify.itemstored_timeout') :
+                            (i18n.t(response.body) || i18n.t('notify.itemstored_unknown'));
                         throw res;
                     }),
-                () => i18n.t("notify_itemstored"));
+                () => i18n.t('notify.itemstored'));
         },
         update_entry(context, entry) {
             let resource = Vue.resource('entries{/id}');
@@ -98,10 +98,10 @@ export default new Vuex.Store({
                         return entry;
                     }, response => {
                         throw response.status === 408 ?
-                            i18n.t("notify_itemupdated_timeout") :
-                            (i18n.t(response.body) || i18n.t("notify_itemupdated_unknown"));
+                            i18n.t('notify.itemupdated_timeout') :
+                            (i18n.t(response.body) || i18n.t('notify.itemupdated_unknown'));
                     }),
-                () => i18n.t("notify_itemupdated"));
+                () => i18n.t('notify.itemupdated'));
         },
         remove_entry_by_id(context, id) {
             let resource = Vue.resource('entries{/id}');
@@ -117,10 +117,10 @@ export default new Vuex.Store({
                         return;
                     }, response => {
                         throw response.status === 408 ?
-                            i18n.t("notify_itemremoved_timeout") :
-                            (i18n.t(response.body) || i18n.t("notify_itemremoved_unknown"));
+                            i18n.t('notify.itemremoved_timeout') :
+                            (i18n.t(response.body) || i18n.t('notify.itemremoved_unknown'));
                     }),
-                () => i18n.t("notify_itemremoved"));
+                () => i18n.t('notify.itemremoved'));
         },
         get_entries(context) {
             let resource = Vue.resource('entries');
@@ -132,10 +132,10 @@ export default new Vuex.Store({
                         context.commit("set_entries", response.body);
                     }, response => {
                         throw response.status === 408 ?
-                            i18n.t("notify_itemsfetched_timeout") :
-                            (i18n.t(response.body) || i18n.t("notify_itemsfetched_unknown"));
+                            i18n.t('notify.itemsfetched_timeout') :
+                            (i18n.t(response.body) || i18n.t('notify.itemsfetched_unknown'));
                     }),
-                () => i18n.t("notify_itemsfetched"));
+                () => i18n.t('notify.itemsfetched'));
         }
     }
 });

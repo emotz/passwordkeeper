@@ -6,7 +6,7 @@
                         @cancel="cancel_edit"
                         @edit="apply_edit"></pk-pass-editor>
         <div class="panel-heading">
-            <h3 class="panel-title">{{ $t('passlist_panel_title') }}</h3>
+            <h3 class="panel-title">{{ $t('passlist.panel_title') }}</h3>
         </div>
         <div class="panel-body">
             <transition name="fade">

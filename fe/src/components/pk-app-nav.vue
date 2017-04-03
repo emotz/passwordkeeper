@@ -9,13 +9,13 @@
             <ul class="nav navbar-nav">
                 <router-link active-class="active"
                              tag="li"
-                             to="/home"><a>{{ $t('link_home') }}</a></router-link>
+                             to="/home"><a>{{ $t('link.home') }}</a></router-link>
                 <router-link active-class="active"
                              tag="li"
-                             to="/config"><a>{{ $t('link_config') }}</a></router-link>
+                             to="/config"><a>{{ $t('link.config') }}</a></router-link>
                 <router-link active-class="active"
                              tag="li"
-                             to="/about"><a>{{ $t('link_about') }}</a></router-link>
+                             to="/about"><a>{{ $t('link.about') }}</a></router-link>
             </ul>
         </div>
         <!--/.container-fluid -->
