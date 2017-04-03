@@ -20,7 +20,7 @@ const locale = {
         }
     }
 };
-// TODO: move notifications to app.vue or whatever
+
 export default new Vuex.Store({
     strict: process.env.NODE_ENV === 'development',
     modules: {
@@ -74,10 +74,9 @@ export default new Vuex.Store({
                         return entry.id;
                     }, response => {
                         console.log("Failure");
-                        // TODO: translate response.body ???
                         const res = response.status === 408 ?
                             i18n.t("notify_itemstored_timeout") :
-                            (response.body || i18n.t("notify_itemstored_unknown"));
+                            (i18n.t(response.body) || i18n.t("notify_itemstored_unknown"));
                         throw res;
                     }),
                 () => i18n.t("notify_itemstored"));
@@ -98,10 +97,9 @@ export default new Vuex.Store({
                         context.commit("update_entry", entry_to_send);
                         return entry;
                     }, response => {
-                        // TODO: translate response.body ???
                         throw response.status === 408 ?
                             i18n.t("notify_itemupdated_timeout") :
-                            (response.body || i18n.t("notify_itemupdated_unknown"));
+                            (i18n.t(response.body) || i18n.t("notify_itemupdated_unknown"));
                     }),
                 () => i18n.t("notify_itemupdated"));
         },
@@ -118,10 +116,9 @@ export default new Vuex.Store({
                         }
                         return;
                     }, response => {
-                        // TODO: translate response.body ???
                         throw response.status === 408 ?
                             i18n.t("notify_itemremoved_timeout") :
-                            (response.body || i18n.t("notify_itemremoved_unknown"));
+                            (i18n.t(response.body) || i18n.t("notify_itemremoved_unknown"));
                     }),
                 () => i18n.t("notify_itemremoved"));
         },
@@ -134,10 +131,9 @@ export default new Vuex.Store({
                     .then(response => {
                         context.commit("set_entries", response.body);
                     }, response => {
-                        // TODO: translate response.body ???
                         throw response.status === 408 ?
                             i18n.t("notify_itemsfetched_timeout") :
-                            (response.body || i18n.t("notify_itemsfetched_unknown"));
+                            (i18n.t(response.body) || i18n.t("notify_itemsfetched_unknown"));
                     }),
                 () => i18n.t("notify_itemsfetched"));
         }
