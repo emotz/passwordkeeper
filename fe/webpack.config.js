@@ -1,6 +1,7 @@
 let path = require('path');
 let webpack = require('webpack');
 let CopyWebpackPlugin = require('copy-webpack-plugin');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
 
 module.exports = {
     entry: ['./src/index.js'],
@@ -30,7 +31,10 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: 'src/index.html' },
             { from: 'src/index.css' }
-        ])
+        ]),
+        new LiveReloadPlugin({
+            port: 35729
+        })
     ],
     watch: false,
     watchOptions: {

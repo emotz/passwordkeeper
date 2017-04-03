@@ -82,3 +82,9 @@ npm run dev
 npm run selenium
 npm run all-test
 ```
+
+## Clean
+
+```bat
+npm run clean
+```
