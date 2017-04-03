@@ -1,3 +1,4 @@
+import 'font-awesome-webpack';
 import 'bootstrap';
 import 'bootstrap.css';
 

@@ -3,7 +3,7 @@ let webpack = require('webpack');
 let CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: ['font-awesome-webpack', './src/index.js'],
+    entry: ['./src/index.js'],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
