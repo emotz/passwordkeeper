@@ -30,12 +30,14 @@ export default {
     store,
     created() {
         if (this.$store.state.locale.locale === "") {
-            this.$store.commit('locale/set_locale', 'en');
+            let lang = window.localStorage.getItem('PkLang') || 'en';
+            this.$store.commit('locale/set_locale', lang);
         }
     },
     watch: {
         '$store.state.locale.locale'(new_locale) {
             i18n.set_locale(new_locale);
+            window.localStorage.setItem('PkLang', new_locale);
         }
     }
 }
