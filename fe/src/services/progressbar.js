@@ -32,9 +32,13 @@ class ProgressBar {
     wrap(fn, context, ...args) {
         this.start();
         const res = Promise.resolve(fn instanceof Function ? fn.apply(context, args) : fn);
-        const onfinal = () => this.stop();
-        res.then(onfinal, onfinal);
-        return res;
+        return res.then(val => {
+            this.stop();
+            return val;
+        }, err => {
+            this.stop();
+            throw err;
+        });
     }
 }
 export default new ProgressBar();

@@ -17,7 +17,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/test_index.js'
+            'dist/bundle.js',
         ],
 
         // list of files to exclude
@@ -27,32 +27,7 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'tests/test_index.js': ['webpack'],
-        },
-
-        webpack: {
-            devtool: 'cheap-module-source-map',
-            resolve: {
-                alias: {
-                    'src': path.resolve(__dirname, 'src'),
-                    'vue$': 'vue/dist/vue.esm.js', // required to bundle vue with compiler so it can process templates
-                    'nprogress.css$': path.resolve(__dirname, 'tests/dummy.css'),
-                    'toastr.css$': path.resolve(__dirname, 'tests/dummy.css'),
-                }
-            },
-            module: {
-                loaders: [
-                    { test: /\.vue$/, loader: 'vue-loader' },
-                    { test: /\.css$/, loader: 'null-loader' }
-                ]
-            },
-        },
-
-        webpackMiddleware: {
-            // webpack-dev-middleware configuration
-            // i. e.
-            stats: 'errors-only',
-            noInfo: true
+            'dist/bundle.js': ['sourcemap'],
         },
 
         // test results reporter to use
@@ -76,7 +51,7 @@ module.exports = function (config) {
 
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: false,
-
+        autoWatchBatchDelay: 500,
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
