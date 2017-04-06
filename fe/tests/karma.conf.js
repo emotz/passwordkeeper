@@ -1,8 +1,6 @@
 // Karma configuration
 // Generated on Tue Mar 21 2017 16:40:41 GMT+0700 (Altai Standard Time)
 
-let path = require('path');
-
 module.exports = function (config) {
     config.set({
 

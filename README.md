@@ -63,37 +63,37 @@ npm run build
 Start dev server
 
 ```bat
-npm run dev
+npm run watch:dev
 ```
 
 Run unit tests
 
 ```bat
-npm run unit-test
+npm run test:unit
 ```
 
 Run e2e tests
 
 ```bat
-npm run dev
-npm run e2e-test
+npm run watch:dev
+npm run test:e2e
 ```
 
 Run all tests
 
 ```bat
-npm run dev
-npm run all-test
+npm run watch:dev
+npm run test:all
 ```
 
 ## Usual development workflow
 
 ```bat
 set NODE_ENV=development
-npm run dev
-npm run build-watch
-npm run build-watch:unit-test
-npm run unit-test-watch
+npm run watch:dev
+npm run watch:build
+npm run watch:build:test:unit
+npm run watch:test:unit
 ```
 
 Open `localhost:8000` in browser.

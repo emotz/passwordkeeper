@@ -2,7 +2,6 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
 import * as loader from 'src/services/loader.js';
-import * as utls from 'src/utility.js';
 
 Vue.use(VueI18n);
 const locales = {

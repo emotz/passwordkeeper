@@ -1,5 +1,4 @@
 import * as dispatcher from 'src/dispatcher.js';
-import _ from 'lodash';
 
 describe("dispatcher tests", function () {
     it("should create manager and dispatch some actions", function (done) {

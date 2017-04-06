@@ -9,7 +9,7 @@ describe("test-router tests", function () {
             template: '<router-link to="/home">Home</router-link>',
         });
 
-        const component = new Component({
+        new Component({
             router: new VueRouter()
         }).$mount();
     });

@@ -17,9 +17,20 @@ module.exports = {
     },
     module: {
         loaders: [
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "eslint-loader",
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader",
+                options: { presets: ['es2015'] }
+            },
             { test: /\.vue$/, loader: 'vue-loader' },
-            { test: /\.css$/, loader: 'null-loader' },
-            { test: /\.js$/, loader: 'babel-loader', exclude: [/node_modules/], options: { presets: ['es2015'] } } // babel is required for proper inject-loader work
+            { test: /\.css$/, loader: 'null-loader' }
         ]
     },
     watch: false,

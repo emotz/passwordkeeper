@@ -6,7 +6,7 @@ const req = require.context('./plugins/', true, /\.js$/);
 req.keys().forEach(req);
 
 $(function () {
-    const app = new Vue(App).$mount("#app");
+    new Vue(App).$mount("#app");
 
     $("#splash").fadeOut(500);
 

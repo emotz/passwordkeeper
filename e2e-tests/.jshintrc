@@ -1,7 +1,0 @@
-{
-    "globals": {
-        "browser": true
-    },
-    "esversion": 6,
-    "node": true
-}

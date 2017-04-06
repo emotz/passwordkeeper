@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { DispatchObj, DispatchOp, get_last_op, add_new_op, update_op_status, get_last_last_op } from './dispatchobj.js';
 
-class DispatchCommand {
+export class DispatchCommand {
     /**
      * 
      * @param {function} action Async action, must return Promise
