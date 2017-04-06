@@ -1,0 +1,18 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+        {
+            "name": "Launch localhost",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8000",
+            "webRoot": "${workspaceRoot}/fe/dist",
+            "sourceMapPathOverrides": {
+                "webpack:///./*": "${workspaceRoot}/fe/*", // Example: "webpack:///./src/app.js" -> "/users/me/project/src/app.js",
+                "webpack:///./~/*": "${workspaceRoot}/node_modules/*", // Example: "webpack:///./~/querystring/index.js" -> "/Users/me/project/node_modules/querystring/index.js"
+                "webpack:///*": "*" // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
+            },
+            "userDataDir": "${workspaceRoot}/.vscode/chrome"
+        }
+    ]
+}

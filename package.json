@@ -59,7 +59,7 @@
         "test:e2e": "wdio & exit 0",
         "test:all": "npm run test:unit && npm run test:e2e",
         "postinstall": "cd fe/tests && typings install",
-        "clean": "rmdir /S /Q bin & rmdir /S /Q errorShots & rmdir /S /Q node_modules & cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q typings & rmdir /S /Q dist & exit 0"
+        "clean": "rmdir /S /Q bin & rmdir /S /Q errorShots & rmdir /S /Q node_modules & cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q typings & rmdir /S /Q dist & rmdir /S /Q .vscode/chrome & exit 0"
     },
     "repository": {
         "type": "git",
