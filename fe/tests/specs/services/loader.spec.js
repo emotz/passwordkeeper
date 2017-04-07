@@ -22,7 +22,7 @@ describe("progressbar tests", function () {
         const notify = {
             success: jasmine.createSpy("notify success"),
             error: jasmine.createSpy("notify error")
-        }
+        };
         const loader = loaderInjector({
             './notify.js': notify
         });

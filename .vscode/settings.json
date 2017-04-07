@@ -1,4 +1,17 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "jshint.enable": false
+    "jshint.enable": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        ".vscode/chrome": true
+    },
+    "path-intellisense.extensionOnImport": true,
+    "path-intellisense.mappings": {
+        "src": "${workspaceRoot}/fe/src",
+        "global": "E:\\eoksni-dir"
+    }
 }

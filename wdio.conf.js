@@ -129,6 +129,7 @@ exports.config = {
     //
     // Options to be passed to Jasmine.
     jasmineNodeOpts: {
+        // grep: ['login'],
         //
         // Jasmine default timeout
         defaultTimeoutInterval: 60000 * 60,

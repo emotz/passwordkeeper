@@ -1,4 +1,4 @@
-import progressbar from './progressbar.js';
+import * as progressbar from './progressbar.js';
 import * as notify from './notify.js';
 import _ from 'lodash';
 

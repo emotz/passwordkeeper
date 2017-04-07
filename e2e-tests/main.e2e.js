@@ -1,5 +1,23 @@
 describe('main', function () {
+    describe('login', function () {
+        const Page = require('./po/page.js');
+        const page = new Page();
 
+        beforeEach(function () {
+            page.open();
+        });
+
+        it('should fail login with non-existent user/password', function () {
+            page.login('nonexistent user', 'nonexistent password');
+            page.waitForFailedLogin();
+        });
+        it('should not fail login with correct user/password and logout', function () {
+            page.login('myuser', 'mypassword');
+            page.waitForFailedLogin(undefined, true);
+            page.logout();
+            page.waitForLoginReady();
+        });
+    });
     describe('about', function () {
         const page = require('./po/about.js');
 
@@ -28,7 +46,7 @@ describe('main', function () {
     describe('home', function () {
         const page = require('./po/home.js');
 
-        beforeAll(function () {
+        beforeEach(function () {
             page.open();
             page.removeAllPasses();
             page.waitForNoPasses();

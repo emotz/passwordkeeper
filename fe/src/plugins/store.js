@@ -9,6 +9,8 @@ import * as loader from 'src/services/loader.js';
 Vue.use(Vuex);
 Vue.use(VueResource);
 
+const API_ENTRIES_URL = '/api/entries';
+
 const locale = {
     namespaced: true,
     state: {
@@ -21,10 +23,23 @@ const locale = {
     }
 };
 
+const auth = {
+    namespaced: true,
+    state: {
+        authenticated: false
+    },
+    mutations: {
+        set_authenticated(state, new_auth) {
+            state.authenticated = new_auth;
+        }
+    }
+};
+
 export default new Vuex.Store({
     strict: process.env.NODE_ENV === 'development',
     modules: {
-        locale
+        locale,
+        auth
     },
     state: {
         entries: []
@@ -52,10 +67,10 @@ export default new Vuex.Store({
             }
 
             var customActions = {
-                add: { method: 'POST', url: 'entries' }
+                add: { method: 'POST' }
             };
 
-            let resource = Vue.resource('entries', {}, customActions);
+            let resource = Vue.resource(API_ENTRIES_URL, {}, customActions);
 
             let entry_to_send = {
                 user: entry.user,
@@ -82,7 +97,7 @@ export default new Vuex.Store({
                 () => i18n.t('notify.itemstored'));
         },
         update_entry(context, entry) {
-            let resource = Vue.resource('entries{/id}');
+            let resource = Vue.resource(API_ENTRIES_URL + '{/id}');
 
             let entry_to_send = {
                 id: entry.id,
@@ -104,7 +119,7 @@ export default new Vuex.Store({
                 () => i18n.t('notify.itemupdated'));
         },
         remove_entry_by_id(context, id) {
-            let resource = Vue.resource('entries{/id}');
+            let resource = Vue.resource(API_ENTRIES_URL + '{/id}');
 
             return loader.perform(
                 resource
@@ -123,7 +138,7 @@ export default new Vuex.Store({
                 () => i18n.t('notify.itemremoved'));
         },
         get_entries(context) {
-            let resource = Vue.resource('entries');
+            let resource = Vue.resource(API_ENTRIES_URL);
 
             return loader.perform(
                 resource

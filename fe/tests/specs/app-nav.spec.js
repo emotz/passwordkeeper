@@ -33,6 +33,7 @@ describe("app-nav tests", function () {
         const component = new Component({ router, store }).$mount();
 
         component.$children.forEach(function (child) {
+            if (child._props === undefined) return;
             const location = child._props.to;
             if (location === undefined) return;
             expect(location).toBeRegisteredInRouter();

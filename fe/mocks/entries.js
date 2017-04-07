@@ -12,7 +12,7 @@ function guid() {
         s4() + '-' + s4() + s4() + s4();
 }
 
-/* responses for /users */
+/* responses for /entries */
 const mockResponses = [
     /* Respond with 400 Bad Request for PUT and DELETE - inappropriate on a collection */
     { request: { method: 'PUT' }, response: { status: 400 } },

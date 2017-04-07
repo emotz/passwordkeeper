@@ -5,10 +5,10 @@ describe("progressbar tests", function () {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")
-        }
+        };
         const progressbar = progressbarInjector({
             'nprogress': NProgress
-        }).default;
+        });
 
         progressbar.start();
         expect(NProgress.start).toHaveBeenCalledTimes(1);
@@ -20,10 +20,10 @@ describe("progressbar tests", function () {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")
-        }
+        };
         const progressbar = progressbarInjector({
             'nprogress': NProgress
-        }).default;
+        });
 
         progressbar.start();
         progressbar.start();
@@ -38,10 +38,10 @@ describe("progressbar tests", function () {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")
-        }
+        };
         const progressbar = progressbarInjector({
             'nprogress': NProgress
-        }).default;
+        });
 
         progressbar.start();
         progressbar.start();
@@ -61,10 +61,10 @@ describe("progressbar tests", function () {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")
-        }
+        };
         const progressbar = progressbarInjector({
             'nprogress': NProgress
-        }).default;
+        });
 
         const promise = new Promise((resolve, reject) => { resolve("resolved"); });
 
@@ -79,10 +79,10 @@ describe("progressbar tests", function () {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")
-        }
+        };
         const progressbar = progressbarInjector({
             'nprogress': NProgress
-        }).default;
+        });
 
         const promise = new Promise((resolve, reject) => { resolve("resolved"); });
 

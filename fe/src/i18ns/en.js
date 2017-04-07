@@ -48,5 +48,9 @@ export default {
     button_cancel: "Cancel",
     editor_title: "Edit password entry",
     search_placeholder: "Search",
-    no_passwords_found: "No matched passwords."
+    no_passwords_found: "No matched passwords.",
+    signin: "Sign In",
+    signin_user_placeholder: "Email",
+    signin_pass_placeholder: "Password",
+    signout: "Sign Out"
 };

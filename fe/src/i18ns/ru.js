@@ -48,5 +48,9 @@ export default {
     button_cancel: "Отмена",
     editor_title: "Редактирование записи",
     search_placeholder: "Поиск",
-    no_passwords_found: "Совпадений не найдено."
+    no_passwords_found: "Совпадений не найдено.",
+    signin: "Войти",
+    signin_user_placeholder: "Электронный адрес",
+    signin_pass_placeholder: "Пароль",
+    signout: "Выйти"
 };

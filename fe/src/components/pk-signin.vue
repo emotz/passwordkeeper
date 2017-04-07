@@ -1,0 +1,32 @@
+<template>
+    <ul class="pk-signin navbar-form navbar-right"
+        :id="`pk-signin-${_uid}`">
+        <div v-if="!$store.state.auth.authenticated">
+            <div class="form-group">
+                <input type="text"
+                       :placeholder="$t('signin_user_placeholder')"
+                       class="pk-signin-user-input form-control"
+                       v-model="user">
+            </div>
+            <div class="form-group">
+                <input type="password"
+                       :placeholder="$t('signin_pass_placeholder')"
+                       class="pk-signin-pass-input form-control"
+                       v-model="password">
+            </div>
+            <pk-async-button class="pk-btn-signin btn btn-success"
+                             :can-execute="true"
+                             :action="signin">
+                <slot>{{ $t('signin') }}</slot>
+            </pk-async-button>
+        </div>
+        <pk-async-button v-else
+                         class="pk-btn-signout btn btn-default"
+                         :can-execute="true"
+                         :action="signout">
+            <slot>{{ $t('signout') }}</slot>
+        </pk-async-button>
+    </ul>
+</template>
+
+<script src="./pk-signin.js"></script>
