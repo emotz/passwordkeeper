@@ -12,8 +12,9 @@ if (is_valid_token(get_token())) store.commit('auth/set_authenticated', true);
 
 Vue.http.interceptors.push(function (request, next) {
     // TODO: should we pass authorization token for each request? may be only for requests which are required to have authorizatioN?
-    if (request.headers['Authorization'] === undefined) {
-        request.headers['Authorization'] = get_token();
+    let token = get_token();
+    if (request.headers['Authorization'] === undefined && is_valid_token(token)) {
+        request.headers.set('Authorization', `Bearer ${token}`);
     }
     next();
     // TODO: should have interceptor for Unauthorized response whatever to remove auth token

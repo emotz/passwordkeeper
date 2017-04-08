@@ -7,7 +7,8 @@
         "**/.hg": true,
         "**/CVS": true,
         "**/.DS_Store": true,
-        ".vscode/chrome": true
+        ".vscode/chrome": true,
+        "**/dist": true
     },
     "path-intellisense.extensionOnImport": true,
     "path-intellisense.mappings": {

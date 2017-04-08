@@ -1,0 +1,26 @@
+# -*- restclient -*-
+
+:url = http://localhost:8000/api
+
+# Login
+POST :url/sessions
+Content-Type: application/json;charset=UTF-8
+
+{"user":"myuser","password":"mypassword"}
+
+#
+:auth = b9c0d631-bf67-d809-998e-152051c84f0c
+
+# Fail Logout
+
+DELETE :url/sessions
+Authorization: Beaer :auth
+
+# Another fail logout
+
+DELETE :url/sessions
+
+# Proper logout
+
+DELETE :url/sessions
+Authorization: Bearer :auth
