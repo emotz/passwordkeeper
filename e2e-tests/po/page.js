@@ -29,7 +29,7 @@ class Page {
         browser.$('.pk-btn-signout').click();
     }
     waitForFailedLogin(...args) {
-        this.waitForErrorNotification("api_error.no user with matched password", ...args);
+        this.waitForErrorNotification("No user with matched password.", ...args);
     }
 }
 module.exports = Page;

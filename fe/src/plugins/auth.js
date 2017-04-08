@@ -35,9 +35,11 @@ export async function register(input) {
 }
 
 export async function logout() {
-    let response = await Vue.http.delete(API_SESSION_URL);
-    remove_token();
-    return response;
+    try {
+        return await Vue.http.delete(API_SESSION_URL);
+    } finally {
+        remove_token();
+    }
 }
 
 function set_token(token) {

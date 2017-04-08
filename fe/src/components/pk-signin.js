@@ -10,17 +10,40 @@ export default {
     data() {
         return {
             user: "",
+            user_error: false,
             password: "",
-            signin: utls.make_fn_singleton(() => {
-                // TODO: add validation for user password
-                return loader.perform(auth.login(this.user, this.password), () => { }, res => i18n.t('api_error.' + res.body.reason)).then(() => {
-                    this.user = "";
-                    this.password = "";
-                });
+            password_error: false,
+            show_password: false,
+            signin: utls.make_fn_singleton(async () => {
+                let val;
+                try {
+                    val = await loader.perform(
+                        auth.login(this.user, this.password),
+                        () => { },
+                        res => i18n.t(`api_error["${res.body.reason}"]`));
+                } catch (err) {
+                    this.user_error = true;
+                    this.password_error = true;
+                    throw err;
+                }
+                this.user = "";
+                this.password = "";
+                return val;
             }),
             signout: utls.make_fn_singleton(() => {
-                return loader.perform(auth.logout(), () => { }, res => i18n.t('api_error.' + res.body.reason));
+                return loader.perform(
+                    auth.logout(),
+                    () => { },
+                    res => i18n.t(`api_error["${res.body.reason}"]`));
             })
         };
+    },
+    watch: {
+        user() {
+            this.user_error = false;
+        },
+        password() {
+            this.password_error = false;
+        }
     }
 };

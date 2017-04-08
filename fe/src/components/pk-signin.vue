@@ -2,13 +2,15 @@
     <ul class="pk-signin navbar-form navbar-right"
         :id="`pk-signin-${_uid}`">
         <div v-if="!$store.state.auth.authenticated">
-            <div class="form-group">
+            <div class="form-group"
+                 :class="{'has-error': user_error}">
                 <input type="text"
                        :placeholder="$t('signin_user_placeholder')"
                        class="pk-signin-user-input form-control"
                        v-model="user">
             </div>
-            <div class="form-group">
+            <div class="form-group"
+                 :class="{'has-error': password_error}">
                 <input type="password"
                        :placeholder="$t('signin_pass_placeholder')"
                        class="pk-signin-pass-input form-control"

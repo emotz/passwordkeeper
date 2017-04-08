@@ -1,7 +1,6 @@
 'use strict';
 
 const entries = require('./entries.json');
-const _ = require('lodash');
 
 /* responses for /entries/:id */
 const mockResponses = [

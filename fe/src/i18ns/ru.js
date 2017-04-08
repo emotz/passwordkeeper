@@ -52,5 +52,9 @@ export default {
     signin: "Войти",
     signin_user_placeholder: "Электронный адрес",
     signin_pass_placeholder: "Пароль",
-    signout: "Выйти"
+    signout: "Выйти",
+    api_error: {
+        'no user with matched password': "Пользователь с таким паролем не найден.",
+        'access token is not valid': "Токен доступа не валиден."
+    }
 };

@@ -52,5 +52,9 @@ export default {
     signin: "Sign In",
     signin_user_placeholder: "Email",
     signin_pass_placeholder: "Password",
-    signout: "Sign Out"
+    signout: "Sign Out",
+    api_error: {
+        'no user with matched password': "No user with matched password.",
+        'access token is not valid': "Access token is not valid"
+    }
 };
