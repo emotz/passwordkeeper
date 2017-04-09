@@ -57,7 +57,7 @@ describe("progressbar tests", function () {
         expect(NProgress.done).toHaveBeenCalledTimes(2);
     });
 
-    if ("should wrap function", function (done) {
+    it("should wrap function", function (done) {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")
@@ -75,7 +75,7 @@ describe("progressbar tests", function () {
         });
     });
 
-    if ("should wrap promise", function (done) {
+    it("should wrap promise", function (done) {
         const NProgress = {
             start: jasmine.createSpy("nprogress start"),
             done: jasmine.createSpy("nprogress done")

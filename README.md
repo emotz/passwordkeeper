@@ -49,7 +49,7 @@ npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone
 Then additional requirements:
 
 ```bat
-npm install -g webpack local-web-server karma-cli typings
+npm install -g webpack webpack-runner local-web-server karma-cli typings
 npm install
 ```
 

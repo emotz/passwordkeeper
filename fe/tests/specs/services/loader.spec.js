@@ -1,6 +1,6 @@
 import loaderInjector from 'inject-loader!src/services/loader.js';
 
-describe("progressbar tests", function () {
+describe("loader tests", function () {
     it("should call notify on success", function (done) {
         const notify = {
             success: jasmine.createSpy("notify success"),
@@ -18,7 +18,7 @@ describe("progressbar tests", function () {
         });
     });
 
-    it("should call notify on error", function () {
+    it("should call notify on error", function (done) {
         const notify = {
             success: jasmine.createSpy("notify success"),
             error: jasmine.createSpy("notify error")
@@ -27,8 +27,7 @@ describe("progressbar tests", function () {
             './notify.js': notify
         });
         const promise = new Promise((resolve, reject) => { reject("rejected"); });
-
-        loader.perform(promise).then(() => {
+        loader.perform(promise).catch(() => {
             expect(notify.error).toHaveBeenCalledTimes(1);
             done();
         });

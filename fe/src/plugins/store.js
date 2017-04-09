@@ -10,7 +10,6 @@ Vue.use(Vuex);
 Vue.use(VueResource);
 
 const API_ENTRIES_URL = '/api/entries';
-
 const locale = {
     namespaced: true,
     state: {
@@ -81,14 +80,12 @@ export default new Vuex.Store({
                 resource
                     .add(entry_to_send)
                     .then(response => {
-                        console.log("Success");
                         let id = parse_location(response.headers.map.Location[0]);
                         entry.id = id;
                         entry_to_send.id = entry.id;
                         context.commit("add_entry", entry_to_send);
                         return entry.id;
                     }, response => {
-                        console.log("Failure");
                         const res = response.status === 408 ?
                             i18n.t('notify.itemstored_timeout') :
                             (i18n.t(response.body) || i18n.t('notify.itemstored_unknown'));

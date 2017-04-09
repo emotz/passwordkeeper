@@ -75,7 +75,7 @@ describe("generateUniqueId tests", function () {
         expect(typeof (res)).toEqual('string');
         expect(res.length > 0).toBe(true);
     });
-    if ("should generate different ids", function () {
+    it("should generate different ids", function () {
         const first = utls.generateUniqueId();
         const second = utls.generateUniqueId();
         expect(first).not.toEqual(second);
