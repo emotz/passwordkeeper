@@ -11,7 +11,7 @@
         "nprogress": "^0.2.0",
         "toastr": "^2.1.2",
         "vue": "^2.2.4",
-        "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#3d408c923ae95d3217a29e06396976d0d3958014",
+        "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#905ce6b16992b238e8b9394976e9b2b049400cbb",
         "vue-resource": "^1.2.1",
         "vue-router": "^2.3.0",
         "vuex": "^2.2.1"
@@ -62,7 +62,8 @@
         "nobuild:test:unit": "cd fe && cd tests && karma start",
         "test": "npm run test:unit && npm run test:e2e",
         "postinstall": "cd fe/tests && typings install",
-        "clean": "rmdir /S /Q bin & rmdir /S /Q errorShots & rmdir /S /Q node_modules & cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q typings & rmdir /S /Q dist & rmdir /S /Q .vscode/chrome"
+        "clean": "rmdir /S /Q bin & rmdir /S /Q errorShots & rmdir /S /Q node_modules & cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q typings & rmdir /S /Q dist & cd .. & cd .. & cd .vscode & rmdir /S /Q chrome",
+        "clean:dist": "cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q dist"
     },
     "repository": {
         "type": "git",

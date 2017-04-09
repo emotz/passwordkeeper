@@ -1,7 +1,7 @@
 <template>
     <ul class="pk-signin navbar-form navbar-right"
         :id="`pk-signin-${_uid}`">
-        <div v-if="!$store.state.auth.authenticated">
+        <form v-if="!$store.state.auth.authenticated">
             <div class="form-group"
                  :class="{'has-error': user_error}">
                 <input type="text"
@@ -17,11 +17,12 @@
                        v-model="password">
             </div>
             <pk-async-button class="pk-btn-signin btn btn-success"
+                             type="submit"
                              :can-execute="true"
                              :action="signin">
                 <slot>{{ $t('signin') }}</slot>
             </pk-async-button>
-        </div>
+        </form>
         <pk-async-button v-else
                          class="pk-btn-signout btn btn-default"
                          :can-execute="true"

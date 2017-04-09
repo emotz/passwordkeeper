@@ -9,7 +9,8 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         ".vscode/chrome": true,
-        "**/dist": true
+        "**/dist": true,
+        "node_modules": true
     },
     "path-intellisense.extensionOnImport": true,
     "path-intellisense.mappings": {

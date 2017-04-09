@@ -1,6 +1,6 @@
 <template>
-    <div class="pk-pass-adder form-inline"
-         :id="`pk-pass-adder-${_uid}`">
+    <form class="pk-pass-adder form-inline"
+          :id="`pk-pass-adder-${_uid}`">
         <div class="form-group"
              :class="{'has-error': title_error}">
             <label class="control-label"
@@ -44,8 +44,9 @@
         </div>
         <button class="btn btn-default pk-btn-pass-add"
                 :id="`pk-pass-add-${_uid}`"
-                @click="add"><span class="fa fa-plus force-parent-lh"></span></button>
-    </div>
+                type="submit"
+                @click.prevent="add"><span class="fa fa-plus force-parent-lh"></span></button>
+    </form>
 </template>
 
 <script>
