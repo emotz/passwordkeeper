@@ -1,6 +1,6 @@
-const sessions = [];
+const tokens = require('./tokens.json');
 
-function handleAuthError(ctx, err) {
+function handle_auth_error(ctx, err) {
     if (err === "missing authorization header" || err === "access header is malformed") {
         ctx.status = 400;
         ctx.body = { reason: err };
@@ -17,33 +17,33 @@ function handleAuthError(ctx, err) {
  * @returns {string} Token
  * @throws {string} Error message
  */
-function checkAuth(authHeader) {
+function check_auth(authHeader) {
     if (authHeader === undefined || authHeader === null || authHeader === "") throw 'missing authorization header';
     let m = authHeader.match(/Bearer (.*)/);
     if (m === null) throw 'access header is malformed';
     let token = m[1];
-    if (!~sessions.indexOf(token)) throw 'access token is not valid';
+    if (!~tokens.indexOf(token)) throw 'access token is not valid';
     return token;
 }
 
-function deleteSession(token) {
-    let index = sessions.indexOf(token);
+function delete_token(token) {
+    let index = tokens.indexOf(token);
     if (~index) {
-        sessions.splice(index, 1);
+        tokens.splice(index, 1);
     }
 }
 
-function createSession() {
+function create_token() {
     let token = guid();
-    sessions.push(token);
+    tokens.push(token);
     return token;
 }
 
 module.exports = {
-    handleAuthError,
-    checkAuth,
-    deleteSession,
-    createSession
+    handle_auth_error,
+    check_auth,
+    delete_token,
+    create_token
 };
 
 function guid() {

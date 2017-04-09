@@ -13,12 +13,12 @@ const mockResponses = [
             let authHeader = ctx.request.get('Authorization');
             let token;
             try {
-                token = auth.checkAuth(authHeader);
+                token = auth.check_auth(authHeader);
             } catch (err) {
-                auth.handleAuthError(ctx, err);
+                auth.handle_auth_error(ctx, err);
                 return;
             }
-            auth.deleteSession(token);
+            auth.delete_token(token);
             ctx.status = 204;
         }
     },
@@ -31,7 +31,7 @@ const mockResponses = [
                 ctx.body = { reason: "no user with matched password" };
                 return;
             }
-            let token = auth.createSession();
+            let token = auth.create_token();
             ctx.status = 201;
             ctx.response.body = { access_token: token };
         }

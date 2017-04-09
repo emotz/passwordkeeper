@@ -59,6 +59,7 @@
         "watch:build:test:unit": "cd fe && cd tests && webpack-runner --config=webpack.config.js --watch",
         "watch:test:unit": "cd fe && cd tests && karma start --single-run=false --auto-watch",
         "test:e2e": "wdio",
+        "nobuild:test:unit": "cd fe && cd tests && karma start",
         "test": "npm run test:unit && npm run test:e2e",
         "postinstall": "cd fe/tests && typings install",
         "clean": "rmdir /S /Q bin & rmdir /S /Q errorShots & rmdir /S /Q node_modules & cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q typings & rmdir /S /Q dist & rmdir /S /Q .vscode/chrome"

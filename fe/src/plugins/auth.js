@@ -3,7 +3,7 @@ import VueResource from 'vue-resource';
 
 import store from 'src/plugins/store.js';
 
-const API_SESSION_URL = "/api/sessions";
+const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
 
 // let authenticated = validToken(getToken());
@@ -21,7 +21,7 @@ Vue.http.interceptors.push(function (request, next) {
 });
 
 export async function login(user, password) {
-    let response = await Vue.http.post(API_SESSION_URL, { user, password });
+    let response = await Vue.http.post(API_TOKEN_URL, { user, password });
     // TODO: validate token
     set_token(response.data.access_token);
     return response;
@@ -30,13 +30,13 @@ export async function login(user, password) {
 export async function register(input) {
     let response = await Vue.http.post(API_USERS_URL, input);
     // TODO: validate token
-    set_token(response.data.token);
+    set_token(response.data.access_token);
     return response;
 }
 
 export async function logout() {
     try {
-        return await Vue.http.delete(API_SESSION_URL);
+        return await Vue.http.delete(API_TOKEN_URL);
     } finally {
         remove_token();
     }

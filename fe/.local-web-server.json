@@ -12,8 +12,8 @@
             "module": "../mocks/entries.js"
         },
         {
-            "route": "/api/sessions",
-            "module": "../mocks/sessions.js"
+            "route": "/api/token",
+            "module": "../mocks/token.js"
         }
     ]
 }

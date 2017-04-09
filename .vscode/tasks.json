@@ -51,6 +51,20 @@
                             "location": 2
                         }
                     ]
+                },
+                {
+                    "owner": "wdio",
+                    "pattern": [
+                        {
+                            "regexp": "^\\d+\\) (.*):$",
+                            "file": 1,
+                            "line": 1
+                        },
+                        {
+                            "regexp": "^Failed: (.*)$",
+                            "message": 1
+                        }
+                    ]
                 }
                 // {
                 //     "owner": "jasmine",
