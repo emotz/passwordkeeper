@@ -29,6 +29,7 @@
         "async-await/space-after-await": 2
     },
     "plugins": [
-        "async-await"
+        "async-await",
+        "vue"
     ]
 }

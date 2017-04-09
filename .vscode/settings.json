@@ -2,6 +2,10 @@
 {
     "jshint.enable": false,
     "eslint.enable": true,
+    "eslint.validate": [
+        "javascript",
+        "vue"
+    ],
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,

@@ -35,6 +35,25 @@
                     ]
                 },
                 {
+                    "owner": "javascript",
+                    "fileLocation": "absolute",
+                    "pattern": [
+                        {
+                            "regexp": "^ERROR in .*$"
+                        },
+                        {
+                            "regexp": "^(.*)$",
+                            "file": 1
+                        },
+                        {
+                            "regexp": "\\s*(\\d+:\\d+)\\s*error  (.*)$",
+                            "location": 1,
+                            "message": 2,
+                            "loop": true
+                        }
+                    ]
+                },
+                {
                     "owner": "jasmine",
                     "fileLocation": [
                         "relative",
@@ -98,6 +117,25 @@
                             "line": 2,
                             "column": 3,
                             "message": 4
+                        }
+                    ]
+                },
+                {
+                    "owner": "javascript",
+                    "fileLocation": "absolute",
+                    "pattern": [
+                        {
+                            "regexp": "^ERROR in .*$"
+                        },
+                        {
+                            "regexp": "^(.*)$",
+                            "file": 1
+                        },
+                        {
+                            "regexp": "\\s*(\\d+:\\d+)\\s*error  (.*)$",
+                            "location": 1,
+                            "message": 2,
+                            "loop": true
                         }
                     ]
                 }

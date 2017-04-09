@@ -1,3 +1,4 @@
+/*eslint-env node */
 const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -56,13 +57,28 @@ module.exports = {
             // for font-awesome
             { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
             { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
-            { test: /\.vue$/, loader: 'vue-loader' },
+            {
+                test: /\.vue$/,
+                exclude: /node_modules/,
+                loader: 'vue-loader',
+                options: {
+                    preLoaders: {
+                        js: 'eslint-loader'
+                    }
+                }
+            },
+            {
+                test: /\.vue$/,
+                include: /node_modules/,
+                loader: 'vue-loader'
+            },
+
             { test: /\.css$/, use: ['style-loader', 'css-loader'] },
             {
                 enforce: "pre",
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "eslint-loader",
+                loader: "eslint-loader"
             },
         ]
     }
