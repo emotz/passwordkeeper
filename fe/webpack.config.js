@@ -6,11 +6,12 @@ const BabiliPlugin = require("babili-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === 'development';
 const plugins = [
-    // for proper bootstrap loading
+    // for proper bootstrap loading (and vue)
     new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
     }),
+
     new webpack.EnvironmentPlugin({
         NODE_ENV: process.env.NODE_ENV || 'development'
     }),
@@ -20,6 +21,10 @@ const plugins = [
     ]),
     new LiveReloadPlugin({
         port: 35729
+    }),
+    new webpack.DllReferencePlugin({
+        context: '.',
+        manifest: require('./dist/vendor-manifest.json')
     })
 ];
 if (!isDev) {
@@ -54,8 +59,6 @@ module.exports = {
             // the url-loader uses DataUrls. 
             // the file-loader emits files. 
             // for font-awesome
-            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
             { test: /\.vue$/, loader: 'vue-loader' },
             { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]

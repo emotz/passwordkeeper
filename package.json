@@ -12,6 +12,7 @@
     "toastr": "^2.1.2",
     "vue": "^2.2.4",
     "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#3d408c923ae95d3217a29e06396976d0d3958014",
+    "vue-i18n": "^5.0.3",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.3.0",
     "vuex": "^2.2.1"
@@ -35,7 +36,6 @@
     "null-loader": "^0.1.1",
     "typings": "^2.1.0",
     "url-loader": "^0.5.8",
-    "vue-i18n": "^5.0.3",
     "vue-loader": "^11.1.4",
     "vue-template-compiler": "^2.2.4",
     "wdio-jasmine-framework": "^0.3.0",
@@ -46,6 +46,7 @@
   },
   "scripts": {
     "dev": "cd fe && ws & exit 0",
+    "build-vendor": "cd fe && webpack --config vendor.webpack.config.js & exit 0",
     "build": "cd fe && webpack & exit 0",
     "build-watch": "cd fe && webpack --watch --progress --color & exit 0",
     "unit-test": "cd fe && karma start & exit 0",
