@@ -24,6 +24,18 @@ export function decorate_without_success_notify(fn, ...args) {
 }
 
 /**
+ * 
+ * @param {Function} fn Function to call async import
+ */
+export function import_async(fn) {
+    return decorate_without_success_notify(() => new Promise((resolve, reject) => {
+        let wrapped = val => resolve(val);
+        wrapped.default = val => wrapped(val.default);
+        fn(wrapped, reject);
+    }));
+}
+
+/**
  * Shows progressbar during execution and shows notification when finished.
  * @param {*} fn Function or Promise to execute
  * @param {Function|String} [map_success_text] Function to modify displayed notification for success case (or just text to display)

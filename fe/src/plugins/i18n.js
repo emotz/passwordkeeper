@@ -5,10 +5,7 @@ import * as loader from 'src/services/loader.js';
 
 Vue.use(VueI18n);
 const locales = {
-    'ru': loader.decorate_without_success_notify(
-        () => new Promise((resolve, reject) => {
-            require(['src/i18ns/ru.js'], function (val) { resolve(val.default); }, reject);
-        })),
+    'ru': loader.import_async((resolve, reject) => require(['src/i18ns/ru.js'], resolve.default, reject)),
     'en': require('src/i18ns/en.js').default
 };
 for (let lang in locales) {
