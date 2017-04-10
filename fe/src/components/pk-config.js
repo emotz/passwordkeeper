@@ -9,10 +9,10 @@ export default {
     computed: {
         locale: {
             get() {
-                return this.$store.state.locale.locale;
+                return i18n.get_locale();
             },
             set(new_locale) {
-                this.$store.commit("locale/set_locale", new_locale);
+                i18n.set_locale(new_locale);
             }
         }
     },

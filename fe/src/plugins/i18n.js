@@ -9,6 +9,7 @@ const locales = {
     'en': require('src/i18ns/en.js').default
 };
 for (let lang in locales) {
+    // Vue.locale starts download immediately even if it is function, so we dont assign anything here
     if (locales[lang] instanceof Function) continue;
     Vue.locale(lang, locales[lang]);
 }
@@ -16,11 +17,9 @@ Vue.config.fallbackLang = 'en';
 
 let last_locale;
 /**
- * Don't use this directly, modify store instead `this.$store.commit("locale/set_locale", new_locale)`.
+ * It might not change locale immediately - if locale is not yet available, it is downloaded first.
+ * If it is changed again before download is finished, then locale won't change after download.
  * @param {string} new_locale New locale to set, e.g. "ru".
- * @example
- * import * as i18n from 'src/plugins/i18n.js';
- * i18n.set_locale("ru");
  */
 export function set_locale(new_locale) {
     last_locale = new_locale;
@@ -42,10 +41,23 @@ export function set_locale(new_locale) {
     }
 }
 
+/**
+ * Reactive
+ */
+export function get_locale() {
+    return Vue.config.lang;
+}
+
+/**
+ * WARNING Not reactive
+ */
 export function get_locales() {
     return Object.keys(locales);
 }
 
+/**
+ * Reactive
+ */
 export function t(msg) {
     return Vue.t(msg);
 }

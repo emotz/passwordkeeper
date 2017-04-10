@@ -10,17 +10,6 @@ Vue.use(Vuex);
 Vue.use(VueResource);
 
 const API_ENTRIES_URL = '/api/entries';
-const locale = {
-    namespaced: true,
-    state: {
-        locale: ""
-    },
-    mutations: {
-        set_locale(state, new_locale) {
-            state.locale = new_locale;
-        }
-    }
-};
 
 const auth = {
     namespaced: true,
@@ -37,7 +26,6 @@ const auth = {
 export default new Vuex.Store({
     strict: process.env.NODE_ENV === 'development',
     modules: {
-        locale,
         auth
     },
     state: {
