@@ -7,11 +7,12 @@ const BabiliPlugin = require("babili-webpack-plugin");
 
 const isDev = process.env.NODE_ENV !== 'production';
 const plugins = [
-    // for proper bootstrap loading
+    // for proper bootstrap loading (and vue)
     new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
     }),
+
     new webpack.EnvironmentPlugin({
         NODE_ENV: process.env.NODE_ENV || 'development'
     }),
@@ -21,6 +22,10 @@ const plugins = [
     ]),
     new LiveReloadPlugin({
         port: 35729
+    }),
+    new webpack.DllReferencePlugin({
+        context: '.',
+        manifest: require('./dist/vendor-manifest.json')
     })
 ];
 if (!isDev) {
@@ -80,6 +85,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: "eslint-loader"
             },
+
         ]
     }
 };

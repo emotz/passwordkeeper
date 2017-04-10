@@ -1,5 +1,6 @@
 /*eslint-env node */
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: ['./test_index.js'],
@@ -16,6 +17,13 @@ module.exports = {
             'toastr.css$': path.resolve(__dirname, 'dummy.css'),
         }
     },
+    plugins: [
+        new webpack.DllReferencePlugin({
+            context: '..',
+            manifest: require('../dist/vendor-manifest.json')
+        })
+    ],
+
     module: {
         loaders: [
             {

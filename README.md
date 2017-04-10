@@ -57,6 +57,7 @@ Build
 
 ```bat
 set NODE_ENV=development
+npm run build:vendor
 npm run build
 ```
 
@@ -69,6 +70,7 @@ npm run watch:dev
 Run unit tests
 
 ```bat
+npm run build:vendor
 npm run test:unit
 ```
 
@@ -76,6 +78,8 @@ Run e2e tests
 
 ```bat
 npm run watch:dev
+npm run build:vendor
+npm run build
 npm run test:e2e
 ```
 
@@ -83,6 +87,8 @@ Run all tests
 
 ```bat
 npm run watch:dev
+npm run build:vendor
+npm run build
 npm run test:all
 ```
 
@@ -91,6 +97,7 @@ npm run test:all
 ```bat
 set NODE_ENV=development
 npm run watch:dev
+npm run build:vendor
 npm run watch:build
 npm run watch:build:test:unit
 npm run watch:test:unit
