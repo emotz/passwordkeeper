@@ -1,14 +1,16 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 
-import store from 'src/plugins/store.js';
-
 const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
 
 // let authenticated = validToken(getToken());
 Vue.use(VueResource);
-if (is_valid_token(get_token())) store.commit('auth/set_authenticated', true);
+
+const data = {
+    token: undefined
+};
+new Vue({ data });
 
 Vue.http.interceptors.push(function (request, next) {
     // TODO: should we pass authorization token for each request? may be only for requests which are required to have authorizatioN?
@@ -42,24 +44,30 @@ export async function logout() {
     }
 }
 
-function set_token(token) {
-    window.localStorage.setItem("token", token);
-    store.commit('auth/set_authenticated', true);
-    // authenticated = true;
+/**
+ * Reactive
+ */
+export function is_authenticated() {
+    return is_valid_token(data.token);
 }
 
-function remove_token() {
-    window.localStorage.removeItem("token");
-    store.commit('auth/set_authenticated', false);
-    // authenticated = false;
+export function set_token(token) {
+    data.token = token;
 }
 
-function get_token() {
-    return window.localStorage.getItem("token");
+export function remove_token() {
+    data.token = undefined;
+}
+
+/**
+ * Reactive
+ */
+export function get_token() {
+    return data.token;
 }
 
 function is_valid_token(token) {
-    if (token !== undefined && token != null) {
+    if (token !== undefined && token !== null) {
         return true;
     }
     return false;

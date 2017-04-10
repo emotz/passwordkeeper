@@ -38,6 +38,9 @@ export default {
             })
         };
     },
+    computed: {
+        authenticated: auth.is_authenticated
+    },
     watch: {
         user() {
             this.user_error = false;
