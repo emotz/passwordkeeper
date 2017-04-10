@@ -1,7 +1,8 @@
 <template>
     <ul class="pk-signin navbar-form navbar-right"
         :id="`pk-signin-${_uid}`">
-        <form v-if="!authenticated">
+        <form v-if="!authenticated"
+              style="display: inline">
             <div class="form-group"
                  :class="{'has-error': user_error}">
                 <input type="text"
