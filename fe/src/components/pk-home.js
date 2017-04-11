@@ -1,20 +1,15 @@
 
 import PkPassList from './pk-pass-list.vue';
-import PkAsyncButton from './pk-async-button.vue';
-import * as utls from 'src/utility.js';
+import * as pass_store from 'src/services/pass-store.js';
 
 export default {
-    components: { PkPassList, PkAsyncButton },
-    data: function () {
-        return {
-            get_entries: utls.make_fn_singleton(function () {
-                return this.$store.dispatch('get_entries');
-            })
-        };
+    components: { PkPassList },
+    created() {
+        this.pull_cmd = pass_store.pull_cmd;
     },
     computed: {
         num_of_entries() {
-            return this.$store.state.entries.length;
+            return pass_store.get_entries().length;
         }
     }
 };

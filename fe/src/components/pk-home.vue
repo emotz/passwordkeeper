@@ -8,11 +8,11 @@
                 <span v-else-if="num_of_entries < 5">{{ $t('home.description.fewpasswords') }}</span>
                 <span v-else-if="num_of_entries < 10">{{ $t('home.description.manypasswords') }}</span>
                 <span v-else>{{ $t('home.description.toomanypasswords') }}</span>
-                <pk-async-button class="btn btn-primary pk-btn-refresh-all-pass"
-                                 :can-execute="true"
-                                 :action="get_entries">
-                    <slot>{{ $t('home.fetch_all_passwords') }}</slot>
-                </pk-async-button>
+                <button class="btn btn-primary pk-btn-refresh-all-pass"
+                        :disabled="pull_cmd.is_executing()"
+                        @click="pull_cmd.execute()">
+                    {{ $t('home.fetch_all_passwords') }}
+                </button>
             </p>
         </div>
         <pk-pass-list></pk-pass-list>

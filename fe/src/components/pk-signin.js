@@ -1,45 +1,38 @@
-import * as auth from 'src/plugins/auth.js';
-import * as loader from 'src/services/loader.js';
-import * as i18n from 'src/plugins/i18n.js';
-import * as utls from 'src/utility.js';
-
-import PkAsyncButton from 'src/components/pk-async-button.vue';
+import * as auth from 'src/services/auth.js';
 
 export default {
-    components: { PkAsyncButton },
     data() {
         return {
             user: "",
             user_error: false,
             password: "",
             password_error: false,
-            show_password: false,
-            signin: utls.make_fn_singleton(async () => {
-                let val;
-                try {
-                    val = await loader.perform(
-                        auth.login(this.user, this.password),
-                        () => { },
-                        res => i18n.t(`api_error["${res.body.reason}"]`));
-                } catch (err) {
-                    this.user_error = true;
-                    this.password_error = true;
-                    throw err;
-                }
-                this.user = "";
-                this.password = "";
-                return val;
-            }),
-            signout: utls.make_fn_singleton(() => {
-                return loader.perform(
-                    auth.logout(),
-                    () => { },
-                    res => i18n.t(`api_error["${res.body.reason}"]`));
-            })
+            show_password: false
         };
     },
+    methods: {
+        async signin() {
+            let val;
+            try {
+                val = await auth.login_cmd.execute(this.user, this.password);
+            } catch (err) {
+                this.user_error = true;
+                this.password_error = true;
+                throw err;
+            }
+            this.user = "";
+            this.password = "";
+            return val;
+        },
+        signout() {
+            return auth.logout();
+        }
+    },
     computed: {
-        authenticated: auth.is_authenticated
+        authenticated: auth.is_authenticated,
+        can_signin() {
+            return auth.login_cmd.is_executing();
+        }
     },
     watch: {
         user() {

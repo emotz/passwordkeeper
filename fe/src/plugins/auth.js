@@ -1,74 +1,31 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
+import * as auth from 'src/services/auth.js';
+import { http, msg_for_error_response } from './http.js';
+import ClientStore from 'src/client-store.js';
+import { watch } from 'src/services/watch.js';
+import * as loader from 'src/services/loader.js';
 
-const API_TOKEN_URL = "/api/token";
-const API_USERS_URL = "/api/users";
+(function init() {
+    http.interceptors.push(function (request, next) {
+        // TODO: should we pass authorization token for each request? may be only for requests which are required to have authorizatioN?
+        if (request.headers['Authorization'] === undefined && auth.is_authenticated()) {
+            request.headers.set('Authorization', `Bearer ${auth.get_token()}`);
+        }
+        next();
+        // TODO: should have interceptor for Unauthorized response whatever to remove auth token
+    });
 
-// let authenticated = validToken(getToken());
-Vue.use(VueResource);
-
-const data = {
-    token: undefined
-};
-new Vue({ data });
-
-Vue.http.interceptors.push(function (request, next) {
-    // TODO: should we pass authorization token for each request? may be only for requests which are required to have authorizatioN?
-    let token = get_token();
-    if (request.headers['Authorization'] === undefined && is_valid_token(token)) {
-        request.headers.set('Authorization', `Bearer ${token}`);
+    let client_store = new ClientStore('token');
+    let token = client_store.get();
+    if (token !== undefined) {
+        auth.set_token(token);
     }
-    next();
-    // TODO: should have interceptor for Unauthorized response whatever to remove auth token
-});
+    watch(auth.get_token, (new_token, old_token) => {
+        client_store.set(new_token);
+    });
 
-export async function login(user, password) {
-    let response = await Vue.http.post(API_TOKEN_URL, { user, password });
-    // TODO: validate token
-    set_token(response.data.access_token);
-    return response;
-}
-
-export async function register(input) {
-    let response = await Vue.http.post(API_USERS_URL, input);
-    // TODO: validate token
-    set_token(response.data.access_token);
-    return response;
-}
-
-export async function logout() {
-    try {
-        return await Vue.http.delete(API_TOKEN_URL);
-    } finally {
-        remove_token();
-    }
-}
-
-/**
- * Reactive
- */
-export function is_authenticated() {
-    return is_valid_token(data.token);
-}
-
-export function set_token(token) {
-    data.token = token;
-}
-
-export function remove_token() {
-    data.token = undefined;
-}
-
-/**
- * Reactive
- */
-export function get_token() {
-    return data.token;
-}
-
-function is_valid_token(token) {
-    if (token !== undefined && token !== null) {
-        return true;
-    }
-    return false;
-}
+    watch(() => auth.login_cmd.promise(), (promise) => {
+        loader.perform(promise,
+            () => { },
+            msg_for_error_response);
+    });
+})();

@@ -1,7 +1,6 @@
 import { Vue } from './vue-helper.js';
 
 import PkAppNav from 'src/components/pk-app-nav.vue';
-import store from 'src/plugins/store.js';
 import router from 'src/plugins/router.js';
 
 describe("app-nav tests", function () {
@@ -30,7 +29,7 @@ describe("app-nav tests", function () {
     it("should not contain non-registered links", function () {
         const Component = Vue.extend(PkAppNav);
 
-        const component = new Component({ router, store }).$mount();
+        const component = new Component({ router }).$mount();
 
         component.$children.forEach(function (child) {
             if (child._props === undefined) return;

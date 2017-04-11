@@ -1,9 +1,7 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
+import { http } from './http.js';
 import * as progressbar from 'src/services/progressbar.js';
 
-Vue.use(VueResource);
-Vue.http.interceptors.push(function (request, next) {
+http.interceptors.push(function (request, next) {
     progressbar.start();
 
     // continue to next interceptor

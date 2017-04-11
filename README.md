@@ -1,6 +1,6 @@
 # PasswordKeeper
 
-Simple storage for passwords.
+Simple storage for passwords. Uses VueJS for front-end.
 
 ## Tech description
 
@@ -55,7 +55,7 @@ npm install -g webpack webpack-runner local-web-server karma-cli typings
 npm install
 ```
 
-Build:
+### Build
 
 ```bat
 set NODE_ENV=development
@@ -63,20 +63,20 @@ npm run build:vendor
 npm run build
 ```
 
-Start dev server:
+### Start dev server
 
 ```bat
 npm run watch:dev
 ```
 
-Run unit tests:
+### Run unit tests
 
 ```bat
 npm run build:vendor
 npm run test:unit
 ```
 
-Run e2e tests:
+### Run e2e tests
 
 ```bat
 npm run watch:dev
@@ -85,7 +85,7 @@ npm run build
 npm run test:e2e
 ```
 
-Run all tests:
+### Run all tests
 
 ```bat
 npm run watch:dev
@@ -93,6 +93,24 @@ npm run build:vendor
 npm run build
 npm run test:all
 ```
+
+### Production build
+
+```bat
+set NODE_ENV=production
+npm run build
+```
+
+### Clean
+
+```bat
+npm run clean
+
+### Clean distributable files
+
+```bat
+npm run clean:dist
+``````
 
 ## Usual development workflow
 
@@ -106,22 +124,3 @@ npm run watch:test:unit
 ```
 
 Open `localhost:8000` in browser.
-
-## Production build
-
-```bat
-set NODE_ENV=production
-npm run build
-```
-
-## Clean
-
-```bat
-npm run clean
-```
-
-## Dist-clean
-
-```bat
-npm run clean:dist
-```

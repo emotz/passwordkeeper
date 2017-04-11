@@ -54,6 +54,27 @@
                     ]
                 },
                 {
+                    "owner": "javascript",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceRoot}/fe"
+                    ],
+                    "pattern": [
+                        {
+                            "regexp": "^ERROR in .*\\./(.*?)$",
+                            "file": 1
+                        },
+                        {
+                            "regexp": "^Module not found: Error: (.*)$",
+                            "message": 1
+                        },
+                        {
+                            "regexp": " @ .* (\\d+)",
+                            "line": 1
+                        }
+                    ]
+                },
+                {
                     "owner": "jasmine",
                     "fileLocation": [
                         "relative",
@@ -136,6 +157,27 @@
                             "location": 1,
                             "message": 2,
                             "loop": true
+                        }
+                    ]
+                },
+                {
+                    "owner": "javascript",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceRoot}/fe"
+                    ],
+                    "pattern": [
+                        {
+                            "regexp": "^ERROR in .*\\./(.*?)$",
+                            "file": 1
+                        },
+                        {
+                            "regexp": "^Module not found: Error: (.*)$",
+                            "message": 1
+                        },
+                        {
+                            "regexp": " @ .* (\\d+)",
+                            "line": 1
                         }
                     ]
                 }

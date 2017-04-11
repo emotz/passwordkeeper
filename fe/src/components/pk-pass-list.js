@@ -1,11 +1,20 @@
-
 import PkPassAdder from './pk-pass-adder.vue';
 import PkPassEditor from './pk-pass-editor.vue';
 import PkPassFilter from './pk-pass-filter.vue';
 
-import * as dispatcher from 'src/dispatcher.js';
+import * as pass_store from 'src/services/pass-store.js';
 import * as utls from 'src/utility.js';
-import _ from 'lodash';
+
+/**
+ * @typedef {Object} Entry
+ * @property {string} _id Local id
+ * @property {string} id Persistent id (stored at server in db)
+ * @property {string} title
+ * @property {string} user
+ * @property {string} password
+ * @property {boolean} synced True if synced with the server db
+ * @property {boolean} show_password
+ */
 
 export default {
     components: {
@@ -14,17 +23,7 @@ export default {
         PkPassFilter
     },
     data: function () {
-        const items = this.$store.state.entries.map(function (element) {
-            return {
-                id: element.id,
-                title: element.title,
-                user: element.user,
-                password: element.password,
-                show_password: false,
-                stored: "stored",
-                dispatcher: new dispatcher.DispatchObj()
-            };
-        }, this);
+        const items = pass_store.get_entries().map(ctor_entry);
         return {
             items: items,
             editing_item: undefined,
@@ -33,84 +32,15 @@ export default {
     },
     created() {
         if (this.items.length <= 0) {
-            this.$store.dispatch('get_entries');
+            pass_store.pull_cmd.execute();
         }
-
-        let that = this;
-
-        this._dispatch_manager = new dispatcher.DispatchManager({
-            dummy: {
-                action() { return Promise.resolve(); },
-                with_delay: false
-            },
-            add: {
-                action(item) {
-                    that.items.push(item);
-                    // TODO: here store.dispatch assigns id to item on success by itself :(
-                    return that.$store.dispatch('add_entry', item).then((id) => {
-                        item.stored = "stored";
-                        return id;
-                    });
-                },
-                with_delay: true
-            },
-            save: {
-                action(item) {
-                    // TODO: here store.dispatch assigns id to item on success by itself :(
-                    return that.$store.dispatch('add_entry', item).then((id) => {
-                        item.stored = "stored";
-                        return id;
-                    });
-                },
-                with_delay: true
-            },
-            update: {
-                action(item) {
-                    return that.$store.dispatch('update_entry', item).then(val => {
-                        item.stored = "stored";
-                        return val;
-                    }, val => {
-                        item.stored = "notstored";
-                        throw val;
-                    });
-                },
-                with_delay: true
-            },
-            remove: {
-                action(item) {
-                    if (item.id === undefined) {
-                        let index = that.items.indexOf(item);
-                        that.items.splice(index, 1);
-                        return Promise.resolve();
-                    }
-
-                    let promise = that.$store.dispatch('remove_entry_by_id', item.id);
-                    let op_id = that.get_last_op(item).id;
-
-                    return promise
-                        .then(val => {
-                            item.stored = "notstored";
-                            return val;
-                        }, val => {
-                            _.delay(() => {
-                                let last_op_id = that.get_last_op(item).id;
-                                if (op_id === last_op_id) {
-                                    // means no other operation was performed since we tried
-                                    that._dispatch_manager.enqueue(item.dispatcher, 'dummy');
-                                    // adding dummy operation to shut up `requires_attention`
-                                }
-                            }, 5000);
-                            throw val;
-                        });
-                },
-                with_delay: true
-            }
-        });
+        this.$watch(pass_store.get_entries, (new_entries) => {
+            // FIX: performance issue - too many operations for even slightest change
+            this.items = this.items.filter(item => ~new_entries.findIndex(e => e._id === item._id));
+            utls.merge_arrays_of_objects(this.items, new_entries, "_id", ctor_entry);
+        }, { deep: true });
     },
     computed: {
-        state_entries() {
-            return this.$store.state.entries;
-        },
         show_filter() {
             return this.items.length > 0;
         },
@@ -121,69 +51,75 @@ export default {
             return this.items.filter((item) => item.title.toLowerCase().indexOf(this.filter_query.toLowerCase()) >= 0);
         }
     },
-    watch: {
-        state_entries(new_entries) {
-            utls.merge_arrays_of_objects(this.items, new_entries, "id", () => {
-                return {
-                    show_password: false,
-                    stored: "stored",
-                    dispatcher: new dispatcher.DispatchObj()
-                };
-            });
-        }
-    },
     methods: {
         get_last_op(item) {
-            return dispatcher.get_last_op(item.dispatcher);
+            return pass_store.get_entry_cmdhistory(item._id, 0);
         },
         get_last_last_op(item) {
-            return dispatcher.get_last_last_op(item.dispatcher);
+            return pass_store.get_entry_cmdhistory(item._id, 1);
         },
         requires_attention(item) {
             let last_op = this.get_last_op(item);
-            return (item.stored === 'notstored' && !this.is_saving(item)) || last_op.status === 'failure' || (last_op.status === 'inprogress' && this.get_last_last_op(item).status === 'failure');
+            return (item.synced === false && !this.is_saving(item)) || last_op.status === 'failure' || (last_op.status === 'inprogress' && this.get_last_last_op(item).status === 'failure');
         },
         cancel_edit() {
             this.editing_item = undefined;
         },
         can_edit(item) {
-            return this.editing_item === undefined && this._dispatch_manager.can_dispatch(item.dispatcher);
+            return this.editing_item === undefined && get_save_cmd(item).can_execute();
         },
         can_remove(item) {
-            return this._dispatch_manager.can_dispatch(item.dispatcher);
+            return get_remove_cmd(item).can_execute();
         },
         is_removing(item) {
-            let last_op = this.get_last_op(item);
-            return last_op.name === 'remove' && last_op.status === 'inprogress';
+            return get_remove_cmd(item).is_executing();
         },
         can_save(item) {
-            return item.stored === 'notstored' && this._dispatch_manager.can_dispatch(item.dispatcher);
+            return item.synced === false && get_save_cmd(item).can_execute();
         },
         is_saving(item) {
-            let last_op = this.get_last_op(item);
-            return (last_op.name === 'save' || last_op.name === 'add' || last_op.name === 'update') && last_op.status === 'inprogress';
+            return get_save_cmd(item).is_executing();
         },
         add(item) {
-            item.show_password = false;
-            item.stored = "notstored";
-            item.dispatcher = new dispatcher.DispatchObj();
-            this._dispatch_manager.dispatch(item.dispatcher, 'add', item);
+            pass_store.add_entry({
+                title: item.title,
+                user: item.user,
+                password: item.password
+            });
         },
         apply_edit(item) {
-            this.editing_item.title = item.title;
-            this.editing_item.user = item.user;
-            this.editing_item.password = item.password;
-
-            item = this.editing_item;
+            get_save_cmd(this.editing_item).execute(item);
             this.editing_item = undefined;
-
-            this._dispatch_manager.dispatch(item.dispatcher, 'update', item);
         },
         save(item) {
-            this._dispatch_manager.dispatch(item.dispatcher, 'save', item);
+            get_save_cmd(item).execute();
         },
         remove(item) {
-            this._dispatch_manager.dispatch(item.dispatcher, 'remove', item);
+            get_remove_cmd(item).execute();
         }
     }
 };
+
+/**
+ * 
+ * @returns {Entry}
+ */
+function ctor_entry(obj = {}) {
+    return {
+        _id: obj._id,
+        id: obj.id,
+        title: obj.title,
+        user: obj.user,
+        password: obj.password,
+        synced: obj.synced,
+        show_password: obj.show_password || false
+    };
+}
+
+function get_save_cmd(item) {
+    return pass_store.get_entry_cmds(item._id).save_cmd;
+}
+
+function get_remove_cmd(item) {
+    return pass_store.get_entry_cmds(item._id).remove_cmd;
+}
