@@ -46,6 +46,8 @@ npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone
 
 ## Build & Run
 
+First finish `e2e tests set up` section.
+
 Then additional requirements:
 
 ```bat
@@ -53,7 +55,7 @@ npm install -g webpack webpack-runner local-web-server karma-cli typings
 npm install
 ```
 
-Build
+Build:
 
 ```bat
 set NODE_ENV=development
@@ -61,20 +63,20 @@ npm run build:vendor
 npm run build
 ```
 
-Start dev server
+Start dev server:
 
 ```bat
 npm run watch:dev
 ```
 
-Run unit tests
+Run unit tests:
 
 ```bat
 npm run build:vendor
 npm run test:unit
 ```
 
-Run e2e tests
+Run e2e tests:
 
 ```bat
 npm run watch:dev
@@ -83,7 +85,7 @@ npm run build
 npm run test:e2e
 ```
 
-Run all tests
+Run all tests:
 
 ```bat
 npm run watch:dev
@@ -116,4 +118,10 @@ npm run build
 
 ```bat
 npm run clean
+```
+
+## Dist-clean
+
+```bat
+npm run clean:dist
 ```
