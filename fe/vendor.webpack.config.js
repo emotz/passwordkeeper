@@ -1,5 +1,23 @@
-var webpack = require('webpack');
-var path = require('path');
+/*eslint-env node */
+const webpack = require('webpack');
+const path = require('path');
+const BabiliPlugin = require("babili-webpack-plugin");
+
+const isDev = process.env.NODE_ENV !== 'production';
+const plugins = [
+    new webpack.DllPlugin({
+        name: 'vendor_lib',
+        path: 'dist/vendor-manifest.json',
+    }),
+    // for proper bootstrap loading
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery"
+    })
+];
+if (!isDev) {
+    plugins.push(new BabiliPlugin());
+}
 
 module.exports = {
     entry: {
@@ -34,17 +52,7 @@ module.exports = {
             'nprogress.css$': 'nprogress/nprogress.css'
         }
     },
-    plugins: [
-        new webpack.DllPlugin({
-            name: 'vendor_lib',
-            path: 'dist/vendor-manifest.json',
-        }),
-        // for proper bootstrap loading
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        }),
-    ],
+    plugins,
     module: {
         loaders: [
             // the url-loader uses DataUrls. 
