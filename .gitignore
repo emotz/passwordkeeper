@@ -37,7 +37,9 @@ jspm_packages
 .node_repl_history
 
 # build files
-fe/dist
+dist
 bin
-e2e-reports
 selenium-debug.log
+errorShots
+typings
+.vscode/chrome

@@ -4,12 +4,16 @@
     "directory": "dist",
     "mocks": [
         {
-            "route": "/entries/:id",
+            "route": "/api/entries/:id",
             "module": "../mocks/entry.js"
         },
         {
-            "route": "/entries",
+            "route": "/api/entries",
             "module": "../mocks/entries.js"
+        },
+        {
+            "route": "/api/token",
+            "module": "../mocks/token.js"
         }
     ]
 }

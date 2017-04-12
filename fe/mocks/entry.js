@@ -1,22 +1,13 @@
 'use strict';
 
 const entries = require('./entries.json');
-const _ = require('lodash');
 
 /* responses for /entries/:id */
 const mockResponses = [
-    /* don't support POST here */
-    { request: { method: 'POST' }, response: { status: 400 } },
-
     /* for GET requests, return a particular entry */
     {
         request: { method: 'GET' },
         response: function (ctx, id) {
-            // if (Math.random() > 0.5) {
-            //     ctx.status = 408;
-            //     return;
-            // }
-
             ctx.body = entries.find(entry => entry.id === id);
         }
     },
@@ -25,11 +16,6 @@ const mockResponses = [
     {
         request: { method: 'PUT' },
         response: function (ctx, id) {
-            // if (Math.random() > 0.5) {
-            //     ctx.status = 408;
-            //     return;
-            // }
-
             const updatedEntry = ctx.request.body;
             updatedEntry.id = id;
 
@@ -60,14 +46,9 @@ const mockResponses = [
     {
         request: { method: 'DELETE' },
         response: function (ctx, id) {
-            // if (Math.random() > 0.5) {
-            //     ctx.status = 408;
-            //     return;
-            // }
-
             const existingEntryIndex = entries.findIndex(entry => entry.id === id);
-            entries.splice(existingEntryIndex, 1);
-            ctx.status = 200;
+            if (~existingEntryIndex) entries.splice(existingEntryIndex, 1);
+            ctx.status = 204;
         }
     }
 ];

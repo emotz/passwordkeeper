@@ -7,7 +7,7 @@ import _ from 'lodash';
  * @param {string} [prop=id] Determines uniqueness of objects by value of specified property
  * @param {Function} [ctor] Function to construct default element to push into arr1 if element from arr2 is not found in arr1
  */
-function merge_arrays_of_objects(arr1, arr2, prop, ctor) {
+export function merge_arrays_of_objects(arr1, arr2, prop, ctor) {
     prop = prop || 'id';
     arr2.forEach(function (element) {
         let item = arr1.find(item => item[prop] === element[prop]);
@@ -32,7 +32,7 @@ function merge_arrays_of_objects(arr1, arr2, prop, ctor) {
 /**
  * @returns {string} Newly created unique id
  */
-function generateUniqueId() {
+export function generateUniqueId() {
     return _.uniqueId();
 }
 
@@ -43,7 +43,7 @@ function generateUniqueId() {
  * @param {function} fn Async function (expected to return Promise)
  * @returns {function} Proxified async function and only one instance of it can be running at the same time
  */
-function make_fn_singleton(fn) {
+export function make_fn_singleton(fn) {
     function on_any(val) {
         last_op.is_fulfilled = true;
         watched.forEach(w => w());
@@ -85,5 +85,3 @@ function make_fn_singleton(fn) {
 
     return res;
 }
-
-export { merge_arrays_of_objects, generateUniqueId, make_fn_singleton };

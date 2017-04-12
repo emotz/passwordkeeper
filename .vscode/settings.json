@@ -1,0 +1,29 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "jshint.enable": false,
+    "eslint.enable": true,
+    "eslint.validate": [
+        "javascript",
+        "vue"
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        ".vscode/chrome": true,
+        "**/dist": true,
+        "node_modules": true
+    },
+    "path-intellisense.extensionOnImport": true,
+    "path-intellisense.mappings": {
+        "src": "${workspaceRoot}/fe/src"
+    },
+    "rest-client.environmentVariables": {
+        "local": {
+            "url": "localhost:8000",
+            "token": "9dbc2362-2760-ec0b-97f6-f3cf634d2172"
+        }
+    }
+}

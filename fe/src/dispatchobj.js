@@ -21,6 +21,7 @@ class DispatchOp {
  */
 class DispatchObj {
     constructor() {
+        // TODO: use fixed sized queue instead of endless array
         /** @type {DispatchOp[]} */
         this.history = [];
     }

@@ -1,14 +1,43 @@
 import _ from 'lodash';
 import { DispatchObj, DispatchOp, get_last_op, add_new_op, update_op_status, get_last_last_op } from './dispatchobj.js';
 
-class DispatchCommand {
+export class DispatchCommand {
     /**
      * 
      * @param {function} action Async action, must return Promise
      */
     constructor(action) {
         this.action = action;
+        this.with_delay = true;
     }
+}
+
+function reflect(promise) {
+    return promise.then(function (v) {
+        return {
+            value: v,
+            succeed: true
+        };
+    }, function (e) {
+        return {
+            value: e,
+            succeed: false
+        };
+    });
+}
+
+function delay_promise(promise, time) {
+    time = time === undefined ? 500 : time;
+    let delaying = new Promise((resolve, reject) => {
+        _.delay(() => {
+            resolve();
+        }, time);
+    });
+    return Promise.all([promise, delaying].map(reflect)).then(results => {
+        let result = results[0];
+        if (result.succeed) return result.value;
+        throw result.value;
+    });
 }
 
 /**
@@ -46,7 +75,8 @@ class DispatchManager {
                 return;
             }
             let op = add_new_op(dispatchobj, new DispatchOp('inprogress', name));
-            command.action(payload)
+            let wrapper = command.with_delay ? delay_promise : _.identity;
+            wrapper(command.action(payload))
                 .then(val => {
                     update_op_status(dispatchobj, op, 'success');
                     resolve(val);

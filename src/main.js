@@ -1,13 +1,11 @@
 //console.log("Nothing here yet!");
+const express = require('express');
+const path = require('path');
+const app = express();
 const entries = require('./entries.json');
 
-var express = require('express');
-var path = require('path'); // модуль для парсинга пути
-var app = express();
-
-
-app.get('/api', function (req, res) {
-    res.send('API is running');
+app.get('/', function (req, res) {
+    res.send(entries);
 });
 
 app.post('/', function (req, res) {

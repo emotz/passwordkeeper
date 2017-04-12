@@ -1,9 +1,39 @@
-let path = require('path');
-let webpack = require('webpack');
-let CopyWebpackPlugin = require('copy-webpack-plugin');
+/*eslint-env node */
+const path = require('path');
+const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
+const BabiliPlugin = require("babili-webpack-plugin");
+
+const isDev = process.env.NODE_ENV !== 'production';
+const plugins = [
+    // for proper bootstrap loading (and vue)
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery"
+    }),
+
+    new webpack.EnvironmentPlugin({
+        NODE_ENV: process.env.NODE_ENV || 'development'
+    }),
+    new CopyWebpackPlugin([
+        { from: 'src/index.html' },
+        { from: 'src/index.css' }
+    ]),
+    new LiveReloadPlugin({
+        port: 35729
+    }),
+    new webpack.DllReferencePlugin({
+        context: '.',
+        manifest: require('./dist/vendor-manifest.json')
+    })
+];
+if (!isDev) {
+    plugins.push(new BabiliPlugin());
+}
 
 module.exports = {
-    entry: ['font-awesome-webpack', './src/index.js'],
+    entry: ['./src/index.js'],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -17,21 +47,8 @@ module.exports = {
             'nprogress.css$': 'nprogress/nprogress.css'
         }
     },
-    devtool: 'cheap-module-eval-source-map',
-    plugins: [
-        // for proper bootstrap loading
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        }),
-        new webpack.EnvironmentPlugin({
-            NODE_ENV: 'development'
-        }),
-        new CopyWebpackPlugin([
-            { from: 'src/index.html' },
-            { from: 'src/index.css' }
-        ])
-    ],
+    devtool: isDev ? 'cheap-module-eval-source-map' : false,
+    plugins,
     watch: false,
     watchOptions: {
         aggregateTimeout: 300,
@@ -45,8 +62,30 @@ module.exports = {
             // for font-awesome
             { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
             { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
-            { test: /\.vue$/, loader: 'vue-loader' },
-            { test: /\.css$/, use: ['style-loader', 'css-loader'] }
+            {
+                test: /\.vue$/,
+                exclude: /node_modules/,
+                loader: 'vue-loader',
+                options: {
+                    preLoaders: {
+                        js: 'eslint-loader'
+                    }
+                }
+            },
+            {
+                test: /\.vue$/,
+                include: /node_modules/,
+                loader: 'vue-loader'
+            },
+
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "eslint-loader"
+            },
+
         ]
     }
 };
