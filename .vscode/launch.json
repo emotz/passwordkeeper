@@ -2,7 +2,7 @@
     "version": "0.1.0",
     "configurations": [
         {
-            "name": "Launch localhost",
+            "name": "Launch frontend",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:8000",
@@ -13,6 +13,15 @@
                 "webpack:///*": "*" // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
             },
             "userDataDir": "${workspaceRoot}/.vscode/chrome"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch backend",
+            "program": "${workspaceRoot}/src/main.js",
+            "runtimeArgs": [
+                "--harmony"
+            ]
         }
     ]
 }
