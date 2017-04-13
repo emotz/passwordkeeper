@@ -4,7 +4,9 @@ const path = require('path');
 const app = express();
 const entries = require('./entries.json');
 
-app.get('/', function (req, res) {
+app.use(express.static('fe/dist'));
+
+app.get('/entries', function (req, res) {
     res.send(entries);
 });
 
