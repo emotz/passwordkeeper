@@ -1,6 +1,6 @@
 # PasswordKeeper
 
-Simple storage for passwords.
+Simple storage for passwords. Uses VueJS for front-end.
 
 ## Tech description
 
@@ -26,21 +26,32 @@ Development server is `local-web-server`. It is simple http server, designed to 
 
 ## e2e tests set up
 
-Install Java 8 SDK.
+*Optional*: Install choco - package manager for Windows:
 
 ```bat
+:: elevated CMD (with Administrator rights):
+
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+refreshenv
+```
+
+Install Java 8 SDK and NodeJS (e.g. with choco) and Visual C++ Build Tools:
+
+```bat
+:: elevated CMD (with Administrator rights):
+
 choco install jdk8
-```
-
-From elevated CMD (with Administrator rights):
-
-```bat
+choco install nodejs
+refreshenv
 npm install --global --production windows-build-tools
+refreshenv
 ```
 
-From usual CMD:
+And then install WebDriverIO and related tools:
 
 ```bat
+:: usual cmd (without Administrator rights):
+
 npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone-service
 ```
 
@@ -52,10 +63,11 @@ Then additional requirements:
 
 ```bat
 npm install -g webpack webpack-runner local-web-server karma-cli typings
+:: then close cmd window and open it again
 npm install
 ```
 
-Build:
+### Build
 
 ```bat
 set NODE_ENV=development
@@ -63,20 +75,20 @@ npm run build:vendor
 npm run build
 ```
 
-Start dev server:
+### Start dev server
 
 ```bat
 npm run watch:dev
 ```
 
-Run unit tests:
+### Run unit tests
 
 ```bat
 npm run build:vendor
 npm run test:unit
 ```
 
-Run e2e tests:
+### Run e2e tests
 
 ```bat
 npm run watch:dev
@@ -85,13 +97,32 @@ npm run build
 npm run test:e2e
 ```
 
-Run all tests:
+### Run all tests
 
 ```bat
 npm run watch:dev
 npm run build:vendor
 npm run build
 npm run test:all
+```
+
+### Production build
+
+```bat
+set NODE_ENV=production
+npm run build
+```
+
+### Clean
+
+```bat
+npm run clean
+```
+
+### Clean distributable files
+
+```bat
+npm run clean:dist
 ```
 
 ## Usual development workflow
@@ -106,22 +137,3 @@ npm run watch:test:unit
 ```
 
 Open `localhost:8000` in browser.
-
-## Production build
-
-```bat
-set NODE_ENV=production
-npm run build
-```
-
-## Clean
-
-```bat
-npm run clean
-```
-
-## Dist-clean
-
-```bat
-npm run clean:dist
-```
