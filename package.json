@@ -40,7 +40,9 @@
     "karma-sourcemap-loader": "^0.3.7",
     "less": "^2.7.2",
     "less-loader": "^3.0.0",
+    "local-web-server": "^1.2.7",
     "null-loader": "^0.1.1",
+    "rimraf": "^2.6.1",
     "typings": "^2.1.0",
     "url-loader": "^0.5.8",
     "vue-loader": "^11.1.4",
@@ -55,7 +57,7 @@
   "scripts": {
     "watch:dev": "cd fe && ws",
     "build": "cd fe && webpack",
-    "build:vendor": "cd fe && webpack --config vendor.webpack.config.js & exit 0",
+    "build:vendor": "cd fe && webpack --config vendor.webpack.config.js",
     "watch:build": "cd fe && webpack-runner --config=webpack.config.js --watch",
     "test:unit": "cd fe && cd tests && webpack && karma start",
     "watch:build:test:unit": "cd fe && cd tests && webpack-runner --config=webpack.config.js --watch",
@@ -64,8 +66,8 @@
     "nobuild:test:unit": "cd fe && cd tests && karma start",
     "test": "npm run test:unit && npm run test:e2e",
     "postinstall": "cd fe/tests && typings install",
-    "clean": "rmdir /S /Q bin & rmdir /S /Q errorShots & rmdir /S /Q node_modules & cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q typings & rmdir /S /Q dist & cd .. & cd .. & cd .vscode & rmdir /S /Q chrome",
-    "clean:dist": "cd fe & rmdir /S /Q dist & cd tests & rmdir /S /Q dist"
+    "clean": "rimraf bin errorShots fe/dist fe/tests/dist .vscode/chrome",
+    "clean:dist": "rimraf fe/dist fe/tests/dist"
   },
   "repository": {
     "type": "git",

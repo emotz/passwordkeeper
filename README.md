@@ -24,25 +24,32 @@ Development server is `local-web-server`. It is simple http server, designed to 
 
 `WebDriverIO` is used to run end-to-end tests (full-stack tests). It uses Selenium as engine.
 
-## e2e tests set up
+## e2e tests set up (for Windows)
 
-Install Java 8 SDK.
+*Optional*: Install choco - package manager for Windows:
 
 ```bat
+:: elevated CMD (with Administrator rights):
+
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+refreshenv
+```
+
+Install Java 8 SDK and NodeJS (e.g. with choco) and Visual C++ Build Tools (this will take a lot of time):
+
+```bat
+:: elevated CMD (with Administrator rights):
+
 choco install jdk8
-```
-
-From elevated CMD (with Administrator rights):
-
-```bat
+choco install nodejs
+refreshenv
 npm install --global --production windows-build-tools
+refreshenv
 ```
 
-From usual CMD:
+## e2e tests set up (for Linux)
 
-```bat
-npm install --global webdriverio wdio-jasmine-framework wdio-selenium-standalone-service
-```
+[TODO]
 
 ## Build & Run
 
@@ -51,7 +58,6 @@ First finish `e2e tests set up` section.
 Then additional requirements:
 
 ```bat
-npm install -g webpack webpack-runner local-web-server karma-cli typings
 npm install
 ```
 
@@ -105,12 +111,13 @@ npm run build
 
 ```bat
 npm run clean
+```
 
 ### Clean distributable files
 
 ```bat
 npm run clean:dist
-``````
+```
 
 ## Usual development workflow
 
