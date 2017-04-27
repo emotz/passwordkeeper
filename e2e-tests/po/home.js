@@ -30,6 +30,7 @@ class HomePage extends Page {
         this.lastPassEntry.$('.pk-btn-pass-edit').click();
         const editor = browser.$('.pk-pass-editor');
         editor.$('.pk-title-input').waitForVisible();
+        editor.pause(5000);
         editor.$('.pk-title-input').setValue(pass.title);
         editor.$('.pk-user-input').setValue(pass.user);
         editor.$('.pk-pass-input').setValue(pass.password);
