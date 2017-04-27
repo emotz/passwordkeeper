@@ -4,6 +4,8 @@ Simple storage for passwords. Uses VueJS for front-end.
 
 ## Tech description
 
+`Vagrantfile` is a configuration file for `Vagrant`. It is used to provide conservative environment amongst developers machines.
+
 `fe/jsconfig.json` is a Visual Studio Code file for project definition.
 
 `fe/tests/typings.json` configuration file for `typings` - it is used to provide intellisense.
@@ -24,9 +26,11 @@ Development server is `local-web-server`. It is simple http server, designed to 
 
 `WebDriverIO` is used to run end-to-end tests (full-stack tests). It uses Selenium as engine.
 
-## e2e tests set up (for Windows)
+## Vagrant setup (for Windows host)
 
-*Optional*: Install choco - package manager for Windows:
+If you already have *VirtualBox*, *Vagrant* and *OpenSSH* installed, you can skip this section and move to `Build & Run`.
+
+*Optional*: Install [choco](https://chocolatey.org/) - package manager for Windows to simplify installation process:
 
 ```bat
 :: elevated CMD (with Administrator rights):
@@ -35,41 +39,78 @@ Development server is `local-web-server`. It is simple http server, designed to 
 refreshenv
 ```
 
-Install Java 8 SDK and NodeJS (e.g. with choco) and Visual C++ Build Tools (this will take a lot of time):
+Install [Vagrant](https://www.vagrantup.com/), [VirtualBox](https://www.virtualbox.org/), and *OpenSSH*:
+
+*Notice*: If you have *PUTTY* ssh installed, you might need to move *OpenSSH* before *PUTTY* in **PATH**
 
 ```bat
 :: elevated CMD (with Administrator rights):
 
-choco install jdk8
-choco install nodejs
-refreshenv
-npm install --global --production windows-build-tools
-refreshenv
+choco install virtualbox
+choco install vagrant
+choco install openssh
 ```
 
-## e2e tests set up (for Linux)
+Since virtual machines are taking a lot of disk space, you probably want to move them out of system drive.
 
-[TODO]
+To do that with *VirtualBox*, open up `Oracle VM VirtualBox` manager and press `Settings` button. There select `General` and adjust vm location.
+
+To move *Vagrant* files to another drive, you need to change **VAGRANT_HOME** env variable:
+
+![Changing VAGRANT_HOME](/doc/vagrant_home.png?raw=true "Changing VAGRANT_HOME")
+
+
+Set up *Vagrant*:
+
+```bat
+:: ordinal CMD (without Administrator rights):
+
+vagrant plugin install vagrant-vbguest
+```
 
 ## Build & Run
 
-First finish `e2e tests set up` section.
+Firstly finish `Vagrant setup` section.
 
-Then additional requirements:
+Then `cd` into project root directory.
+
+Then start up vagrant (this will take ~25-30 min for first start-up, it will be much faster for next start-ups):
 
 ```bat
-npm install
+vagrant up
 ```
+
+`vagrant up` command makes Vagrant to launch virtual machine, set up all builds, watches and dev servers. You are ready to go! Open `http://localhost:8000` in your browser.
+
+To debug with *VSCode*:
+
+Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
+
+Open project in *VSCode*, press `ctrl-shift-d`, select `Both` for launch configuration and press `f5`.
+
+## Advanced: Build & Run
+
+For more precise control, after `vagrant up` you can ssh into virtual machine by using
+
+```bat
+vagrant ssh
+```
+
+While you are in ssh, you can do other commands, listed below (or simply do `npm run` to get list of available scripts to run).
 
 ### Build
 
+*Warn*: Don't forget to `vagrant ssh`
+
 ```bat
-set NODE_ENV=development
+NODE_ENV=development
 npm run build:vendor
 npm run build
 ```
 
 ### Start dev server
+
+*Warn*: Don't forget to `vagrant ssh`
 
 ```bat
 npm run watch:dev
@@ -77,37 +118,43 @@ npm run watch:dev
 
 ### Run unit tests
 
+*Warn*: Don't forget to `vagrant ssh`
+
 ```bat
-npm run build:vendor
 npm run test:unit
 ```
 
 ### Run e2e tests
 
+*Warn*: Don't forget to `vagrant ssh`
+
+*Notice*: First start will take quite a bit of time because it downloads selenium and chrome driver.
+
 ```bat
-npm run watch:dev
-npm run build:vendor
-npm run build
 npm run test:e2e
 ```
 
 ### Run all tests
 
+*Warn*: Don't forget to `vagrant ssh`
+
 ```bat
-npm run watch:dev
-npm run build:vendor
-npm run build
-npm run test:all
+npm run test
 ```
 
 ### Production build
 
+*Warn*: Don't forget to `vagrant ssh`
+
 ```bat
-set NODE_ENV=production
+NODE_ENV=production
+npm run build:vendor
 npm run build
 ```
 
 ### Clean
+
+*Warn*: Don't forget to `vagrant ssh`
 
 ```bat
 npm run clean
@@ -115,19 +162,9 @@ npm run clean
 
 ### Clean distributable files
 
+*Warn*: Don't forget to `vagrant ssh`
+
 ```bat
 npm run clean:dist
 ```
 
-## Usual development workflow
-
-```bat
-set NODE_ENV=development
-npm run watch:dev
-npm run build:vendor
-npm run watch:build
-npm run watch:build:test:unit
-npm run watch:test:unit
-```
-
-Open `localhost:8000` in browser.

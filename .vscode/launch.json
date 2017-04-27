@@ -1,27 +1,37 @@
 {
     "version": "0.1.0",
+    "compounds": [
+        {
+            "name": "Both",
+            "configurations": [
+                "Attach to backend",
+                "Launch frontend"
+            ]
+        }
+    ],
     "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to backend",
+            "port": 5858,
+            "protocol": "legacy",
+            "localRoot": "${workspaceRoot}",
+            "remoteRoot": "/vagrant",
+            "restart": true
+        },
         {
             "name": "Launch frontend",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:8000",
+            "url": "http://localhost:1337",
             "webRoot": "${workspaceRoot}/fe/dist",
             "sourceMapPathOverrides": {
                 "webpack:///./*": "${workspaceRoot}/fe/*", // Example: "webpack:///./src/app.js" -> "/users/me/project/src/app.js",
-                "webpack:///./~/*": "${workspaceRoot}/node_modules/*", // Example: "webpack:///./~/querystring/index.js" -> "/Users/me/project/node_modules/querystring/index.js"
-                "webpack:///*": "*" // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
+                "webpack:///../~/*": "${workspaceRoot}/node_modules/*", // Example: "webpack:///./~/querystring/index.js" -> "/Users/me/project/node_modules/querystring/index.js"
+                "webpack:///*": "${workspaceRoot}/fe/*" // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
             },
             "userDataDir": "${workspaceRoot}/.vscode/chrome"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch backend",
-            "program": "${workspaceRoot}/src/main.js",
-            "runtimeArgs": [
-                "--harmony"
-            ]
         }
     ]
 }
