@@ -43,3 +43,4 @@ selenium-debug.log
 errorShots
 typings
 .vscode/chrome
+.vagrant

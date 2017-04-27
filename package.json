@@ -5,6 +5,7 @@
   "main": "src/main.js",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "express": "^4.15.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.0",
     "lodash": "^4.17.4",
@@ -41,6 +42,7 @@
     "less": "^2.7.2",
     "less-loader": "^3.0.0",
     "local-web-server": "^1.2.7",
+    "nodemon": "^1.11.0",
     "null-loader": "^0.1.1",
     "rimraf": "^2.6.1",
     "typings": "^2.1.0",
@@ -67,7 +69,8 @@
     "test": "npm run test:unit && npm run test:e2e",
     "postinstall": "cd fe/tests && typings install",
     "clean": "rimraf bin errorShots fe/dist fe/tests/dist .vscode/chrome",
-    "clean:dist": "rimraf fe/dist fe/tests/dist"
+    "clean:dist": "rimraf fe/dist fe/tests/dist",
+    "watch:backend": "nodemon --debug=0.0.0.0:5858 -L src/main.js"
   },
   "repository": {
     "type": "git",

@@ -8,13 +8,12 @@
     ],
     "files.exclude": {
         "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
         ".vscode/chrome": true,
-        "**/dist": true,
-        "node_modules": true
+        "node_modules": true,
+        ".vagrant": true
+    },
+    "search.exclude": {
+        "**/dist": true
     },
     "path-intellisense.extensionOnImport": true,
     "path-intellisense.mappings": {
