@@ -76,7 +76,23 @@ Firstly finish `Vagrant setup` section.
 
 Then `cd` into project root directory.
 
-Then start up vagrant (this will take ~25-30 min for first start-up, it will be much faster for next start-ups):
+Due to the [bug in VirtualBox Guest Additions](https://www.virtualbox.org/ticket/16670), when starting up vagrant for first time you need to do:
+
+```bat
+:: this will finish with error `Vagrant was unable to mount VirtualBox shared folders...`
+
+vagrant up
+```
+
+And then
+
+```bat
+vagrant provision
+```
+
+This will take ~25-30 min to finish.
+
+All future start-ups should be like so, without `vagrant provision` (and much faster than first one):
 
 ```bat
 vagrant up
