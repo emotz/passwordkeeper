@@ -61,7 +61,6 @@ To move *Vagrant* files to another drive, you need to change **VAGRANT_HOME** en
 
 ![Changing VAGRANT_HOME](/doc/vagrant_home.png?raw=true "Changing VAGRANT_HOME")
 
-
 Set up *Vagrant*:
 
 ```bat
@@ -185,4 +184,3 @@ npm run clean
 ```bat
 npm run clean:dist
 ```
-
