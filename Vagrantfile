@@ -112,9 +112,8 @@ Vagrant.configure("2") do |config|
     wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
 
     apt-get update
-    apt-get install -t jessie-backports openjdk-8-jre
+    apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
-
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
     cd /vagrant
