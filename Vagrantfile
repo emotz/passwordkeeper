@@ -82,7 +82,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
 
   # HACK: fix https://www.virtualbox.org/ticket/16670
-  # config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
   config.vm.provision "shell", name: "VirtualBox bugfix", inline: <<-SHELL
     ln -sf /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/mount.vboxsf /sbin/mount.vboxsf
     mount -t vboxsf -o uid=1000,gid=1000 vagrant /vagrant
