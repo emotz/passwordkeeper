@@ -85,6 +85,10 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox", disabled: true
   config.vm.provision "shell", name: "VirtualBox bugfix", inline: <<-SHELL
     ln -sf /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/mount.vboxsf /sbin/mount.vboxsf
+    mkdir /vagrant
+    chown vagrant:vagrant /vagrant
+  SHELL
+  config.vm.provision "shell", name: "VirtualBox bugfix2", run: "always", inline: <<-SHELL
     mount -t vboxsf -o uid=1000,gid=1000 vagrant /vagrant
   SHELL
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
