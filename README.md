@@ -46,10 +46,12 @@ Install [Vagrant](https://www.vagrantup.com/), [VirtualBox](https://www.virtualb
 ```bat
 :: elevated CMD (with Administrator rights):
 
-choco install virtualbox
 choco install vagrant
+choco install virtualbox
 choco install openssh
 ```
+
+You might need to reboot after installing virtualbox.
 
 Since virtual machines are taking a lot of disk space, you probably want to move them out of system drive.
 

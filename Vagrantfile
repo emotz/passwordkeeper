@@ -51,7 +51,8 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+
+  
   # config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [".git/", "node_modules/", ".vscode/"]
 
   # Provider-specific configuration so you can fine-tune various
@@ -79,6 +80,13 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
+
+  # HACK: fix https://www.virtualbox.org/ticket/16670
+  # config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  config.vm.provision "shell", name: "VirtualBox bugfix", inline: <<-SHELL
+    ln -sf /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/mount.vboxsf /sbin/mount.vboxsf
+    mount -t vboxsf -o uid=1000,gid=1000 vagrant /vagrant
+  SHELL
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     echo "Preparing local node_modules folder..."
     mkdir ~/vagrant_node_modules 2>/dev/null
