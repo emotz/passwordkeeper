@@ -33,6 +33,7 @@ module.exports = {
                 loader: "eslint-loader",
             },
             {
+                // so that inject loader works correctly
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: "babel-loader",

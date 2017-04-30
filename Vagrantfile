@@ -128,17 +128,17 @@ Vagrant.configure("2") do |config|
     npm run build:vendor
     
     echo "Starting watch on app build"
-    npm run watch:build > watch-build.log 2>&1 &
+    npm run watch:build > logs/watch-build.log 2>&1 &
 
     echo "Starting test web server"
-    npm run watch:dev > ws.log 2>&1 &
+    npm run watch:dev > logs/ws.log 2>&1 &
 
     echo "Starting proper web server"
-    npm run watch:backend > backend.log 2>&1 &
+    npm run watch:backend > logs/backend.log 2>&1 &
 
     echo "Starting virtual graphics server"
-    Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp >xvfb.log 2>&1 &
-    x11vnc -display :99 -nopw > x11vnc.log 2>&1 &
+    Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp > logs/xvfb.log 2>&1 &
+    x11vnc -display :99 -nopw > logs/x11vnc.log 2>&1 &
   SHELL
 
 end
