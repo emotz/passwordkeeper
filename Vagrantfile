@@ -117,16 +117,18 @@ Vagrant.configure("2") do |config|
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
     cd /vagrant
-    
+
     echo "Installing node modules (this will take a while)"
     npm install
-    
+
     echo "Cleaning dist"
     npm run clean:dist
-    
+
     echo "Building vendor"
     npm run build:vendor
-    
+
+    mkdir logs
+
     echo "Starting watch on app build"
     npm run watch:build > logs/watch-build.log 2>&1 &
 
