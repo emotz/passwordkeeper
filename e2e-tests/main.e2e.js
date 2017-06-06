@@ -1,4 +1,6 @@
 describe('main', function () {
+    browser.windowHandleSize({ width: 1920, height: 1080 });
+
     describe('login', function () {
         const Page = require('./po/page.js');
         const page = new Page();
@@ -13,7 +15,7 @@ describe('main', function () {
         });
         it('should not fail login with correct user/password and logout', function () {
             page.login('myuser', 'mypassword');
-            page.waitForFailedLogin(undefined, true);
+            page.waitForLogoutReady();
             page.logout();
             page.waitForLoginReady();
         });
@@ -32,7 +34,6 @@ describe('main', function () {
 
         it('can switch locale', function () {
             page.open();
-
             page.waitForEnglishLocale();
 
             page.selectLocale("ru");
@@ -104,7 +105,6 @@ describe('main', function () {
 
             page.addPass(pass);
             page.editLastPass(updatedPass);
-            page.refreshAllPasses();
             page.waitForPass(updatedPass);
             page.waitForPass(pass, undefined, true);
             page.removeLastPass();

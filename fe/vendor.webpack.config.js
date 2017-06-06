@@ -55,11 +55,10 @@ module.exports = {
     plugins,
     module: {
         loaders: [
-            // the url-loader uses DataUrls. 
-            // the file-loader emits files. 
+            // the url-loader uses DataUrls.
+            // the file-loader emits files.
             // for font-awesome
-            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+            { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url-loader' },
             { test: /\.vue$/, loader: 'vue-loader' },
             { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]

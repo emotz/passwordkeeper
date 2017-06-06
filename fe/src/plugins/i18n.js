@@ -2,20 +2,35 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
 import * as loader from 'src/services/loader.js';
+import { watch } from 'src/services/watch.js';
+import ClientStore from 'src/client-store.js';
 
-Vue.use(VueI18n);
 const locales = {
     'ru': loader.import_async((resolve, reject) => require(['src/i18ns/ru.js'], resolve.default, reject)),
     'en': require('src/i18ns/en.js').default
 };
-for (let lang in locales) {
-    // Vue.locale starts download immediately even if it is function, so we dont assign anything here
-    if (locales[lang] instanceof Function) continue;
-    Vue.locale(lang, locales[lang]);
-}
-Vue.config.fallbackLang = 'en';
-
 let last_locale;
+
+(function init() {
+    Vue.use(VueI18n);
+
+    for (let lang in locales) {
+        // Vue.locale starts download immediately even if it is function, so we dont assign anything here
+        if (locales[lang] instanceof Function) continue;
+        Vue.locale(lang, locales[lang]);
+    }
+    Vue.config.fallbackLang = 'en';
+
+    let client_store = new ClientStore('lang');
+    let stored_locale = client_store.get();
+    if (stored_locale !== undefined) {
+        set_locale(stored_locale);
+    }
+    watch(get_locale, (new_locale, old_locale) => {
+        client_store.set(new_locale);
+    });
+})();
+
 /**
  * It might not change locale immediately - if locale is not yet available, it is downloaded first.
  * If it is changed again before download is finished, then locale won't change after download.

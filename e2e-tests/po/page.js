@@ -5,7 +5,6 @@ class Page {
     }
     open(path) {
         browser.url(path || '/');
-        browser.waitForVisible('#splash');
         browser.waitForVisible('#footer');
         browser.waitForVisible('#splash', undefined, true);
     }
@@ -16,13 +15,16 @@ class Page {
         browser.$(`.toast-error=${content}`).waitForVisible(...args);
     }
     waitForLoginReady() {
-        browser.$('.pk-signin-user-input').waitForVisible();
+        browser.$('.pk-btn-signin').waitForVisible();
     }
     login(user, password) {
         this.waitForLoginReady();
         browser.$('.pk-signin-user-input').setValue(user);
         browser.$('.pk-signin-pass-input').setValue(password);
         browser.$('.pk-btn-signin').click();
+    }
+    waitForLogoutReady() {
+        browser.$('.pk-btn-signout').waitForVisible();
     }
     logout() {
         browser.$('.pk-btn-signout').waitForVisible();

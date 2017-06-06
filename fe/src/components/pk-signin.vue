@@ -17,19 +17,18 @@
                        class="pk-signin-pass-input form-control"
                        v-model="password">
             </div>
-            <pk-async-button class="pk-btn-signin btn btn-success"
-                             type="submit"
-                             :can-execute="true"
-                             :action="signin">
+            <button class="pk-btn-signin btn btn-success"
+                    type="submit"
+                    :disabled="can_signin"
+                    @click="signin">
                 <slot>{{ $t('signin') }}</slot>
-            </pk-async-button>
+            </button>
         </form>
-        <pk-async-button v-else
-                         class="pk-btn-signout btn btn-default"
-                         :can-execute="true"
-                         :action="signout">
+        <button v-else
+                class="pk-btn-signout btn btn-default"
+                @click="signout">
             <slot>{{ $t('signout') }}</slot>
-        </pk-async-button>
+        </button>
     </ul>
 </template>
 
