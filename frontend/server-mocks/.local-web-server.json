@@ -1,0 +1,19 @@
+{
+    "port": 8000,
+    "spa": "index.html",
+    "directory": "../dist",
+    "mocks": [
+        {
+            "route": "/api/entries/:id",
+            "module": "./src/entry.js"
+        },
+        {
+            "route": "/api/entries",
+            "module": "./src/entries.js"
+        },
+        {
+            "route": "/api/token",
+            "module": "./src/token.js"
+        }
+    ]
+}
