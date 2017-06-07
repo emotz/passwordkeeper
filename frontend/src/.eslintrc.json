@@ -1,0 +1,14 @@
+{
+    "extends": "../../.eslintrc.json",
+    "env": {
+        "jquery": true,
+        "browser": true,
+        "commonjs": true
+    },
+    "globals": {
+        "process": true
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    }
+}
