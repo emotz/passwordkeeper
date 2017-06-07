@@ -52,7 +52,7 @@
     "webpack-runner": "^1.3.0"
   },
   "scripts": {
-    "dev": "cd frontend && ws",
+    "dev": "cd frontend && cd server-mocks && ws",
     "build": "cd frontend && webpack --config vendor.webpack.config.js && webpack",
     "watch": "cd frontend && webpack --config vendor.webpack.config.js && webpack-runner --config=webpack.config.js --watch",
     "test-unit": "cd frontend && webpack --config test.webpack.config && karma start",

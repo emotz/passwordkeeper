@@ -5,15 +5,15 @@
     "mocks": [
         {
             "route": "/api/entries/:id",
-            "module": "./src/entry.js"
+            "module": "../server-mocks/src/entry.js"
         },
         {
             "route": "/api/entries",
-            "module": "./src/entries.js"
+            "module": "../server-mocks/src/entries.js"
         },
         {
             "route": "/api/token",
-            "module": "./src/token.js"
+            "module": "../server-mocks/src/token.js"
         }
     ]
 }
