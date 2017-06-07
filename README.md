@@ -7,34 +7,35 @@ Simple storage for passwords. Uses VueJS for front-end.
 `Vagrantfile` is a configuration file for `Vagrant`. It is used to provide
 conservative environment amongst developers machines.
 
-`fe/jsconfig.json` is a Visual Studio Code file for project definition.
+`jsconfig.json` is a Visual Studio Code file for project definition. There are
+number of those files amongst the project to separate execution context.
 
-`fe/tests/typings.json` configuration file for `typings` - it is used to provide
-intellisense.
+Front-end source files are located at `frontend/src`.
 
-Front-end source files are located at `fe/src`.
+Front-end unit-test specifications are located at `frontend/test`.
 
-Front-end unit-test specifications are located at `fe/tests/specs`.
+End-to-end tests specifications are located at `e2e`.
 
-End-to-end tests specifications are located at `e2e-tests`.
-
-End-to-end test Page Objects are located at `e2e-tests/po`. These objects are
+End-to-end test Page Objects are located at `e2e/pageobjects`. These objects are
 helpers for the e2e-tests.
 
 `Webpack` is used to precompile js scripts and bundle them into single giant js
-at `fe/dist`. This directory also contains a bunch of precompiled fonts required
-for `bootstrap` and `index.html` which is an entry point for our SPA app.
-Webpack config file is `fe/webpack.config.js`.
+at `frontend/dist/bundle.js`. This directory also contains a bunch of
+precompiled fonts required for `bootstrap` and `index.html` which is an entry
+point for our SPA app. Webpack config file is `frontend/webpack.config.js`.
+"Vendor" libraries are separated into its own bundle
+`frontend/dist/vendor.bundle.js` by using `frontend/vendor.webpack.config.js` as
+a config. This is done so that building times for our app is smaller and so that
+caching of infrequently changing lib files is possible for the future.
+
+There is also `frontend/test.webpack.config.js`. This is for building unit
+tests. They are first built into bundle `frontend/dist/test.bundle.js` and then
+this bundle is monitored by `karma` to run unit tests.
 
 Development server is `local-web-server`. It is simple http server, designed to
 be easily mockable and configurable for easy startup. Its config file along with
-registered routes is `fe/.local-web-server.json`. Route-handlers are located at
-`fe/mocks`.
-
-`Karma` is used to run unit-tests for front-end. Its config file is
-`fe/tests/karma.conf.js`. It also uses `webpack` to precompile tests, but it
-doesnt use `fe/webpack.config.js` for that; instead,
-`fe/tests/webpack.config.js` is used.
+registered routes is `frontend/server-mocks/.local-web-server.json`.
+Route-handlers are located at `frontend/server-mocks/src`.
 
 `WebDriverIO` is used to run end-to-end tests (full-stack tests). It uses
 Selenium as engine.
@@ -45,7 +46,7 @@ If you already have *VirtualBox*, *Vagrant* and *OpenSSH* installed, you can
 skip this section and move to `Build & Run`.
 
 *Optional*: Install [choco](https://chocolatey.org/) - package manager for
-Windows to simplify installation process:
+Windows to simplify installation process by executing following command:
 
 ```bat
 :: elevated CMD (with Administrator rights):
@@ -95,9 +96,7 @@ Firstly finish `Vagrant setup` section.
 
 Then `cd` into project root directory.
 
-Due to
-the
-[bug in VirtualBox Guest Additions](https://www.virtualbox.org/ticket/16670),
+Due to the [bug in VirtualBox Guest Additions](https://www.virtualbox.org/ticket/16670),
 when starting up vagrant for first time you need to do:
 
 ```bat
@@ -114,7 +113,7 @@ vagrant provision
 
 This will take ~25-30 min to finish.
 
-All future start-ups should be like so, without `vagrant provision` (and much
+All future start-ups should be like following, without `vagrant provision` (and much
 faster than first one):
 
 ```bat
@@ -150,7 +149,6 @@ run` to get list of available scripts to run).
 
 ```bat
 NODE_ENV=development
-npm run build:vendor
 npm run build
 ```
 
@@ -159,7 +157,7 @@ npm run build
 *Warn*: Don't forget to `vagrant ssh`
 
 ```bat
-npm run watch:dev
+npm run dev
 ```
 
 ### Run unit tests
@@ -169,6 +167,8 @@ npm run watch:dev
 ```bat
 npm run test:unit
 ```
+
+*Notice*: It doesn't build the project, it builds only tests.
 
 ### Run e2e tests
 
@@ -180,6 +180,8 @@ npm run test:unit
 npm run test:e2e
 ```
 
+*Notice*: It doesn't build the project
+
 ### Run all tests
 
 *Warn*: Don't forget to `vagrant ssh`
@@ -188,13 +190,14 @@ npm run test:e2e
 npm run test
 ```
 
+*Notice*: It doesn't build the project
+
 ### Production build
 
 *Warn*: Don't forget to `vagrant ssh`
 
 ```bat
 NODE_ENV=production
-npm run build:vendor
 npm run build
 ```
 
@@ -206,10 +209,3 @@ npm run build
 npm run clean
 ```
 
-### Clean distributable files
-
-*Warn*: Don't forget to `vagrant ssh`
-
-```bat
-npm run clean:dist
-```
