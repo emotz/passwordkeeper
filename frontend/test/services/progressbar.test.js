@@ -1,4 +1,4 @@
-import progressbarInjector from 'inject-loader!src/services/progressbar.js';
+import progressbarInjector from 'inject-loader!babel-loader?presets[]=es2015!src/services/progressbar.js';
 
 describe("progressbar tests", function() {
     it("should start and stop", function() {

@@ -1,4 +1,4 @@
-import loaderInjector from 'inject-loader!src/services/loader.js';
+import loaderInjector from 'inject-loader!babel-loader?presets[]=es2015!src/services/loader.js';
 
 describe("loader tests", function() {
     it("should call notify on success", function(done) {
