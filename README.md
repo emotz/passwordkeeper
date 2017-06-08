@@ -131,6 +131,12 @@ Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemNam
 Open project in *VSCode*, press `ctrl-shift-d`, select `Both` for launch
 configuration and press `f5`.
 
+## Linting
+
+You probably want to `npm install` from your host machine as well to have your
+editor access to the tools like `eslint`. After that (or if you installed
+`eslint` globally) you can do `npm run lint -s` to lint the entire project.
+
 ## Advanced: Build & Run
 
 For more precise control, after `vagrant up` you can ssh into virtual machine by

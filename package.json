@@ -60,6 +60,7 @@
     "test-unit:watch-build": "cd frontend && webpack-runner --config=test.webpack.config.js --watch",
     "test-e2e": "cd e2e && wdio",
     "test": "npm run test-unit && npm run test-e2e",
+    "lint": "eslint . --format unix",
     "clean": "rimraf bin frontend/dist .vscode/chrome"
   },
   "repository": {
