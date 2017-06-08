@@ -122,17 +122,12 @@ Vagrant.configure("2") do |config|
     npm install
 
     echo "Cleaning dist"
-    npm run clean
+    npm run clean -s
 
     mkdir logs 2>/dev/null
 
-    echo "Starting watch on app build"
-    npm run watch > logs/watch.log 2>&1 &
-
-    echo "Starting test web server"
-    npm run dev > logs/ws.log 2>&1 &
-
-    echo "Starting proper web server (not implemented yet)"
+    echo "Starting watch on everything"
+    npm run watch -s > logs/watch.log 2>&1 &
 
     echo "Starting virtual graphics server"
     Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp > logs/xvfb.log 2>&1 &

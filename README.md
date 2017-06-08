@@ -171,10 +171,16 @@ npm run dev
 *Warn*: Don't forget to `vagrant ssh`
 
 ```bat
-npm run test:unit
+npm run test-unit
 ```
 
 *Notice*: It doesn't build the project, it builds only tests.
+
+To watch on the unit-test:
+
+```bat
+npm run test-unit:watch
+```
 
 ### Run e2e tests
 
@@ -183,7 +189,7 @@ npm run test:unit
 *Notice*: First start will take quite a bit of time because it downloads selenium and chrome driver.
 
 ```bat
-npm run test:e2e
+npm run test-e2e
 ```
 
 *Notice*: It doesn't build the project
