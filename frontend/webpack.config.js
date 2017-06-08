@@ -57,32 +57,16 @@ module.exports = {
     },
     module: {
         loaders: [
-            // the url-loader uses DataUrls. 
-            // the file-loader emits files. 
+            // the url-loader uses DataUrls.
+            // the file-loader emits files.
             // for font-awesome
             { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url-loader' },
-            {
-                test: /\.vue$/,
-                exclude: /node_modules/,
-                loader: 'vue-loader',
-                options: {
-                    preLoaders: {
-                        js: 'eslint-loader'
-                    }
-                }
-            },
             {
                 test: /\.vue$/,
                 include: /node_modules/,
                 loader: 'vue-loader'
             },
-            { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-            {
-                enforce: "pre",
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "eslint-loader"
-            },
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] }
         ]
     }
 };
