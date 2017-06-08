@@ -4,6 +4,7 @@
   "description": "Simple storage for passwords",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "command-decorator": "git+https://github.com/emotz/command-decorator.git",
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.0",

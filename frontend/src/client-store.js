@@ -2,8 +2,8 @@ import _ from 'lodash';
 
 class ClientStore {
     /**
-     * 
-     * @param {string} key 
+     *
+     * @param {string} key
      */
     constructor(key) {
         this.key = _.camelCase('pk-' + key);

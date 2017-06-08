@@ -3,7 +3,7 @@ import * as notify from './notify.js';
 import _ from 'lodash';
 
 /**
- * Decorates function to show progressbar during execution and show notification when finished. 
+ * Decorates function to show progressbar during execution and show notification when finished.
  * @see perform
  * @param {function} fn Function or Promise to execute
  * @param {Function|String} [map_success_text] Function to modify displayed notification for success case (or just text to display)
@@ -24,7 +24,7 @@ export function decorate_without_success_notify(fn, ...args) {
 }
 
 /**
- * 
+ *
  * @param {Function} fn Function to call async import
  */
 export function import_async(fn) {
