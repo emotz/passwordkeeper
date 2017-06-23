@@ -9,8 +9,8 @@ const mongoose = require('./libs/mongoose');
 const passEntry = require('./models/passentry');
 const createDB = require('./createDB');
 
-createDB.createTestDB();
 mongoose.initConnect();
+createDB.createTestDB();
 let PasswordModel = passEntry.PassEntry;
 
 function guid() {

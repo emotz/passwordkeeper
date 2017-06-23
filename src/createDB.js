@@ -3,10 +3,6 @@ const passentry = require('./models/passentry.js');
 
 function createTestDB()
 {
-    mongoose.initConnect();
-    let db = mongoose.connection.db;
-    //db.dropCollection('passwords');
-    //db.dropDatabase(function (err) {if (err) throw err; return;});
     let pass1 = new passentry.PassEntry ({
         "id": "aa259b63-af6c-0074-87f8-544b7efa4302",
         "title": "mytitle",
@@ -28,7 +24,6 @@ function createTestDB()
         "password": "mypassword321"
     });
     pass3.save();
-    mongoose.disconnect();
 }
 
 module.exports.createTestDB = createTestDB;
