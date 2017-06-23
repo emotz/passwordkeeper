@@ -1,33 +1,22 @@
 const mongoose    = require('mongoose');
 const log         = require('./log')(module);
+const url =  'mongodb://localhost:27017/testdb';
 
-mongoose.connect('mongodb://localhost/test1');
-const db = mongoose.connection;
+function initConnect()
+{
+    mongoose.connect(url);
+    const db = mongoose.connection;
 
-db.on('error', function (err) {
-    log.error('connection error:', err.message);
-});
-db.once('open', function callback () {
-    log.info("Connected to DB!");
-});
+    db.on('error', function (err) {
+        log.error('connection error:', err.message);
+    });
 
-let Schema = mongoose.Schema;
+    db.once('open', function callback () {
+        log.info("Connected to DB!");
+    });
+}
 
-// Schemas
-let Password = new Schema({
-    id: { type: String, required: true },
-    title: String,
-    user: { type: String, required: true },
-    password: { type: String, required: true }
-});
+//initConnect();
 
-let User = new Schema({
-    id: { type: String, required: true },
-    password: { type: String, required: true },
-    hash: { type: String, required: true },
-    salt: { type: String, required: true }
-});
-
-var PasswordModel = mongoose.model('Password', Password);
-
-module.exports.PasswordModel = PasswordModel;
+module.exports = mongoose;
+module.exports.initConnect = initConnect;
