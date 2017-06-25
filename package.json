@@ -20,6 +20,7 @@
   },
   "optionalDependencies": {
     "@types/jasmine": "^2.5.47",
+    "babel-eslint": "^7.2.3",
     "eslint": "^3.19.0",
     "eslint-plugin-webdriverio": "^1.0.1",
     "inject-loader": "^3.0.0",

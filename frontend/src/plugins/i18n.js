@@ -11,25 +11,23 @@ const locales = {
 };
 let last_locale;
 
-(function init() {
-    Vue.use(VueI18n);
+Vue.use(VueI18n);
 
-    for (let lang in locales) {
-        // Vue.locale starts download immediately even if it is function, so we dont assign anything here
-        if (locales[lang] instanceof Function) continue;
-        Vue.locale(lang, locales[lang]);
-    }
-    Vue.config.fallbackLang = 'en';
+for (let lang in locales) {
+    // Vue.locale starts download immediately even if it is function, so we dont assign anything here
+    if (locales[lang] instanceof Function) continue;
+    Vue.locale(lang, locales[lang]);
+}
+Vue.config.fallbackLang = 'en';
 
-    let client_store = new ClientStore('lang');
-    let stored_locale = client_store.get();
-    if (stored_locale !== undefined) {
-        set_locale(stored_locale);
-    }
-    watch(get_locale, (new_locale, old_locale) => {
-        client_store.set(new_locale);
-    });
-})();
+let client_store = new ClientStore('lang');
+let stored_locale = client_store.get();
+if (stored_locale !== undefined) {
+    set_locale(stored_locale);
+}
+watch(get_locale, (new_locale, old_locale) => {
+    client_store.set(new_locale);
+});
 
 /**
  * It might not change locale immediately - if locale is not yet available, it is downloaded first.

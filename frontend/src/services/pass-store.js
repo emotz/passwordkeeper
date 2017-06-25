@@ -8,59 +8,7 @@ import * as i18n from 'src/plugins/i18n.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
-/**
- * @typedef {Object} CommandHistory
- * @property {string} status Can be 'failure', 'inprogress' or 'success'.
- */
-
-/**
- * @typedef {Object} Commands
- * @property {BasicCommand} save_cmd
- * @property {BasicCommand} remove_cmd
- */
-
-/**
- * @typedef {Object} Action
- * @property {string} _id
- * @property {Commands} cmds
- * @property {CommandHistory[]} history
- */
-
-/**
- * @typedef {Object} Entry
- * @property {string} _id Local id
- * @property {string} id Persistent id (stored at server in db)
- * @property {string} title
- * @property {string} user
- * @property {string} password
- * @property {boolean} synced True if synced with the server db
- */
-
-/**
- * @typedef {Object} DtoEntry
- * @property {string} id
- * @property {string} title
- * @property {string} user
- * @property {string} password
- */
-
-/**
- * Data Transfer Object from View
- * @typedef {Object} DtoViewEntry
- * @property {string} title
- * @property {string} user
- * @property {string} password
- */
-
-/**
- * @typedef {Object} Data
- * @property {Entry[]} entries
- */
-
-
-/** @type {Action[]} */
 let actions = [];
-/** @type {Data} */
 const data = {
     entries: []
 };
@@ -74,7 +22,6 @@ export function get_entries() {
 }
 
 export const pull_cmd = new BasicCommand(async () => {
-    /** @type {DtoEntry[]} */
     let entries = (await http.get(API_ENTRIES_URL)).body;
     // TODO: validate response
     data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
@@ -95,10 +42,6 @@ export const pull_cmd = new BasicCommand(async () => {
     });
 
 // TODO: add interaction with server for all actions/commands
-/**
- *
- * @param {DtoViewEntry} dto
- */
 export function add_entry(dto) {
     assert(data.entries.find(e => e._id === dto._id) === undefined);
     assert(actions.find(a => a._id === dto._id) === undefined);
@@ -118,10 +61,6 @@ export function get_entry_cmds(_id) {
     return action.cmds;
 }
 
-/**
- * @param {number} idx Specified what command history to get. 0 means last/current command, 1 means previous command etc.
- * @returns {CommandHistory}
- */
 export function get_entry_cmdhistory(_id, idx = 0) {
     return actions[actions.length - 1 - idx].history;
 }
