@@ -6,7 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.post_up_message = "Virtual machine is set up and running, all builds, watches and dev servers are running. You are ready to go! Open `http://localhost:8000` in your browser."
+  config.vm.post_up_message = "If you don't see any errors above, then virtual machine is set up and running, all builds, watches and dev servers are running. You are ready to go! Open `http://localhost:8000` in your browser."
 
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
-  
+
   # config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [".git/", "node_modules/", ".vscode/"]
 
   # Provider-specific configuration so you can fine-tune various
@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     echo "Preparing local node_modules folder..."
     mkdir ~/vagrant_node_modules 2>/dev/null
-    
+
     echo "export DISPLAY=:99" >> ~/.bashrc
     echo "cd /vagrant" >> ~/.bashrc
   SHELL
@@ -103,11 +103,11 @@ Vagrant.configure("2") do |config|
 
     # Add Google public key to apt
     wget -q -O - "https://dl-ssl.google.com/linux/linux_signing_key.pub" | apt-key add -
-    
+
     # Add Google to the apt-get source list
     echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | \
       tee /etc/apt/sources.list.d/google-chrome.list
-    
+
     # Add NodeJS to the apt-get source list
     wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
 
@@ -122,21 +122,12 @@ Vagrant.configure("2") do |config|
     npm install
 
     echo "Cleaning dist"
-    npm run clean:dist
+    npm run clean -s
 
-    echo "Building vendor"
-    npm run build:vendor
+    mkdir logs 2>/dev/null
 
-    mkdir logs
-
-    echo "Starting watch on app build"
-    npm run watch:build > logs/watch-build.log 2>&1 &
-
-    echo "Starting test web server"
-    npm run watch:dev > logs/ws.log 2>&1 &
-
-    echo "Starting proper web server"
-    npm run watch:backend > logs/backend.log 2>&1 &
+    echo "Starting watch on everything"
+    npm run watch -s > logs/watch.log 2>&1 &
 
     echo "Starting virtual graphics server"
     Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp > logs/xvfb.log 2>&1 &

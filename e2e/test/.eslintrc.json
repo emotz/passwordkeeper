@@ -1,0 +1,9 @@
+{
+    "extends": "../../.eslintrc.json",
+    "env": {
+        "webdriverio/wdio": true,
+        "jasmine": true,
+        "node": true
+    },
+    "plugins": ["webdriverio"]
+}

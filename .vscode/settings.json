@@ -1,28 +1,16 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "jshint.enable": false,
-    "eslint.enable": true,
-    "eslint.validate": [
-        "javascript",
-        "vue"
-    ],
+    "markdownlint.config": {
+        "MD013": false,
+        "MD041": false,
+        "MD029": false
+    },
     "files.exclude": {
-        "**/.git": true,
+        ".git": true,
         ".vscode/chrome": true,
         "node_modules": true,
-        ".vagrant": true
-    },
-    "search.exclude": {
+        ".vagrant": true,
         "**/dist": true
     },
-    "path-intellisense.extensionOnImport": true,
-    "path-intellisense.mappings": {
-        "src": "${workspaceRoot}/fe/src"
-    },
-    "rest-client.environmentVariables": {
-        "local": {
-            "url": "localhost:8000",
-            "token": "9dbc2362-2760-ec0b-97f6-f3cf634d2172"
-        }
-    }
+    "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false
 }

@@ -24,12 +24,12 @@
             "name": "Launch frontend",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:1337",
-            "webRoot": "${workspaceRoot}/fe/dist",
+            "url": "http://localhost:8000",
+            "webRoot": "${workspaceRoot}/frontend/dist",
             "sourceMapPathOverrides": {
-                "webpack:///./*": "${workspaceRoot}/fe/*", // Example: "webpack:///./src/app.js" -> "/users/me/project/src/app.js",
+                "webpack:///./*": "${workspaceRoot}/frontend/*", // Example: "webpack:///./src/app.js" -> "/users/me/project/src/app.js",
                 "webpack:///../~/*": "${workspaceRoot}/node_modules/*", // Example: "webpack:///./~/querystring/index.js" -> "/Users/me/project/node_modules/querystring/index.js"
-                "webpack:///*": "${workspaceRoot}/fe/*" // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
+                "webpack:///*": "${workspaceRoot}/frontend/*" // Example: "webpack:///C:/project/app.ts" -> "C:/project/app.ts"
             },
             "userDataDir": "${workspaceRoot}/.vscode/chrome"
         }
