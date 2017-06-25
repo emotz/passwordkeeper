@@ -111,6 +111,8 @@ faster than first one):
 vagrant up
 ```
 
+(wait about 15 secs after `vagrant up` is finished for build to complete)
+
 `vagrant up` command makes Vagrant to launch virtual machine, set up all builds,
 watches and dev servers. You are ready to go! Open `http://localhost:8000` in
 your browser.
