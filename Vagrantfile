@@ -131,7 +131,7 @@ Vagrant.configure("2") do |config|
 
     echo "Starting virtual graphics server"
     Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp > logs/xvfb.log 2>&1 &
-    x11vnc -display :99 -nopw > logs/x11vnc.log 2>&1 &
+    XAUTHLOCALHOSTNAME=localhost x11vnc -display :99 -nopw > logs/x11vnc.log 2>&1 &
   SHELL
 
 end
