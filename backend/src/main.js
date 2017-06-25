@@ -5,6 +5,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const entries = require('./entries.json');
 const log = require('./libs/log.js')(module);
+const mongoose = require('./libs/mongoose');
+const passEntry = require('./models/passentry');
+const createDB = require('./createDB');
+
+mongoose.initConnect();
+createDB.createTestDB();
+let PasswordModel = passEntry.PassEntry;
 
 function guid() {
     function s4() {
@@ -21,43 +28,58 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/entries', function (req, res, next) {
-    res.json(entries).send();
+    return PasswordModel.find(function(err, passEntryList){
+        if (err){
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });
+        }
+        return res.send(passEntryList);
+    });
 });
 
 app.get('/api/entries/:id', function (req, res, next) {
-    res.json(enentries.find(entry => entry.id === res.params[0])).send();
+    PasswordModel.find({'id': res.params[0]}, function(err, passentry){
+        if (err){
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });
+        }
+        return res.send(passentry)
+    });
 });
 
 app.post('/api/entries', function (req, res, next) {
     console.log(req.body);
-    const newEntry = req.body;
-    if (newEntry.id !== undefined) {
-        res.status = 400;
-        res.body = { reason: "request must not specify id" };
-        return;
-    }
-    if (newEntry.title === undefined || newEntry.title === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty title" };
-        return;
-    }
-    if (newEntry.user === undefined || newEntry.user === "") {
-        ctx.status = 400;
-        ctx.body = { reason: "request must specify non-empty user" };
-        return;
-    }
-
-    entries.push(newEntry);
-    newEntry.id = guid();
-    res.status = 201;
-    res.location(`/api/entries/${newEntry.id}`);
-    res.send();
+    const newEntry = new PasswordModel({
+        id: guid(),
+        title: req.body.title,
+        user: req.body.user,
+        password: req.body.password
+    });
+    newEntry.save(function (err) {
+        if (!err) {
+            log.info("new password entry created");
+            res.status = 201;
+            res.location(`/api/entries/${newEntry.id}`);
+            res.send();
+        } else {
+            console.log(err);
+            if(err.name == 'ValidationError') {
+                res.statusCode = 400;
+                res.send({ error: 'Validation error' });
+            } else {
+                res.statusCode = 500;
+                res.send({ error: 'Server error' });
+            }
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+        }
+    });
 });
 
 app.put('/api/entries/:id', function (req, res) {
     const updatedEntry = req.body;
     updatedEntry.id = req.params[0];
-
     if (updatedEntry.title === undefined || updatedEntry.title === "") {
         res.status = 400;
         res.body = { reason: "request must specify non-empty title" };
@@ -68,23 +90,27 @@ app.put('/api/entries/:id', function (req, res) {
         res.body = { reason: "request must specify non-empty user" };
         return;
     }
-
-    const existingEntryIndex = entries.findIndex(entry => entry.id === req.params[0]);
-    if (existingEntryIndex < 0) {
-        res.status = 404;
-        res.body = { reason: "requested id wasn't found" };
-        return;
-    }
-    entries.splice(existingEntryIndex, 1, updatedEntry);
-    res.status = 200;
-    res.send('OK');
+    PasswordModel.findOneAndUpdate({'id': req.params[0]}, {$set:{title: req.body.title, user: req.body.user, password: req.body.password}}, function(err, passentry){
+        if (err){
+            res.status = 404;
+            res.body = { reason: "requested id wasn't found" };
+            return;
+        }
+        res.status = 200;
+        res.send('OK');
+    });
 });
 
 app.delete('/api/entries/:id', function (req, res) {
-    const existingEntryIndex = entries.findIndex(entry => entry.id === req.params[0]);
-    if (~existingEntryIndex) entries.splice(existingEntryIndex, 1);
-    res.status = 204;
-    res.send('OK');
+    PasswordModel.deleteOne(req.params[0], function(err){
+        if (err){
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });
+        }
+        res.status = 204;
+        res.send('OK');
+    });
 });
 
 app.use(function(req, res, next){
