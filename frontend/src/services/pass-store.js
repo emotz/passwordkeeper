@@ -1,6 +1,5 @@
 import assert from 'assert';
-import BasicCommand from 'src/basic-command.js';
-import CommandGroup from 'src/command-group.js';
+import { Command, execute } from 'command-decorator';
 import { make_reactive } from './watch.js';
 import { http, parse_location } from 'src/plugins/http.js';
 import * as utls from 'src/utility.js';
@@ -8,7 +7,9 @@ import * as i18n from 'src/plugins/i18n.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
-let actions = [];
+// can't put `entryCmds` into `data` because it is complex object and
+// `data` must be reactive, and complex objects can't be reactive.
+let entry_cmd = [];
 const data = {
     entries: []
 };
@@ -21,60 +22,66 @@ export function get_entries() {
     return data.entries;
 }
 
-export const pull_cmd = new BasicCommand(async () => {
-    let entries = (await http.get(API_ENTRIES_URL)).body;
-    // TODO: validate response
-    data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
-    actions = actions.filter(item => ~data.entries.findIndex(e => e._id === item._id));
-    utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
-        let { entry, action } = ctor();
-        entry.synced = true;
-        actions.push(action);
-        return entry;
-    });
-}, {
-        success_msg: i18n.t('notify.itemsfetched'),
-        error_msg: (response) => {
-            return response.status === 408 ?
-                i18n.t('notify.itemsfetched_timeout') :
-                (`api_error[${i18n.t(response.body)}]` || i18n.t('notify.itemsfetched_unknown'));
-        }
-    });
+export const pull_cmd = new (class PullCommand extends Command {
+    @execute
+    async execute() {
+        let entries = (await http.get(API_ENTRIES_URL)).body;
+        // TODO: validate response
+        // getting rid of deleted entries
+        data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
+        entry_cmd = entry_cmd.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
+        // updating existing entries
+        utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
+            let { entry, entryCmd } = ctor();
+            entry.synced = true;
+            entry_cmd.push(entryCmd);
+            return entry;
+        });
+    }
+})();
+// {
+//     success_msg: i18n.t('notify.itemsfetched'),
+//         error_msg: (response) => {
+//             return response.status === 408 ?
+//                 i18n.t('notify.itemsfetched_timeout') :
+//                 (`api_error[${i18n.t(response.body)}]` || i18n.t('notify.itemsfetched_unknown'));
+//         }
+// });
 
 // TODO: add interaction with server for all actions/commands
 export function add_entry(dto) {
     assert(data.entries.find(e => e._id === dto._id) === undefined);
-    assert(actions.find(a => a._id === dto._id) === undefined);
+    assert(entry_cmd.find(c => c.entry._id === dto._id) === undefined);
 
-    let { entry, action } = ctor(dto);
-    actions.push(action);
+    let { entry, entryCmd } = ctor(dto);
+    entry_cmd.push(entryCmd);
     data.entries.push(entry);
-    action.cmds.save_cmd.execute();
+    entryCmd.save();
     return entry;
 }
 
 /**
  * WARNING Not reactive
  */
-export function get_entry_cmds(_id) {
-    let action = get_action(_id);
-    return action.cmds;
+export function get_entry_cmd(_id) {
+    let entryCmd = get_entryCmd(_id);
+    return entryCmd.cmds;
 }
 
 export function get_entry_cmdhistory(_id, idx = 0) {
-    return actions[actions.length - 1 - idx].history;
+    return entry_cmd[entry_cmd.length - 1 - idx].history;
 }
 
 function ctor(obj) {
     const entry = ctor_entry(obj);
-    /** @type {Action} */
-    const action = {
+    /** @type {EntryCmd} */
+    const entryCmd = {
         _id: entry._id,
         cmds: ctor_cmds(entry._id),
         history: []
     };
 
-    return { action, entry };
+    return { entryCmd, entry };
 }
 
 /**
@@ -94,13 +101,13 @@ function ctor_entry(obj = {}) {
 
 function ctor_cmds(_id) {
     let save_cmd = new BasicCommand(async (entry_to_send) => {
-        assert(actions.find(a => a._id === _id) !== undefined);
+        assert(entry_cmd.find(a => a._id === _id) !== undefined);
         assert(data.entries.find(e => e._id === _id) !== undefined);
-        let action = actions.find(a => a._id === _id);
+        let entryCmd = entry_cmd.find(a => a._id === _id);
         let history_entry = {
             status: 'inprogress'
         };
-        action.history.push(history_entry);
+        entryCmd.history.push(history_entry);
         let entry = data.entries.find(e => e._id === _id);
 
         if (entry_to_send === undefined) {
@@ -153,14 +160,14 @@ function ctor_cmds(_id) {
         }
     });
     let remove_cmd = new BasicCommand(async () => {
-        assert(actions.find(a => a._id === _id) !== undefined);
+        assert(entry_cmd.find(a => a._id === _id) !== undefined);
         assert(data.entries.find(e => e._id === _id) !== undefined);
 
-        let action = actions.find(a => a._id === _id);
+        let entryCmd = entry_cmd.find(a => a._id === _id);
         let history_entry = {
             status: 'inprogress'
         };
-        action.history.push(history_entry);
+        entryCmd.history.push(history_entry);
         let entry = data.entries.find(e => e._id === _id);
 
         //
@@ -174,7 +181,7 @@ function ctor_cmds(_id) {
                 i18n.t('notify.itemremoved_timeout') :
                 (i18n.t(response.body) || i18n.t('notify.itemremoved_unknown'));
         }
-        actions.splice(actions.findIndex(a => a._id === _id), 1);
+        entry_cmd.splice(entry_cmd.findIndex(a => a._id === _id), 1);
         data.entries.splice(data.entries.findIndex(a => a._id === _id), 1);
         history_entry.status = 'success';
 
@@ -188,8 +195,8 @@ function ctor_cmds(_id) {
     return { save_cmd, remove_cmd };
 }
 
-function get_action(_id) {
-    let action = actions.find(a => a._id === _id);
-    assert(action !== undefined);
-    return action;
+function get_entryCmd(_id) {
+    let entryCmd = entry_cmd.find(a => a._id === _id);
+    assert(entryCmd !== undefined);
+    return entryCmd;
 }
