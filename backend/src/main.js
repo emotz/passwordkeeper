@@ -1,4 +1,3 @@
-//console.log("Nothing here yet!");
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -6,12 +5,11 @@ const bodyParser = require('body-parser');
 const entries = require('./entries.json');
 const log = require('./libs/log.js')(module);
 const mongoose = require('./libs/mongoose');
-const passEntry = require('./models/passentry');
-const createDB = require('./createDB');
+const passEntry = require('./models/passentry').PassEntry;
+const user = require('./models/user').user;
+const passport = require('./libs/passport.js');
 
 mongoose.initConnect();
-createDB.createTestDB();
-let PasswordModel = passEntry.PassEntry;
 
 function guid() {
     function s4() {
@@ -23,12 +21,12 @@ function guid() {
         s4() + '-' + s4() + s4() + s4();
 }
 
-app.use(express.static('fe/dist'));
+app.use(express.static('frontend/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/entries', function (req, res, next) {
-    return PasswordModel.find(function(err, passEntryList){
+    return passEntry.find(function(err, passEntryList){
         if (err){
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
@@ -39,7 +37,7 @@ app.get('/api/entries', function (req, res, next) {
 });
 
 app.get('/api/entries/:id', function (req, res, next) {
-    PasswordModel.find({'id': res.params[0]}, function(err, passentry){
+    passEntry.find({'id': res.params[0]}, function(err, passentry){
         if (err){
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
@@ -50,18 +48,18 @@ app.get('/api/entries/:id', function (req, res, next) {
 });
 
 app.post('/api/entries', function (req, res, next) {
+    let entryid = guid();
     console.log(req.body);
-    const newEntry = new PasswordModel({
-        id: guid(),
+    passEntry.create({
+        id: entryid,
         title: req.body.title,
         user: req.body.user,
         password: req.body.password
-    });
-    newEntry.save(function (err) {
+    }, function (err) {
         if (!err) {
             log.info("new password entry created");
             res.status = 201;
-            res.location(`/api/entries/${newEntry.id}`);
+            res.location(`/api/entries/${entryid}`);
             res.send();
         } else {
             console.log(err);
@@ -90,7 +88,7 @@ app.put('/api/entries/:id', function (req, res) {
         res.body = { reason: "request must specify non-empty user" };
         return;
     }
-    PasswordModel.findOneAndUpdate({'id': req.params[0]}, {$set:{title: req.body.title, user: req.body.user, password: req.body.password}}, function(err, passentry){
+    passEntry.findOneAndUpdate({'id': req.params[0]}, {$set:{title: req.body.title, user: req.body.user, password: req.body.password}}, function(err, passentry){
         if (err){
             res.status = 404;
             res.body = { reason: "requested id wasn't found" };
@@ -102,7 +100,7 @@ app.put('/api/entries/:id', function (req, res) {
 });
 
 app.delete('/api/entries/:id', function (req, res) {
-    PasswordModel.deleteOne(req.params[0], function(err){
+    passEntry.deleteOne(req.params[0], function(err){
         if (err){
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);

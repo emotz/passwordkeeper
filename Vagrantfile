@@ -110,12 +110,23 @@ Vagrant.configure("2") do |config|
 
     # Add NodeJS to the apt-get source list
     wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
+	# Add MongoDB to the apt-get source list
+	echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
 
     apt-get update
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
+	apt-get install -y mongodb-org
+
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
+	echo "Starting MongoDB server"
+	sudo service mongod start
+	sleep 3
+	
+	echo "Initialize db for passwordkeeper"
+	mongo 127.0.0.1:27017 /vagrant/backend/src/createDB.js
+	
     cd /vagrant
 
     echo "Installing node modules (this will take a while)"
@@ -125,13 +136,14 @@ Vagrant.configure("2") do |config|
     npm run clean -s
 
     mkdir logs 2>/dev/null
-
+	
     echo "Starting watch on everything"
     npm run watch -s > logs/watch.log 2>&1 &
 
     echo "Starting virtual graphics server"
     Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp > logs/xvfb.log 2>&1 &
     XAUTHLOCALHOSTNAME=localhost x11vnc -display :99 -nopw > logs/x11vnc.log 2>&1 &
+	
   SHELL
 
 end

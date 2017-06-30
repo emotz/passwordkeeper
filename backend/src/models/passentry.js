@@ -8,7 +8,7 @@ let passEntrySchema = new Schema({
     password: { type: String, required: true }
 });
 
-let PassEntry = mongoose.model('Password', passEntrySchema);
+let PassEntry = mongoose.model('PassEntry', passEntrySchema);
 
 function addPassEntry(passentry)
 {

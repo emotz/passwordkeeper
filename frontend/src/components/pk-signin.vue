@@ -1,6 +1,8 @@
 <template>
     <ul class="pk-signin navbar-form navbar-right"
         :id="`pk-signin-${_uid}`">
+        <pk-sign-up :show="show"
+            @cancel="show = false"></pk-sign-up>
         <form v-if="!authenticated"
               style="display: inline">
             <div class="form-group"
@@ -28,6 +30,10 @@
                 class="pk-btn-signout btn btn-default"
                 @click="signout">
             <slot>{{ $t('signout') }}</slot>
+        </button>
+        <button class="pk-btn-signup btn btn-success"
+                @click="show = true">
+            <slot>{{ $t('signup') }}</slot>
         </button>
     </ul>
 </template>

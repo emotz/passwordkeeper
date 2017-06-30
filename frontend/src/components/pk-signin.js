@@ -1,13 +1,18 @@
 import * as auth from 'src/services/auth.js';
+import PkSignUp from './pk-signup.vue';
 
 export default {
+    components: {
+        PkSignUp
+    },
     data() {
         return {
             user: "",
             user_error: false,
             password: "",
             password_error: false,
-            show_password: false
+            show_password: false,
+            show: false
         };
     },
     methods: {
