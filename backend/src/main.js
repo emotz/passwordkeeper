@@ -8,6 +8,7 @@ const mongoose = require('./libs/mongoose');
 const passEntry = require('./models/passentry').PassEntry;
 const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
+const jwt = require('jsonwebtoken');
 
 mongoose.initConnect();
 
@@ -25,8 +26,13 @@ app.use(express.static('frontend/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/home', function (req, res, next) {
+        return res.redirect('/');
+});
+
 app.get('/api/entries', function (req, res, next) {
-    return passEntry.find(function(err, passEntryList){
+    // BFB - Big Fucking Bug with MongoDB default _id field and local id fromv Vue
+    return passEntry.find({}, 'id title user password -_id', function(err, passEntryList){
         if (err){
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
@@ -47,9 +53,74 @@ app.get('/api/entries/:id', function (req, res, next) {
     });
 });
 
+app.post('/api/login', function (req, res, next) {
+    passport.authenticate('local', function (err, user){
+        console.log(user);
+        if (user === false) {
+            res.body = "Login failed";
+            return res.status(401).json({ status: 'error', code: 'unauthorized' });
+        } else {
+            const payload = {
+                id: user._id,
+                displayName: user.username,
+                email: user.email
+            };
+            const token = jwt.sign(payload, "mysecretkey");
+            console.log('token:' + token);
+            return res.json({user: user.username, access_token: token});
+        }
+    })(req, res, next)
+});
+
+app.post('/api/token', function (req, res, next) {
+    if (req.body.user && req.body.password) {
+        var username = req.body.user;
+        var password = req.body.password;
+        var usertest = user.find(function(u) {
+            return u.email === email && u.password === password;
+        });
+        if (usertest) {
+            var payload = {
+                id: usertest._id,
+                displayName: usertest.username,
+                email: usertest.email
+            };
+            var token = jwt.sign(payload, "mysecretkey");
+            res.json({
+                token: token
+            });
+        } else {
+            res.sendStatus(401);
+        }
+    } else {
+        res.sendStatus(401);
+    }
+});
+
+app.post('/api/users', function (req, res, next) {
+    console.log(req.body);
+    user.create(req.body, function (err) {
+        if (!err) {
+            log.info("new user entry created");
+            res.status = 201;
+            res.location(`/api/login`);
+            res.send();
+        } else {
+            console.log(err);
+            if(err.username == 'ValidationError') {
+                res.statusCode = 400;
+                res.send({ error: 'Validation error' });
+            } else {
+                res.statusCode = 500;
+                res.send({ error: 'Server error' });
+            }
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+        }
+    });
+});
+
 app.post('/api/entries', function (req, res, next) {
     let entryid = guid();
-    console.log(req.body);
     passEntry.create({
         id: entryid,
         title: req.body.title,

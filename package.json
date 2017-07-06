@@ -7,6 +7,7 @@
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.0",
+    "jsonwebtoken": "^7.4.1",
     "lodash": "^4.17.4",
     "nprogress": "^0.2.0",
     "passport": "^0.3.2",
@@ -54,7 +55,7 @@
   },
   "scripts": {
     "dev": "cd frontend && cd server-mocks && ws",
-    "backend": "nodemon backend/src/main.js",
+    "backend": "nodemon -L --watch backend backend/src/main.js",
     "build": "cd frontend && webpack --config vendor.webpack.config.js && webpack",
     "build:watch": "cd frontend && webpack --config vendor.webpack.config.js && webpack-runner --config=webpack.config.js --watch",
     "watch": "parallelshell 'npm run dev -s' 'npm run build:watch -s' 'npm run backend -s'",

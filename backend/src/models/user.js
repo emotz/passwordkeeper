@@ -2,7 +2,8 @@ const mongoose = require('../libs/mongoose.js');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    username: { type: String, required: true, unique : true },
+    email: { type: String, required: true, unique : true },
     passwordHash: { type: String, required: true },
     salt: { type: String, required: true },
     created: { type: Date, default: Date.now },

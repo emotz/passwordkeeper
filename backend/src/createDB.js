@@ -36,9 +36,9 @@ db.passentries.insertOne({
     "password": "mypassword"
 });
 db.passentries.insertOne({
-    "id": "aa259b63-af6c-0074-87f8-544b7efa4302",
-    "title": "mytitle",
-    "user": "myuser",
+    "id": "aa259b63-af6c-0074-87f8-544b7efa4304",
+    "title": "mytitle2",
+    "user": "myuser2",
     "password": "mypassword"
 });
 db.passentries.insertOne({
