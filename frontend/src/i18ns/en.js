@@ -54,6 +54,7 @@ export default {
     no_passwords_found: "No matched passwords.",
     signin: "Sign In",
     signup: "Sign Up",
+    signin_title: "Sign In",
     signin_user_placeholder: "Email",
     signin_pass_placeholder: "Password",
     signout: "Sign Out",
