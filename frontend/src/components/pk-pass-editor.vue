@@ -1,13 +1,11 @@
 <template>
     <div class="pk-pass-editor"
          :id="`pk-pass-editor-${_uid}`">
-        <modal :title="$t('editor_title')"
-               :show="show"
+        <modal :show.sync="current_show"
                @ok="ok"
-               @cancel="cancel"
-               okClass="btn btn-primary pk-btn-editor-ok"
-               :okText="$t('button_ok')"
-               :cancelText="$t('button_cancel')">
+               @cancel="cancel">
+            <span slot="title">{{ $t('editor_title') }}</span>
+
             <div class="form-group"
                  :class="{'has-error': title_error}">
                 <label class="control-label"
