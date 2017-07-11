@@ -13,7 +13,8 @@ export default {
             password: item.password,
             title_error: false,
             user_error: false,
-            show_password: false
+            show_password: false,
+            current_show: this.show
         };
     },
     methods: {
@@ -36,6 +37,9 @@ export default {
         }
     },
     watch: {
+        'show'(val) {
+            this.current_show = val;
+        },
         'item.title'(val) {
             this.title_error = false;
             this.title = val;
