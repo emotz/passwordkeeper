@@ -7,9 +7,9 @@ import * as i18n from 'src/plugins/i18n.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
-// can't put `entryCmds` into `data` because it is complex object and
+// can't put `entry_cmds` into `data` because it is complex object and
 // `data` must be reactive, and complex objects can't be reactive.
-let entry_cmd = [];
+const entry_cmds = [];
 const data = {
     entries: []
 };
@@ -22,19 +22,27 @@ export function get_entries() {
     return data.entries;
 }
 
+function get_entry_cmd(_id) {
+    let entry_cmd = entry_cmds.find(a => a._id === _id);
+    assert(entry_cmd !== undefined);
+    return entry_cmd;
+}
+
 export const pull_cmd = new (class PullCommand extends Command {
     @execute
     async execute() {
         let entries = (await http.get(API_ENTRIES_URL)).body;
         // TODO: validate response
+
         // getting rid of deleted entries
         data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
         entry_cmd = entry_cmd.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
+
         // updating existing entries
         utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
-            let { entry, entryCmd } = ctor();
+            let { entry, entry_cmd } = ctor();
             entry.synced = true;
-            entry_cmd.push(entryCmd);
+            entry_cmd.push(entry_cmd);
             return entry;
         });
     }
@@ -53,10 +61,10 @@ export function add_entry(dto) {
     assert(data.entries.find(e => e._id === dto._id) === undefined);
     assert(entry_cmd.find(c => c.entry._id === dto._id) === undefined);
 
-    let { entry, entryCmd } = ctor(dto);
-    entry_cmd.push(entryCmd);
+    let { entry, entry_cmd } = ctor(dto);
+    entry_cmd.push(entry_cmd);
     data.entries.push(entry);
-    entryCmd.save();
+    entry_cmd.save();
     return entry;
 }
 
@@ -64,8 +72,8 @@ export function add_entry(dto) {
  * WARNING Not reactive
  */
 export function get_entry_cmd(_id) {
-    let entryCmd = get_entryCmd(_id);
-    return entryCmd.cmds;
+    let entry_cmd = get_entryCmd(_id);
+    return entry_cmd.cmds;
 }
 
 export function get_entry_cmdhistory(_id, idx = 0) {
@@ -75,13 +83,13 @@ export function get_entry_cmdhistory(_id, idx = 0) {
 function ctor(obj) {
     const entry = ctor_entry(obj);
     /** @type {EntryCmd} */
-    const entryCmd = {
+    const entry_cmd = {
         _id: entry._id,
         cmds: ctor_cmds(entry._id),
         history: []
     };
 
-    return { entryCmd, entry };
+    return { entry_cmd, entry };
 }
 
 /**
@@ -103,11 +111,11 @@ function ctor_cmds(_id) {
     let save_cmd = new BasicCommand(async (entry_to_send) => {
         assert(entry_cmd.find(a => a._id === _id) !== undefined);
         assert(data.entries.find(e => e._id === _id) !== undefined);
-        let entryCmd = entry_cmd.find(a => a._id === _id);
+        let entry_cmd = entry_cmd.find(a => a._id === _id);
         let history_entry = {
             status: 'inprogress'
         };
-        entryCmd.history.push(history_entry);
+        entry_cmd.history.push(history_entry);
         let entry = data.entries.find(e => e._id === _id);
 
         if (entry_to_send === undefined) {
@@ -163,11 +171,11 @@ function ctor_cmds(_id) {
         assert(entry_cmd.find(a => a._id === _id) !== undefined);
         assert(data.entries.find(e => e._id === _id) !== undefined);
 
-        let entryCmd = entry_cmd.find(a => a._id === _id);
+        let entry_cmd = entry_cmd.find(a => a._id === _id);
         let history_entry = {
             status: 'inprogress'
         };
-        entryCmd.history.push(history_entry);
+        entry_cmd.history.push(history_entry);
         let entry = data.entries.find(e => e._id === _id);
 
         //
@@ -195,8 +203,3 @@ function ctor_cmds(_id) {
     return { save_cmd, remove_cmd };
 }
 
-function get_entryCmd(_id) {
-    let entryCmd = entry_cmd.find(a => a._id === _id);
-    assert(entryCmd !== undefined);
-    return entryCmd;
-}

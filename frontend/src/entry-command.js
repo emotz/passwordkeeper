@@ -6,10 +6,12 @@ import { http, parse_location } from 'src/plugins/http.js';
 const API_ENTRIES_URL = 'api/entries';
 
 export class EntryCommand extends Command {
+    /**
+     * @param entry Must be reactive
+     */
     constructor(entry) {
         super();
 
-        // Reactive
         this.entry = entry;
 
         assert(this.entry._id);
@@ -31,7 +33,7 @@ export class EntryCommand extends Command {
         }
     }
 
-    // Not Reactive because of @can_execute
+    // Not reactive because of @can_execute
     @can_execute
     can_save() {
         if (this.entry.synced === false) {
@@ -50,7 +52,7 @@ export class EntryCommand extends Command {
         }
     }
 
-    // Not Reactive because of @can_execute
+    // Not reactive because of @can_execute
     @can_execute
     can_delete() {
         return { canExecute: true };
