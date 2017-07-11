@@ -110,22 +110,36 @@ Vagrant.configure("2") do |config|
 
     # Add NodeJS to the apt-get source list
     wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
+	
 	# Add MongoDB to the apt-get source list
-	echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-
+	#echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+	
+	# Add PostgreSQL to the apt-get source list
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list 
+	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+	apt-key add -
+	
     apt-get update
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
-	apt-get install -y mongodb-org
+	#apt-get install -y mongodb-org
+	apt-get install postgresql postgresql-client
 
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
-	echo "Starting MongoDB server"
-	sudo service mongod start
+	echo "Starting PostgreSQL server"
+	service postgresql restart
 	sleep 3
 	
-	echo "Initialize db for passwordkeeper"
-	mongo 127.0.0.1:27017 /vagrant/backend/src/createDB.js
+	echo "Creating role for vagrant user for PostgreSQL"
+	sudo su postgres -c "createuser -d -l -r -s -w -i vagrant"
+	
+	echo "Creating database pkeeper"
+	sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
+	sleep 3
+	
+	#echo "Initialize db for passwordkeeper"
+	#mongo 127.0.0.1:27017 /vagrant/backend/src/createDB.js
 	
     cd /vagrant
 
