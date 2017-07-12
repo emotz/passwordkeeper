@@ -11,7 +11,7 @@
     "nprogress": "^0.2.0",
     "toastr": "^2.1.2",
     "vue": "^2.2.4",
-    "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#53c43497bf9d0f0e3d31c1df954148379e1f122a",
+    "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#6412f93ee765f322e8a4ae1a54e7a8f13a2a42f3",
     "vue-i18n": "^5.0.3",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.3.0",

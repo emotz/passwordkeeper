@@ -113,8 +113,9 @@ Vagrant.configure("2") do |config|
   # config.vm.synced_folder "../vue-bootstrap-modal", "/mnt/vue-bootstrap-modal", type: "virtualbox"
   # config.vm.provision "shell", run: "always", inline: <<-SHELL
   #   mkdir /mnt/vue-bootstrap-modal/node_modules 2>/dev/null
-  #   mount --bind /home/vagrant/vagrant_node_modules /vagrant/vue-bootstrap-modal_node_modules
+  #   mount --bind /home/vagrant/vue-bootstrap-modal_node_modules /mnt/vue-bootstrap-modal/node_modules
   #   cd /mnt/vue-bootstrap-modal
+  #   npm install
   #   npm link
   # SHELL
   # config.vm.provision "shell", privileged: false, run: "always", inline: <<-SHELL
