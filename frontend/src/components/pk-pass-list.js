@@ -5,6 +5,8 @@ import PkPassFilter from './pk-pass-filter.vue';
 import * as pass_store from 'src/services/pass-store.js';
 import * as utls from 'src/utility.js';
 
+import * as modal from 'src/services/modal.js';
+
 /**
  * @typedef {Object} Entry
  * @property {string} _id Local id
@@ -19,7 +21,6 @@ import * as utls from 'src/utility.js';
 export default {
     components: {
         PkPassAdder,
-        PkPassEditor,
         PkPassFilter
     },
     data: function() {
@@ -62,11 +63,8 @@ export default {
             let last_op = this.get_last_op(item);
             return (item.synced === false && !this.is_saving(item)) || last_op.status === 'failure' || (last_op.status === 'inprogress' && this.get_last_last_op(item).status === 'failure');
         },
-        cancel_edit() {
-            this.editing_item = undefined;
-        },
         can_edit(item) {
-            return this.editing_item === undefined && get_save_cmd(item).can_execute();
+            return get_save_cmd(item).can_execute();
         },
         can_remove(item) {
             return get_remove_cmd(item).can_execute();
@@ -87,9 +85,22 @@ export default {
                 password: item.password
             });
         },
-        apply_edit(item) {
-            get_save_cmd(this.editing_item).execute(item);
-            this.editing_item = undefined;
+        async edit(item) {
+            const props = {
+                item: {
+                    user: item.user,
+                    title: item.title,
+                    password: item.password
+                }
+            };
+
+            let newitem;
+            try {
+                newitem = await modal.open(PkPassEditor, props);
+            } catch (err) {
+                return;
+            }
+            get_save_cmd(item).execute(newitem);
         },
         save(item) {
             get_save_cmd(item).execute();
