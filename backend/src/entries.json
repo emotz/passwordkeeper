@@ -1,0 +1,20 @@
+[
+    {
+        "id": "aa259b63-af6c-0074-87f8-544b7efa4302",
+        "title": "mytitle",
+        "user": "myuser",
+        "password": "mypassword"
+    },
+    {
+        "id": "ba259b63-af6c-0074-87d8-544b7efa4302",
+        "title": "mytitle2",
+        "user": "myuser2",
+        "password": "mypassword123"
+    },
+    {
+        "id": "db259b63-hf6c-0074-87f8-544b7yfa4302",
+        "title": "mytitle3",
+        "user": "myuser3",
+        "password": "mypassword321"
+    }
+]

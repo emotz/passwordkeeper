@@ -96,19 +96,10 @@ Firstly finish `Vagrant setup` section.
 
 Then `cd` into project root directory.
 
-Due to the [bug in VirtualBox Guest Additions](https://www.virtualbox.org/ticket/16670),
-when starting up vagrant for first time you need to do:
-
-```bat
-:: this will finish with error `Vagrant was unable to mount VirtualBox shared folders...`
-
-vagrant up
-```
-
 And then
 
 ```bat
-vagrant provision
+vagrant up
 ```
 
 This will take ~25-30 min to finish.
@@ -119,6 +110,8 @@ faster than first one):
 ```bat
 vagrant up
 ```
+
+(wait about 15 secs after `vagrant up` is finished for build to complete)
 
 `vagrant up` command makes Vagrant to launch virtual machine, set up all builds,
 watches and dev servers. You are ready to go! Open `http://localhost:8000` in

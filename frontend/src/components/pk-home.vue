@@ -10,7 +10,7 @@
                 <span v-else>{{ $t('home.description.toomanypasswords') }}</span>
                 <button class="btn btn-primary pk-btn-refresh-all-pass"
                         :disabled="pull_cmd.is_executing()"
-                        @click="pull_cmd.execute()">
+                        @click="pull">
                     {{ $t('home.fetch_all_passwords') }}
                 </button>
             </p>

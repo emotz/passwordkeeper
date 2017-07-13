@@ -41,10 +41,12 @@ export default {
         itemsfetched_timeout: "Время запроса истекло при попытке получить записи.",
         itemsfetched_unknown: "Записи не были получены."
     },
+    confirm_text: "Вы уверены?",
+    confirm_title: "Подтвердить",
     label_title: "Название",
     label_user: "Имя пользователя",
     label_password: "Пароль",
-    button_ok: "Ok",
+    button_ok: "Принять",
     button_cancel: "Отмена",
     editor_title: "Редактирование записи",
     search_placeholder: "Поиск",
