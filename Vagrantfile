@@ -12,10 +12,16 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
+  # Private key for SSH
+  #config.ssh.private_key_path = "d:/Work/Sources/JS/passwordkeeper/.vagrant/machines/default/virtualbox/private_key"
+  
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "debian/jessie64"
 
+	#config.ssh.username = 'vagrant'
+	#config.ssh.password = 'vagrant'
+  
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -123,23 +129,22 @@ Vagrant.configure("2") do |config|
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
 	#apt-get install -y mongodb-org
-	apt-get install postgresql postgresql-client
-
-  SHELL
-  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
+	apt-get install -y postgresql postgresql-client
+	
 	echo "Starting PostgreSQL server"
 	service postgresql restart
 	sleep 3
 	
 	echo "Creating role for vagrant user for PostgreSQL"
-	sudo su postgres -c "createuser -d -l -r -s -w -i vagrant"
-	
-	echo "Creating database pkeeper"
-	sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
+	su postgres -c "createuser -d -l -r -s -w -i vagrant"
 	sleep 3
 	
-	#echo "Initialize db for passwordkeeper"
-	#mongo 127.0.0.1:27017 /vagrant/backend/src/createDB.js
+	echo "Creating database pkeeper"
+	su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
+	sleep 3
+
+  SHELL
+  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
 	
     cd /vagrant
 

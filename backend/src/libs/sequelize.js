@@ -1,20 +1,13 @@
-let Sequelize = require('sequelize');
+const Sequelize = require('sequelize');
 const log         = require('./log')(module);
-Sequelize = new Sequelize('pkeeper', 'vagrant', '', {
-  host: 'localhost',
-  dialect: 'postgres',
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  },
-});
 
-Sequelize.authenticate().then(() => {
+const sequelize = new Sequelize('postgres://vagrant:vagrant@127.0.0.1:5432/pkeeper');
+
+sequelize.authenticate().then(() => {
     log.info('Connection has been established successfully.');
   })
   .catch(err => {
     log.error('Unable to connect to the database:', err.message);
   });
 
-module.exports = Sequelize;
+module.exports = sequelize;
