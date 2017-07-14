@@ -4,12 +4,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const entries = require('./entries.json');
 const log = require('./libs/log.js')(module);
-const mongoose = require('./libs/mongoose');
 const passEntry = require('./models/passentry').PassEntry;
 const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
-
-mongoose.initConnect();
 
 function guid() {
     function s4() {
@@ -25,44 +22,42 @@ app.use(express.static('frontend/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/entries', function (req, res, next) {
-    return passEntry.find(function(err, passEntryList){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
-        }
-        return res.send(passEntryList);
-    });
+app.get('/home', function (req, res, next) {
+	return res.redirect('/');
 });
 
-app.get('/api/entries/:id', function (req, res, next) {
-    passEntry.find({'id': res.params[0]}, function(err, passentry){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
-        }
-        return res.send(passentry)
-    });
+app.get('/api/entries', async function (req, res, next) {
+    try {
+        const passEntryList = await passEntry.findAll();
+        return res.send(passEntryList);
+	} catch (err) {
+		res.statusCode = 500;
+		log.error('Internal error(%d): %s',res.statusCode,err.message);
+		return res.send({ error: 'Server error' });		
+	}
+});
+
+app.get('/api/entries/:id', async function (req, res, next) {
+    try {
+        const passEntryOne = await passEntry.findOne({ where: {ID: res.params[0]} });
+        return res.send(passEntryOne);
+	} catch (err) {
+		res.statusCode = 500;
+		log.error('Internal error(%d): %s',res.statusCode,err.message);
+		return res.send({ error: 'Server error' });		
+	}
 });
 
 app.post('/api/entries', function (req, res, next) {
-    let entryid = guid();
-    console.log(req.body);
-    passEntry.create({
-        id: entryid,
+     try {
+		let newentryID = passEntry.create({
         title: req.body.title,
         user: req.body.user,
-        password: req.body.password
-    }, function (err) {
-        if (!err) {
-            log.info("new password entry created");
-            res.status = 201;
-            res.location(`/api/entries/${entryid}`);
-            res.send();
-        } else {
-            console.log(err);
+        password: req.body.password}).get('ID');
+        res.statusCode = 201;
+        res.location(`/api/entries/${newentryID}`);
+        res.send();
+	} catch (err) {
             if(err.name == 'ValidationError') {
                 res.statusCode = 400;
                 res.send({ error: 'Validation error' });
@@ -70,45 +65,45 @@ app.post('/api/entries', function (req, res, next) {
                 res.statusCode = 500;
                 res.send({ error: 'Server error' });
             }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-        }
-    });
+            log.error('Internal error(%d): %s',res.statusCode,err.message);	
+    }
 });
 
-app.put('/api/entries/:id', function (req, res) {
+app.put('/api/entries/:id', async function (req, res) {
     const updatedEntry = req.body;
-    updatedEntry.id = req.params[0];
-    if (updatedEntry.title === undefined || updatedEntry.title === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty title" };
-        return;
+    try{
+        passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {ID: req.params[0]}});
+        res.statusCode = 200;
+        res.send('OK');
     }
-    if (updatedEntry.user === undefined || updatedEntry.user === "") {
+    catch (err) {
+        if (updatedEntry.title === undefined || updatedEntry.title === "") {
+            res.status = 400;
+            res.body = { reason: "request must specify non-empty title" };
+            return;
+        }
+        if (updatedEntry.user === undefined || updatedEntry.user === "") {
         res.status = 400;
         res.body = { reason: "request must specify non-empty user" };
         return;
-    }
-    passEntry.findOneAndUpdate({'id': req.params[0]}, {$set:{title: req.body.title, user: req.body.user, password: req.body.password}}, function(err, passentry){
-        if (err){
-            res.status = 404;
-            res.body = { reason: "requested id wasn't found" };
-            return;
         }
-        res.status = 200;
-        res.send('OK');
-    });
+		res.statusCode = 500;
+		log.error('Internal error(%d): %s',res.statusCode,err.message);
+		return res.send({ error: 'Server error' });		
+    }
 });
 
-app.delete('/api/entries/:id', function (req, res) {
-    passEntry.deleteOne(req.params[0], function(err){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
-        }
+app.delete('/api/entries/:id', async function (req, res) {
+    try{
+        passEntry.destroy({where: {id: req.params[0]}});
         res.status = 204;
         res.send('OK');
-    });
+    }
+    catch (err) {
+		res.statusCode = 500;
+		log.error('Internal error(%d): %s',res.statusCode,err.message);
+		return res.send({ error: 'Server error' });		
+    }
 });
 
 app.use(function(req, res, next){
