@@ -11,13 +11,19 @@
     "lodash": "^4.17.4",
     "nprogress": "^0.2.0",
     "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1",
+    "passport-local": "^1.0.0",
+    "pg": "^6.4.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.3.1",
     "toastr": "^2.1.2",
     "vue": "^2.2.4",
     "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#905ce6b16992b238e8b9394976e9b2b049400cbb",
     "vue-i18n": "^5.0.3",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.3.0",
-    "vuex": "^2.2.1"
+    "vuex": "^2.2.1",
+    "winston": "^2.3.1"
   },
   "optionalDependencies": {
     "@types/jasmine": "^2.5.47",
@@ -55,7 +61,7 @@
   },
   "scripts": {
     "dev": "cd frontend && cd server-mocks && ws",
-    "backend": "nodemon -L --watch backend backend/src/main.js",
+    "backend": "nodemon -L --watch backend -x 'node --harmony' backend/src/main.js",
     "build": "cd frontend && webpack --config vendor.webpack.config.js && webpack",
     "build:watch": "cd frontend && webpack --config vendor.webpack.config.js && webpack-runner --config=webpack.config.js --watch",
     "watch": "parallelshell 'npm run dev -s' 'npm run build:watch -s' 'npm run backend -s'",

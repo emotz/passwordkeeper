@@ -12,10 +12,16 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
+  # Private key for SSH
+  #config.ssh.private_key_path = "d:/Work/Sources/JS/passwordkeeper/.vagrant/machines/default/virtualbox/private_key"
+  
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "debian/jessie64"
 
+	#config.ssh.username = 'vagrant'
+	#config.ssh.password = 'vagrant'
+  
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -110,22 +116,35 @@ Vagrant.configure("2") do |config|
 
     # Add NodeJS to the apt-get source list
     wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
+	
 	# Add MongoDB to the apt-get source list
-	echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-
+	#echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+	
+	# Add PostgreSQL to the apt-get source list
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list 
+	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+	apt-key add -
+	
     apt-get update
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
-	apt-get install -y mongodb-org
+	#apt-get install -y mongodb-org
+	apt-get install -y postgresql postgresql-client
+	
+	echo "Starting PostgreSQL server"
+	service postgresql restart
+	sleep 3
+	
+	echo "Creating role for vagrant user for PostgreSQL"
+	su postgres -c "createuser -d -l -r -s -w -i vagrant"
+	sleep 3
+	
+	echo "Creating database pkeeper"
+	su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
+	sleep 3
 
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
-	echo "Starting MongoDB server"
-	sudo service mongod start
-	sleep 3
-	
-	echo "Initialize db for passwordkeeper"
-	mongo 127.0.0.1:27017 /vagrant/backend/src/createDB.js
 	
     cd /vagrant
 
