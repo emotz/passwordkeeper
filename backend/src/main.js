@@ -51,7 +51,6 @@ app.get('/api/entries/:id', async function (req, res, next) {
 
 app.post('/api/login', function (req, res, next) {
     passport.authenticate('local', function (err, user){
-        console.log(user);
         if (user === false) {
             res.body = "Login failed";
             return res.status(401).json({ status: 'error', code: 'unauthorized' });
@@ -68,7 +67,7 @@ app.post('/api/login', function (req, res, next) {
     })(req, res, next)
 });
 
-app.post('/api/token', function (req, res, next) {
+app.post('/api/token', async function (req, res, next) {
     if (req.body.user && req.body.password) {
         var username = req.body.user;
         var password = req.body.password;
@@ -93,26 +92,26 @@ app.post('/api/token', function (req, res, next) {
     }
 });
 
-app.post('/api/users', function (req, res, next) {
-    console.log(req.body);
-    user.create(req.body, function (err) {
-        if (!err) {
-            log.info("new user entry created");
-            res.status = 201;
-            res.location(`/api/login`);
-            res.send();
+app.post('/api/users', async function (req, res, next) {
+    try {
+        await user.create({
+            username: req.body.username,
+            password: req.body.password,
+            email: req.body.email});
+        log.info("new user entry created");
+        res.status = 201;
+        res.location(`/api/login`);
+        res.send();
+    } catch(err) {
+        if(err.username == 'ValidationError') {
+            res.statusCode = 400;
+            res.send({ error: 'Validation error' });
         } else {
-            console.log(err);
-            if(err.username == 'ValidationError') {
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
-            }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            res.statusCode = 500;
+            res.send({ error: 'Server error' });
         }
-    });
+        log.error('Internal error(%d): %s',res.statusCode,err.message);
+    }
 });
 
 app.post('/api/entries', function (req, res, next) {

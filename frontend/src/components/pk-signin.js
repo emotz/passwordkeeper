@@ -19,7 +19,7 @@ export default {
         async signin() {
             let val;
             try {
-                val = await auth.login_cmd.execute(this.user, this.password);
+                val = await auth.login_cmd.execute(this.username, this.password);
             } catch (err) {
                 this.user_error = true;
                 this.password_error = true;

@@ -7,6 +7,11 @@ const User = sequelize.define('user', {
         autoIncrement: true,
         primaryKey: true
     },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+    },
     username: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -20,9 +25,6 @@ const User = sequelize.define('user', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    created: {
-        type: Sequelize.STRING
-    },
     token: {
         type: Sequelize.STRING
     },
@@ -31,7 +33,7 @@ const User = sequelize.define('user', {
         set: function (val) {
             this.setDataValue('password', val);
             this.setDataValue('salt', crypto.randomBytes(128).toString('base64'));
-            this.setDataValue('password_hash', crypto.pbkdf2Sync(this.password, this.salt, 1, 128, 'sha1'));
+            this.setDataValue('passwordHash', crypto.pbkdf2Sync(val, this.salt, 1, 128, 'sha1').toString('hex'));
         },
         validate: {
             isLongEnough: function (val) {
@@ -43,10 +45,12 @@ const User = sequelize.define('user', {
     }
 });
 
-User.sync();
-/*User.Instance.prototype.checkPassword = function (password){
+User.prototype.checkPassword = function (password){
     if (!password) return false;
     if (!this.passwordHash) return false;
-    return crypto.pbkdf2Sync(password, this.salt, 1, 128, 'sha1') == this.passwordHash;
-}*/
+    return crypto.pbkdf2Sync(password, this.salt, 1, 128, 'sha1').toString('hex') == this.passwordHash;
+}
+
+User.sync();
+
 module.exports.user = User;

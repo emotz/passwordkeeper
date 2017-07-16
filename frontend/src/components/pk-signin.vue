@@ -16,7 +16,7 @@
                        class="pk-user-input form-control"
                        :id="`pk-user-input-${_uid}`"
                        placeholder="User or e-mail"
-                       v-model="title">
+                       v-model="username">
             </div>
             <div class="form-group">
                 <label :for="`pk-pass-input-${_uid}`">{{ $t('label_password') }}</label>
