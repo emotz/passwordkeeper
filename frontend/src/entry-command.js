@@ -33,7 +33,6 @@ export class EntryCommand extends Command {
         }
     }
 
-    // Not reactive because of @can_execute
     @can_execute
     can_save() {
         if (this.entry.synced === false) {
@@ -41,7 +40,7 @@ export class EntryCommand extends Command {
         }
         return {
             canExecute: false,
-            reason: "already synced"
+            reason: "already saved"
         };
     }
 
@@ -52,7 +51,6 @@ export class EntryCommand extends Command {
         }
     }
 
-    // Not reactive because of @can_execute
     @can_execute
     can_delete() {
         return { canExecute: true };
