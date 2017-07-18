@@ -23,7 +23,7 @@ export function get_entries() {
     return data.entries;
 }
 
-function get_entry_cmd(_id) {
+export function get_entry_cmd(_id) {
     let entry_cmd = entry_cmds.find(a => a.entry._id === _id);
     assert(entry_cmd !== undefined);
     return entry_cmd;
@@ -38,13 +38,13 @@ export const pull_cmd = new (class PullCommand extends Command {
 
         // getting rid of deleted entries
         data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
-        entry_cmd = entry_cmd.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
+        const entry_cmd = entry_cmds.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
 
         // updating existing entries
         utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
             let entry = ctor_entry();
             entry.synced = true;
-            entry_cmd.push(new EntryCommand(entry));
+            entry_cmds.push(new EntryCommand(entry));
             // TODO refactor_entry - entry_cmd and entry unsynced possibly
             return entry;
         });

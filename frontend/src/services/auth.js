@@ -9,7 +9,7 @@ const data = make_reactive({
     token: undefined
 });
 
-export const login_cmd = new (class LoginCommand extends Command {
+class LoginCommand extends Command {
     @execute
     async execute(user, password) {
         let response = await http.post(API_TOKEN_URL, { user, password });
@@ -17,7 +17,9 @@ export const login_cmd = new (class LoginCommand extends Command {
         set_token(response.data.access_token);
         return response;
     }
-})();
+}
+
+export const login_cmd = new LoginCommand();
 
 export async function register(input) {
     let response = await http.post(API_USERS_URL, input);

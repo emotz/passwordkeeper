@@ -55,11 +55,11 @@ export default {
     },
     methods: {
         get_last_op(item) {
-            const history = pass_store.get_entry_cmd(item._id).history;
+            const history = get_entry_cmd(item).history;
             return history[history.length - 1];
         },
         get_last_last_op(item) {
-            const history = pass_store.get_entry_cmd(item._id).history;
+            const history = get_entry_cmd(item).history;
             return history[history.length - 2];
         },
         requires_attention(item) {

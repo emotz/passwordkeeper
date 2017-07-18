@@ -23,7 +23,7 @@
                             <transition-group name="fade"
                                               tag="tbody">
                                 <tr v-for="(item, index) in filtered_items"
-                                    :key="item"
+                                    :key="item._id"
                                     :class="{danger: requires_attention(item)}">
                                     <td>{{ item.title }}</td>
                                     <td>{{ item.user }}</td>

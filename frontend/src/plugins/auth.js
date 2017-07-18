@@ -23,16 +23,10 @@ watch(auth.get_token, (new_token, old_token) => {
     client_store.set(new_token);
 });
 
-auth.login_cmd.on_executing((is_executing, promise) => {
-    eoksni $ work - Yesterday at 5:26 PM
-    Тоха, тебе чем больше нравится заниматься - яваскриптить или хтмлить/ верстать ?
-        Zet - Yesterday at 5:27 PM
-    я уверен где- то есть подвох в этом вопросе...(edited)
-eoksni $ work - Yesterday at 5:33 PM
-яваскрипт у тебя идет довольно туго, с хтмлем ты сможешь быстрее разобраться на приличном уровне
-возможно, тебе стоит специализироваться именно на верстке(edited)   if (is_executing) {
-    loader.perform(promise,
-        () => { },
-        msg_for_error_response);
-}
+watch(() => auth.login_cmd.is_executing(), (is_executing) => {
+    if (is_executing) {
+        loader.perform(auth.login_cmd.promise,
+            () => { },
+            msg_for_error_response);
+    }
 });
