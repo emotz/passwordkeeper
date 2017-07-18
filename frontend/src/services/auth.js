@@ -4,7 +4,7 @@ import { make_reactive } from './watch.js';
 
 const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
-const API_LOGIN_URL = "/api/login";
+const API_LOGIN_URL = "/api/token";
 
 const data = make_reactive({
     token: undefined

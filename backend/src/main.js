@@ -24,7 +24,7 @@ app.get('/api/entries', function (req, res, next) {
             return res.send({ error: 'Server error: ' + err });
         }
         try {
-            const passEntryList = await passEntry.findAll({ where: {userID: user.ID} });
+            const passEntryList = await passEntry.findAll({ where: {userID: user.id} });
             res.statusCode = 201;
             return res.send(passEntryList);
         } catch (err) {
@@ -36,24 +36,26 @@ app.get('/api/entries', function (req, res, next) {
 });
 
 app.get('/api/entries/:id', async function (req, res, next) {
-    try {
-        const passEntryOne = await passEntry.findOne({ where: {ID: res.params[0]} });
-        return res.send(passEntryOne);
-	} catch (err) {
-		res.statusCode = 500;
-		log.error('Internal error(%d): %s',res.statusCode,err.message);
-		return res.send({ error: 'Server error' });		
-	}
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        try {
+            const passEntryOne = await passEntry.findOne({ where: {id: res.params[0]} });
+            return res.send(passEntryOne);
+        } catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });		
+        }
+    })(req, res, next);
 });
 
-app.post('/api/login', function (req, res, next) {
+app.post('/api/token', function (req, res, next) {
     passport.authenticate('local', function (err, user){
         if (user === false) {
             res.body = "Login failed";
             return res.status(401).json({ status: 'error', code: 'unauthorized' });
         } else {
             const payload = {
-                _id: user.ID,
+                _id: user.id,
                 displayName: user.username,
                 email: user.email
             };
@@ -118,10 +120,10 @@ app.post('/api/entries', function (req, res, next) {
     return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
         try {
             let newentryID = await passEntry.create({
-            userID: user.ID,
+            userID: user.id,
             title: req.body.title,
             user: req.body.user,
-            password: req.body.password}).get('ID');
+            password: req.body.password}).get('id');
             res.statusCode = 201;
             res.location(`/api/entries/${newentryID}`);
             res.send();
@@ -138,41 +140,45 @@ app.post('/api/entries', function (req, res, next) {
     })(req, res, next);
 });
 
-app.put('/api/entries/:id', async function (req, res) {
-    const updatedEntry = req.body;
-    try{
-        await passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {ID: req.params[0]}});
-        res.statusCode = 200;
-        res.send('OK');
-    }
-    catch (err) {
-        if (updatedEntry.title === undefined || updatedEntry.title === "") {
+app.put('/api/entries/:id', async function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        const updatedEntry = req.body;
+        try{
+            await passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {id: req.params[0]}});
+            res.statusCode = 200;
+            res.send('OK');
+        }
+        catch (err) {
+            if (updatedEntry.title === undefined || updatedEntry.title === "") {
+                res.status = 400;
+                res.body = { reason: "request must specify non-empty title" };
+                return;
+            }
+            if (updatedEntry.user === undefined || updatedEntry.user === "") {
             res.status = 400;
-            res.body = { reason: "request must specify non-empty title" };
+            res.body = { reason: "request must specify non-empty user" };
             return;
+            }
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });		
         }
-        if (updatedEntry.user === undefined || updatedEntry.user === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty user" };
-        return;
-        }
-		res.statusCode = 500;
-		log.error('Internal error(%d): %s',res.statusCode,err.message);
-		return res.send({ error: 'Server error' });		
-    }
+    })(req, res, next);
 });
 
-app.delete('/api/entries/:id', async function (req, res) {
-    try{
-        await passEntry.destroy({where: {ID: req.params[0]}});
-        res.status = 204;
-        res.send('OK');
-    }
-    catch (err) {
-		res.statusCode = 500;
-		log.error('Internal error(%d): %s',res.statusCode,err.message);
-		return res.send({ error: 'Server error' });		
-    }
+app.delete('/api/entries/:id', async function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        try{
+            await passEntry.destroy({where: {id: req.params[0]}});
+            res.status = 204;
+            res.send('OK');
+        }
+        catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });		
+        }
+    })(req, res, next);
 });
 
 app.use(function(req, res, next){

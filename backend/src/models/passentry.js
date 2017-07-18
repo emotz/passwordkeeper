@@ -1,7 +1,7 @@
 const sequelize = require('../libs/sequelize.js');
 const Sequelize = require('sequelize');
 const PassEntry = sequelize.define('passentry', {
-    ID : {
+    id : {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true

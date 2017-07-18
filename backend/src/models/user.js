@@ -2,7 +2,7 @@ const sequelize = require('../libs/sequelize.js');
 const Sequelize = require('sequelize');
 const crypto = require('crypto');
 const User = sequelize.define('user', {
-    ID : {
+    id : {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
@@ -24,9 +24,6 @@ const User = sequelize.define('user', {
     salt: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    token: {
-        type: Sequelize.STRING
     },
     password: {
         type: Sequelize.VIRTUAL,
