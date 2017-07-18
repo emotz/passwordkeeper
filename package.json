@@ -5,12 +5,14 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "express": "^4.15.2",
+    "express-jwt": "^5.3.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.0",
     "jsonwebtoken": "^7.4.1",
     "lodash": "^4.17.4",
     "nprogress": "^0.2.0",
     "passport": "^0.3.2",
+    "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "pg": "^6.4.1",
@@ -61,7 +63,7 @@
   },
   "scripts": {
     "dev": "cd frontend && cd server-mocks && ws",
-    "backend": "nodemon -L --watch backend -x 'node --harmony' backend/src/main.js",
+    "backend": "nodemon -L --watch backend -x 'node --debug --harmony' backend/src/main.js",
     "build": "cd frontend && webpack --config vendor.webpack.config.js && webpack",
     "build:watch": "cd frontend && webpack --config vendor.webpack.config.js && webpack-runner --config=webpack.config.js --watch",
     "watch": "parallelshell 'npm run dev -s' 'npm run build:watch -s' 'npm run backend -s'",

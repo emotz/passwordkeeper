@@ -1,7 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const JwtStrategy = require('passport-jwt').Strategy;
+const BearerStrategy = require('passport-http-bearer').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const JwtStrategy = require('passport-jwt').Strategy;
 const User = require('../models/user').user;
 const jwtsecret = "mysecretkey";
 
@@ -24,13 +25,13 @@ passport.use(new LocalStrategy({
 );
 
 const jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
     secretOrKey: jwtsecret
 };
 
-passport.use(new JwtStrategy(jwtOptions, async function (payload, done) {
+passport.use(new JwtStrategy (jwtOptions, async function (payload, done) {
     try {
-        const userOne = await User.findById(payload.id);
+        const userOne = await User.findById(payload._id);
         if (userOne) {
             return done(null, userOne);
         }

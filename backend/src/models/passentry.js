@@ -6,6 +6,10 @@ const PassEntry = sequelize.define('passentry', {
         autoIncrement: true,
         primaryKey: true
     },
+    userID : {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+    },
     title: {
         type: Sequelize.STRING,
         allowNull: true,
@@ -19,6 +23,8 @@ const PassEntry = sequelize.define('passentry', {
         allowNull: false,
     },
 });
+
+
 
 PassEntry.sync();
 

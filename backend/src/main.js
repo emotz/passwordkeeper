@@ -8,6 +8,7 @@ const passEntry = require('./models/passentry').PassEntry;
 const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
 const jwt = require('jsonwebtoken');
+const authenticate = require('express-jwt');
 
 function guid() {
     function s4() {
@@ -22,23 +23,33 @@ function guid() {
 app.use(express.static('frontend/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+
 
 app.get('/home', function (req, res, next) {
 	return res.redirect('/');
 });
 
-app.get('/api/entries', async function (req, res, next) {
-    try {
-        const passEntryList = await passEntry.findAll();
-        return res.send(passEntryList);
-	} catch (err) {
-		res.statusCode = 500;
-		log.error('Internal error(%d): %s',res.statusCode,err.message);
-		return res.send({ error: 'Server error' });		
-	}
+app.get('/api/entries', function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        if (err){
+            res.statusCode = 401;
+            return res.send({ error: 'Server error: ' + err });
+        }
+        try {
+            const passEntryList = await passEntry.findAll({ where: {userID: user.ID} });
+            res.statusCode = 201;
+            return res.send(passEntryList);
+        } catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });
+        }
+    })(req, res, next);
 });
 
 app.get('/api/entries/:id', async function (req, res, next) {
+    console.log(res.params[0]);
     try {
         const passEntryOne = await passEntry.findOne({ where: {ID: res.params[0]} });
         return res.send(passEntryOne);
@@ -56,18 +67,17 @@ app.post('/api/login', function (req, res, next) {
             return res.status(401).json({ status: 'error', code: 'unauthorized' });
         } else {
             const payload = {
-                id: user._id,
+                _id: user.ID,
                 displayName: user.username,
                 email: user.email
             };
             const token = jwt.sign(payload, "mysecretkey");
-            console.log('token:' + token);
             return res.json({user: user.username, access_token: token});
         }
     })(req, res, next)
 });
 
-app.post('/api/token', async function (req, res, next) {
+/*app.post('/api/token', async function (req, res, next) {
     if (req.body.user && req.body.password) {
         var username = req.body.user;
         var password = req.body.password;
@@ -90,6 +100,10 @@ app.post('/api/token', async function (req, res, next) {
     } else {
         res.sendStatus(401);
     }
+});*/
+
+app.delete('/api/token',  function (req, res, next) {
+    return res.location(`/home`).send();
 });
 
 app.post('/api/users', async function (req, res, next) {
@@ -115,30 +129,35 @@ app.post('/api/users', async function (req, res, next) {
 });
 
 app.post('/api/entries', function (req, res, next) {
-     try {
-		let newentryID = passEntry.create({
-        title: req.body.title,
-        user: req.body.user,
-        password: req.body.password}).get('ID');
-        res.statusCode = 201;
-        res.location(`/api/entries/${newentryID}`);
-        res.send();
-	} catch (err) {
-            if(err.name == 'ValidationError') {
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
-            }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);	
-    }
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        try {
+            let newentryID = await passEntry.create({
+            userID: user.ID,
+            title: req.body.title,
+            user: req.body.user,
+            password: req.body.password}).get('ID');
+            res.statusCode = 201;
+            console.log("newid: " + newentryID);
+            res.location(`/api/entries/${newentryID}`);
+            res.send();
+        } catch (err) {
+                if(err.name == 'ValidationError') {
+                    res.statusCode = 400;
+                    res.send({ error: 'Validation error' });
+                } else {
+                    res.statusCode = 500;
+                    res.send({ error: 'Server error' });
+                }
+                log.error('Internal error(%d): %s',res.statusCode,err.message);	
+        }
+    })(req, res, next)
 });
 
 app.put('/api/entries/:id', async function (req, res) {
     const updatedEntry = req.body;
+    console.log(req.body);
     try{
-        passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {ID: req.params[0]}});
+        await passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {ID: req.params[0]}});
         res.statusCode = 200;
         res.send('OK');
     }
@@ -160,8 +179,9 @@ app.put('/api/entries/:id', async function (req, res) {
 });
 
 app.delete('/api/entries/:id', async function (req, res) {
+    console.log(req.params[0]);
     try{
-        passEntry.destroy({where: {id: req.params[0]}});
+        await passEntry.destroy({where: {ID: req.params[0]}});
         res.status = 204;
         res.send('OK');
     }
