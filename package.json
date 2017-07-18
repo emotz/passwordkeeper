@@ -4,7 +4,7 @@
   "description": "Simple storage for passwords",
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "command-decorator": "git+https://github.com/emotz/command-decorator.git",
+    "command-decorator": "git+https://github.com/emotz/command-decorator#76d2dbbbe0c92d581dc75e5ee6a1fd790ee4852e",
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.0",
@@ -12,7 +12,7 @@
     "nprogress": "^0.2.0",
     "toastr": "^2.1.2",
     "vue": "^2.2.4",
-    "vue-bootstrap-modal": "github:eoksni/vue-bootstrap-modal#6412f93ee765f322e8a4ae1a54e7a8f13a2a42f3",
+    "vue-bootstrap-modal": "git+https://github.com/emotz/vue-bootstrap-modal#6412f93ee765f322e8a4ae1a54e7a8f13a2a42f3",
     "vue-i18n": "^5.0.3",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.3.0",

@@ -75,10 +75,14 @@ export default {
             return false;
         },
         can_edit(item) {
-            return get_entry_cmd(item).can_save();
+            const last_op = this.get_last_op(item);
+            if (last_op && last_op.status === CommandStatus.Pending) {
+                return false;
+            }
+            return true;
         },
         can_remove(item) {
-            return get_entry_cmd(item).can_delete();
+            return get_entry_cmd(item).can_delete().canExecute;
         },
         is_removing(item) {
             let cmd = get_entry_cmd(item);
@@ -86,7 +90,7 @@ export default {
             return cmd.is_executing() && last_op.cmd === 'delete' && last_op.status === CommandStatus.Pending;
         },
         can_save(item) {
-            return get_entry_cmd(item).can_save();
+            return get_entry_cmd(item).can_save(item).canExecute;
         },
         is_saving(item) {
             let cmd = get_entry_cmd(item);
@@ -115,10 +119,14 @@ export default {
             } catch (err) {
                 return;
             }
-            get_entry_cmd(item).save(newitem);
+            item.title = newitem.title;
+            item.password = newitem.password;
+            item.user = newitem.user;
+            item.synced = false;
+            this.save(item);
         },
         save(item) {
-            get_entry_cmd(item).save();
+            get_entry_cmd(item).save(item);
         },
         remove(item) {
             get_entry_cmd(item).delete();

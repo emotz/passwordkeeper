@@ -1,16 +1,18 @@
 import assert from 'assert';
 import { Command, execute } from 'command-decorator';
 import { make_reactive } from './watch.js';
-import { http, parse_location } from 'src/plugins/http.js';
+import { http } from 'src/plugins/http.js';
 import { EntryCommand } from 'src/entry-command.js';
 import * as utls from 'src/utility.js';
 import * as i18n from 'src/plugins/i18n.js';
+
+import * as notify from 'src/services/notify.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
 // can't put `entry_cmds` into `data` because it is complex object and
 // `data` must be reactive, and complex objects can't be reactive.
-const entry_cmds = [];
+let entry_cmds = [];
 const data = {
     entries: []
 };
@@ -32,46 +34,61 @@ export function get_entry_cmd(_id) {
 export const pull_cmd = new (class PullCommand extends Command {
     @execute
     async execute() {
-        let entries = (await http.get(API_ENTRIES_URL)).body;
+        let response;
+        try {
+            response = await http.get(API_ENTRIES_URL);
+        } catch (response) {
+            const msg = response.status === 408 ?
+                i18n.t('notify.itemsfetched_timeout') :
+                (`api_error[${i18n.t(response.body)}]` || i18n.t('notify.itemsfetched_unknown'));
+            notify.error(msg);
+            throw response;
+        }
+        notify.success(i18n.t('notify.itemsfetched'));
+        // TODO move that notification stuff somewhere
+
+        let entries = response.body;
         // TODO: validate response
         // TODO: handle errors
 
         // getting rid of deleted entries
         data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
-        const entry_cmd = entry_cmds.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
+        entry_cmds = entry_cmds.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
 
         // updating existing entries
         utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
             let entry = ctor_entry();
             entry.synced = true;
-            entry_cmds.push(new EntryCommand(entry));
+            entry_cmds.push(ctor_entry_cmd(entry));
             // TODO refactor_entry - entry_cmd and entry unsynced possibly
             return entry;
         });
     }
 })();
-// {
-//     success_msg: i18n.t('notify.itemsfetched'),
-//         error_msg: (response) => {
-//             return response.status === 408 ?
-//                 i18n.t('notify.itemsfetched_timeout') :
-//                 (`api_error[${i18n.t(response.body)}]` || i18n.t('notify.itemsfetched_unknown'));
-//         }
-// });
 
 // TODO: add interaction with server for all actions/commands
 export function add_entry(dto) {
     assert(data.entries.find(e => e._id === dto._id) === undefined);
-    assert(entry_cmd.find(c => c.entry._id === dto._id) === undefined);
+    assert(entry_cmds.find(c => c.entry._id === dto._id) === undefined);
 
     let entry = ctor_entry(dto);
-    let entry_cmd = new EntryCommand(entry);
+    let entry_cmd = ctor_entry_cmd(entry);
     entry_cmds.push(entry_cmd);
     data.entries.push(entry);
     entry_cmd.save();
     return entry;
 }
 
+function ctor_entry_cmd(entry) {
+    return new EntryCommand({
+        entry,
+        ondelete: function() {
+            // HACK ohhh this is so dirty
+            const idx = data.entries.indexOf(entry);
+            data.entries.splice(idx, 1);
+        }
+    });
+}
 function ctor_entry(obj = {}) {
     return {
         _id: obj._id || utls.generateUniqueId("pass-entry"),

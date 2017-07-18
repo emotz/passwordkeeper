@@ -110,19 +110,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
   SHELL
-  # config.vm.synced_folder "../vue-bootstrap-modal", "/mnt/vue-bootstrap-modal", type: "virtualbox"
-  # config.vm.provision "shell", run: "always", inline: <<-SHELL
-  #   mkdir /mnt/vue-bootstrap-modal/node_modules 2>/dev/null
-  #   mount --bind /home/vagrant/vue-bootstrap-modal_node_modules /mnt/vue-bootstrap-modal/node_modules
-  #   cd /mnt/vue-bootstrap-modal
-  #   npm install
-  #   npm link
-  # SHELL
-  # config.vm.provision "shell", privileged: false, run: "always", inline: <<-SHELL
-  #   cd /vagrant 
-  #   npm link vue-bootstrap-modal
-  # SHELL
-  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
+  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", inline: <<-SHELL
     cd /vagrant
 
     echo "Installing node modules (this will take a while)"

@@ -7,35 +7,44 @@ const API_ENTRIES_URL = 'api/entries';
 
 export class EntryCommand extends Command {
     /**
-     * @param entry Must be reactive
+     * @param options.entry Must be reactive
      */
-    constructor(entry) {
+    constructor(options) {
         super();
 
-        this.entry = entry;
+        this.entry = options.entry;
+        this.ondelete = options.ondelete;
 
         assert(this.entry._id);
     }
 
     @execute
-    async save() {
-        assert(this.entry.synced === false);
+    async save(newitem) {
+        newitem = newitem || this.entry;
+        const dto = {
+            title: newitem.title,
+            user: newitem.user,
+            password: newitem.password
+        };
 
+        let response;
         if (this.entry.id !== undefined) {
-            const response = await http.put(`${API_ENTRIES_URL}/${this.entry.id}`, this.entry);
-            this.entry.synced = true;
-            return response;
+            response = await http.put(`${API_ENTRIES_URL}/${this.entry.id}`, dto);
         } else {
-            const response = await http.post(API_ENTRIES_URL, this.entry);
+            response = await http.post(API_ENTRIES_URL, dto);
             this.entry.id = parse_location(response);
-            this.entry.synced = true;
-            return response;
         }
+        this.entry.user = dto.user;
+        this.entry.title = dto.title;
+        this.entry.password = dto.password;
+        this.entry.synced = true;
+        return response;
     }
 
     @can_execute
-    can_save() {
-        if (this.entry.synced === false) {
+    can_save(newitem) {
+        newitem = newitem || this.entry;
+        if (!newitem.synced) {
             return { canExecute: true };
         }
         return {
@@ -47,8 +56,9 @@ export class EntryCommand extends Command {
     @execute
     async delete() {
         if (this.entry.id !== undefined) {
-            return await http.delete(`${API_ENTRIES_URL}/${this.entry.id}`);
+            await http.delete(`${API_ENTRIES_URL}/${this.entry.id}`);
         }
+        (this.ondelete || function() { })();
     }
 
     @can_execute
