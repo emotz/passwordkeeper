@@ -1,24 +1,11 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
-const entries = require('./entries.json');
 const log = require('./libs/log.js')(module);
 const passEntry = require('./models/passentry').PassEntry;
 const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
 const jwt = require('jsonwebtoken');
-const authenticate = require('express-jwt');
-
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-}
 
 app.use(express.static('frontend/dist'));
 app.use(bodyParser.json());
@@ -49,7 +36,6 @@ app.get('/api/entries', function (req, res, next) {
 });
 
 app.get('/api/entries/:id', async function (req, res, next) {
-    console.log(res.params[0]);
     try {
         const passEntryOne = await passEntry.findOne({ where: {ID: res.params[0]} });
         return res.send(passEntryOne);
@@ -137,7 +123,6 @@ app.post('/api/entries', function (req, res, next) {
             user: req.body.user,
             password: req.body.password}).get('ID');
             res.statusCode = 201;
-            console.log("newid: " + newentryID);
             res.location(`/api/entries/${newentryID}`);
             res.send();
         } catch (err) {
@@ -155,7 +140,6 @@ app.post('/api/entries', function (req, res, next) {
 
 app.put('/api/entries/:id', async function (req, res) {
     const updatedEntry = req.body;
-    console.log(req.body);
     try{
         await passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {ID: req.params[0]}});
         res.statusCode = 200;
@@ -179,7 +163,6 @@ app.put('/api/entries/:id', async function (req, res) {
 });
 
 app.delete('/api/entries/:id', async function (req, res) {
-    console.log(req.params[0]);
     try{
         await passEntry.destroy({where: {ID: req.params[0]}});
         res.status = 204;
@@ -207,5 +190,6 @@ app.use(function(err, req, res, next){
 });
 
 app.listen(1337, function(){
-    console.log('Express server listening on port 1337');
+    //console.log('Express server listening on port 1337');
+    return;
 });

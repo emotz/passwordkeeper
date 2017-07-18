@@ -1,4 +1,3 @@
-import * as PassValidator from 'src/pass-validator.js';
 import * as auth from 'src/services/auth.js';
 import Modal from 'vue-bootstrap-modal';
 
