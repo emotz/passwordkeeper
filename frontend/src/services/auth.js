@@ -1,5 +1,5 @@
 import { http } from 'src/plugins/http.js';
-import Command from 'src/command.js';
+import { Command, execute } from 'command-decorator';
 import { make_reactive } from './watch.js';
 
 const API_TOKEN_URL = "/api/token";
@@ -9,15 +9,17 @@ const data = make_reactive({
     token: undefined
 });
 
-export const login_cmd = new (class LoginCommand extends Command {
-    execute(user, password) {
-        return this._execute(async () => {
-            let response = await http.post(API_TOKEN_URL, { user, password });
-            set_token(response.data.access_token);
-            return response;
-        });
+class LoginCommand extends Command {
+    @execute
+    async execute(user, password) {
+        let response = await http.post(API_TOKEN_URL, { user, password });
+        // TODO handle errors
+        set_token(response.data.access_token);
+        return response;
     }
-})();
+}
+
+export const login_cmd = new LoginCommand();
 
 export async function register(input) {
     let response = await http.post(API_USERS_URL, input);

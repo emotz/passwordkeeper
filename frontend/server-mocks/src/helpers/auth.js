@@ -12,8 +12,8 @@ function handle_auth_error(ctx, err) {
 }
 
 /**
- * 
- * @param {string} authHeader 
+ *
+ * @param {string} authHeader
  * @returns {string} Token
  * @throws {string} Error message
  */

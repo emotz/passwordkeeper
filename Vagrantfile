@@ -81,12 +81,7 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
 
-  # HACK: fix https://www.virtualbox.org/ticket/16670
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-  # config.vm.provision "shell", name: "VirtualBox bugfix", inline: <<-SHELL
-  #   ln -sf /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/mount.vboxsf /sbin/mount.vboxsf
-  #   mount -t vboxsf -o uid=1000,gid=1000 vagrant /vagrant
-  # SHELL
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     echo "Preparing local node_modules folder..."
     mkdir ~/vagrant_node_modules 2>/dev/null
@@ -115,7 +110,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
   SHELL
-  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
+  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", inline: <<-SHELL
     cd /vagrant
 
     echo "Installing node modules (this will take a while)"

@@ -42,7 +42,7 @@ Selenium as engine.
 
 ## Vagrant setup (for Windows host)
 
-If you already have *VirtualBox*, *Vagrant* and *OpenSSH* installed, you can
+If you already have *VirtualBox* (required version > 5.1.20 because of bug in that version), *Vagrant* and *OpenSSH* installed, you can
 skip this section and move to `Build & Run`.
 
 *Optional*: Install [choco](https://chocolatey.org/) - package manager for
@@ -116,6 +116,8 @@ vagrant up
 `vagrant up` command makes Vagrant to launch virtual machine, set up all builds,
 watches and dev servers. You are ready to go! Open `http://localhost:8000` in
 your browser.
+
+## Debug
 
 To debug with *VSCode*:
 
