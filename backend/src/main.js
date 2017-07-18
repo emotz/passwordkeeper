@@ -1,114 +1,184 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
-const entries = require('./entries.json');
 const log = require('./libs/log.js')(module);
-const mongoose = require('./libs/mongoose');
 const passEntry = require('./models/passentry').PassEntry;
 const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
-
-mongoose.initConnect();
-
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-}
+const jwt = require('jsonwebtoken');
 
 app.use(express.static('frontend/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
-app.get('/api/entries', function (req, res, next) {
-    return passEntry.find(function(err, passEntryList){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
-        }
-        return res.send(passEntryList);
-    });
+
+app.get('/home', function (req, res, next) {
+	return res.redirect('/');
 });
 
-app.get('/api/entries/:id', function (req, res, next) {
-    passEntry.find({'id': res.params[0]}, function(err, passentry){
+app.get('/api/entries', function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
         if (err){
+            res.statusCode = 401;
+            return res.send({ error: 'Server error: ' + err });
+        }
+        try {
+            const passEntryList = await passEntry.findAll({ where: {userID: user.id} });
+            res.statusCode = 201;
+            return res.send(passEntryList);
+        } catch (err) {
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
             return res.send({ error: 'Server error' });
         }
-        return res.send(passentry)
-    });
+    })(req, res, next);
+});
+
+app.get('/api/entries/:id', async function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        try {
+            const passEntryOne = await passEntry.findOne({ where: {id: res.params[0]} });
+            return res.send(passEntryOne);
+        } catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });		
+        }
+    })(req, res, next);
+});
+
+app.post('/api/token', function (req, res, next) {
+    passport.authenticate('local', function (err, user){
+        if (user === false) {
+            res.body = "Login failed";
+            return res.status(401).json({ status: 'error', code: 'unauthorized' });
+        } else {
+            const payload = {
+                _id: user.id,
+                displayName: user.username,
+                email: user.email
+            };
+            const token = jwt.sign(payload, "mysecretkey");
+            return res.json({user: user.username, access_token: token});
+        }
+    })(req, res, next);
+});
+
+/*app.post('/api/token', async function (req, res, next) {
+    if (req.body.user && req.body.password) {
+        var username = req.body.user;
+        var password = req.body.password;
+        var usertest = user.find(function(u) {
+            return u.email === email && u.password === password;
+        });
+        if (usertest) {
+            var payload = {
+                id: usertest._id,
+                displayName: usertest.username,
+                email: usertest.email
+            };
+            var token = jwt.sign(payload, "mysecretkey");
+            res.json({
+                token: token
+            });
+        } else {
+            res.sendStatus(401);
+        }
+    } else {
+        res.sendStatus(401);
+    }
+});*/
+
+app.delete('/api/token',  function (req, res, next) {
+    return res.location(`/home`).send();
+});
+
+app.post('/api/users', async function (req, res, next) {
+    try {
+        await user.create({
+            username: req.body.username,
+            password: req.body.password,
+            email: req.body.email});
+        log.info("new user entry created");
+        res.status = 201;
+        res.location(`/api/login`);
+        res.send();
+    } catch(err) {
+        if(err.username == 'ValidationError') {
+            res.statusCode = 400;
+            res.send({ error: 'Validation error' });
+        } else {
+            res.statusCode = 500;
+            res.send({ error: 'Server error' });
+        }
+        log.error('Internal error(%d): %s',res.statusCode,err.message);
+    }
 });
 
 app.post('/api/entries', function (req, res, next) {
-    let entryid = guid();
-    console.log(req.body);
-    passEntry.create({
-        id: entryid,
-        title: req.body.title,
-        user: req.body.user,
-        password: req.body.password
-    }, function (err) {
-        if (!err) {
-            log.info("new password entry created");
-            res.status = 201;
-            res.location(`/api/entries/${entryid}`);
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        try {
+            let newentryID = await passEntry.create({
+            userID: user.id,
+            title: req.body.title,
+            user: req.body.user,
+            password: req.body.password}).get('id');
+            res.statusCode = 201;
+            res.location(`/api/entries/${newentryID}`);
             res.send();
-        } else {
-            console.log(err);
-            if(err.name == 'ValidationError') {
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
+        } catch (err) {
+                if(err.name == 'ValidationError') {
+                    res.statusCode = 400;
+                    res.send({ error: 'Validation error' });
+                } else {
+                    res.statusCode = 500;
+                    res.send({ error: 'Server error' });
+                }
+                log.error('Internal error(%d): %s',res.statusCode,err.message);	
+        }
+    })(req, res, next);
+});
+
+app.put('/api/entries/:id', async function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        const updatedEntry = req.body;
+        try{
+            await passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {id: req.params[0]}});
+            res.statusCode = 200;
+            res.send('OK');
+        }
+        catch (err) {
+            if (updatedEntry.title === undefined || updatedEntry.title === "") {
+                res.status = 400;
+                res.body = { reason: "request must specify non-empty title" };
+                return;
             }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-        }
-    });
-});
-
-app.put('/api/entries/:id', function (req, res) {
-    const updatedEntry = req.body;
-    updatedEntry.id = req.params[0];
-    if (updatedEntry.title === undefined || updatedEntry.title === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty title" };
-        return;
-    }
-    if (updatedEntry.user === undefined || updatedEntry.user === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty user" };
-        return;
-    }
-    passEntry.findOneAndUpdate({'id': req.params[0]}, {$set:{title: req.body.title, user: req.body.user, password: req.body.password}}, function(err, passentry){
-        if (err){
-            res.status = 404;
-            res.body = { reason: "requested id wasn't found" };
+            if (updatedEntry.user === undefined || updatedEntry.user === "") {
+            res.status = 400;
+            res.body = { reason: "request must specify non-empty user" };
             return;
-        }
-        res.status = 200;
-        res.send('OK');
-    });
-});
-
-app.delete('/api/entries/:id', function (req, res) {
-    passEntry.deleteOne(req.params[0], function(err){
-        if (err){
+            }
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
+            return res.send({ error: 'Server error' });		
         }
-        res.status = 204;
-        res.send('OK');
-    });
+    })(req, res, next);
+});
+
+app.delete('/api/entries/:id', async function (req, res, next) {
+    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+        try{
+            await passEntry.destroy({where: {id: req.params[0]}});
+            res.status = 204;
+            res.send('OK');
+        }
+        catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            return res.send({ error: 'Server error' });		
+        }
+    })(req, res, next);
 });
 
 app.use(function(req, res, next){
@@ -126,5 +196,6 @@ app.use(function(err, req, res, next){
 });
 
 app.listen(1337, function(){
-    console.log('Express server listening on port 1337');
+    //console.log('Express server listening on port 1337');
+    return;
 });

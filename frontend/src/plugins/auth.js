@@ -7,11 +7,14 @@ import * as loader from 'src/services/loader.js';
 (function init() {
     http.interceptors.push(function(request, next) {
         // TODO: should we pass authorization token for each request? may be only for requests which are required to have authorizatioN?
+        /*if (auth.get_token() === undefined){
+            request.headers.set('Authorization', undefined);
+        }*/
+
         if (request.headers['Authorization'] === undefined && auth.is_authenticated()) {
             request.headers.set('Authorization', `Bearer ${auth.get_token()}`);
         }
         next();
-        // TODO: should have interceptor for Unauthorized response whatever to remove auth token
     });
 
     let client_store = new ClientStore('token');

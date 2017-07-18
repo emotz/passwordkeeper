@@ -1,41 +1,46 @@
 <template>
-    <ul class="pk-signin navbar-form navbar-right"
-        :id="`pk-signin-${_uid}`">
-        <pk-sign-up :show="show"
-            @cancel="show = false"></pk-sign-up>
-        <form v-if="!authenticated"
-              style="display: inline">
+    <div class="pk-signin"
+         :id="`pk-signin-${_uid}`">
+        <modal :title="$t('signin_title')"
+               :show="showsignin"
+               @ok="signin"
+               @cancel="cancel"
+               okClass="btn btn-primary pk-btn-editor-ok"
+               :okText="$t('button_ok')"
+               :cancelText="$t('button_cancel')">
             <div class="form-group"
-                 :class="{'has-error': user_error}">
+                 :class="{'has-error': title_error}">
+                <label class="control-label"
+                       :for="`pk-user-input-${_uid}`">{{ $t('label_user') }}</label>
                 <input type="text"
-                       :placeholder="$t('signin_user_placeholder')"
-                       class="pk-signin-user-input form-control"
-                       v-model="user">
+                       class="pk-user-input form-control"
+                       :id="`pk-user-input-${_uid}`"
+                       placeholder="User or e-mail"
+                       v-model="username">
             </div>
-            <div class="form-group"
-                 :class="{'has-error': password_error}">
-                <input type="password"
-                       :placeholder="$t('signin_pass_placeholder')"
-                       class="pk-signin-pass-input form-control"
-                       v-model="password">
+            <div class="form-group">
+                <label :for="`pk-pass-input-${_uid}`">{{ $t('label_password') }}</label>
+                <div class="input-group">
+                    <input v-if="show_password"
+                           type="text"
+                           class="pk-pass-input form-control"
+                           :id="`pk-pass-input-${_uid}`"
+                           placeholder="Password123"
+                           v-model="password">
+                    <input v-else
+                           type="password"
+                           class="pk-pass-input form-control"
+                           :id="`pk-pass-input-${_uid}`"
+                           placeholder="Password123"
+                           v-model="password">
+                    <div class="btn btn-default input-group-addon"
+                         @click="show_password = !show_password"
+                         :class="{'active': show_password}"
+                         :aria-pressed="show_password"><span class="fa fa-eye"></span></div>
+                </div>
             </div>
-            <button class="pk-btn-signin btn btn-success"
-                    type="submit"
-                    :disabled="can_signin"
-                    @click="signin">
-                <slot>{{ $t('signin') }}</slot>
-            </button>
-        </form>
-        <button v-else
-                class="pk-btn-signout btn btn-default"
-                @click="signout">
-            <slot>{{ $t('signout') }}</slot>
-        </button>
-        <button class="pk-btn-signup btn btn-success"
-                @click="show = true">
-            <slot>{{ $t('signup') }}</slot>
-        </button>
-    </ul>
+        </modal>
+    </div>
 </template>
 
 <script src="./pk-signin.js"></script>

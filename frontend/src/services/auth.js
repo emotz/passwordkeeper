@@ -4,6 +4,7 @@ import { make_reactive } from './watch.js';
 
 const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
+const API_LOGIN_URL = "/api/token";
 
 const data = make_reactive({
     token: undefined
@@ -12,14 +13,15 @@ const data = make_reactive({
 export const login_cmd = new (class LoginCommand extends Command {
     execute(user, password) {
         return this._execute(async () => {
-            let response = await http.post(API_TOKEN_URL, { user, password });
+            let response = await http.post(API_LOGIN_URL, { user, password });
             set_token(response.data.access_token);
             return response;
         });
     }
-})();
+}) ();
 
-export async function register(input) {
+export async function signup(input) {
+    // TODO finish this signup
     let response = await http.post(API_USERS_URL, input);
     // TODO: validate token
     set_token(response.data.access_token);
@@ -62,3 +64,4 @@ function is_valid_token(token) {
     }
     return false;
 }
+

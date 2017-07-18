@@ -1,25 +1,24 @@
 import * as auth from 'src/services/auth.js';
-import PkSignUp from './pk-signup.vue';
+import Modal from 'vue-bootstrap-modal';
 
 export default {
-    components: {
-        PkSignUp
-    },
+    components: { Modal },
+    props: ['user', 'showsignin'],
     data() {
+        let user = this.user === undefined ? {} : this.user;
         return {
-            user: "",
-            user_error: false,
-            password: "",
-            password_error: false,
-            show_password: false,
-            show: false
+            username: user.username,
+            password: user.password,
+            username_error: false,
+            email_error: false,
+            show_password: false
         };
     },
     methods: {
         async signin() {
             let val;
             try {
-                val = await auth.login_cmd.execute(this.user, this.password);
+                val = await auth.login_cmd.execute(this.username, this.password);
             } catch (err) {
                 this.user_error = true;
                 this.password_error = true;
@@ -29,14 +28,8 @@ export default {
             this.password = "";
             return val;
         },
-        signout() {
-            return auth.logout();
-        }
-    },
-    computed: {
-        authenticated: auth.is_authenticated,
-        can_signin() {
-            return auth.login_cmd.is_executing();
+        cancel() {
+            this.$emit("cancel");
         }
     },
     watch: {
