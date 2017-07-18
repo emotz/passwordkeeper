@@ -60,7 +60,7 @@ app.post('/api/login', function (req, res, next) {
             const token = jwt.sign(payload, "mysecretkey");
             return res.json({user: user.username, access_token: token});
         }
-    })(req, res, next)
+    })(req, res, next);
 });
 
 /*app.post('/api/token', async function (req, res, next) {
@@ -135,7 +135,7 @@ app.post('/api/entries', function (req, res, next) {
                 }
                 log.error('Internal error(%d): %s',res.statusCode,err.message);	
         }
-    })(req, res, next)
+    })(req, res, next);
 });
 
 app.put('/api/entries/:id', async function (req, res) {
