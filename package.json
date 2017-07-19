@@ -67,7 +67,7 @@
     "backend:watch": "nodemon -L --watch backend -x 'node --debug --harmony' backend/src/main.js",
     "build": "cd frontend && webpack --config vendor.webpack.config.js && webpack",
     "build:watch": "cd frontend && webpack --config vendor.webpack.config.js && webpack-runner --config=webpack.config.js --watch",
-    "watch": "parallelshell 'npm run dev -s' 'npm run build:watch -s' 'npm run backend:watch -s'",
+    "watch": "parallelshell 'npm run build:watch -s' 'npm run backend:watch -s'",
     "test-unit": "cd frontend && webpack --config test.webpack.config && karma start",
     "test-unit:watch": "npm run test-unit && parallelshell 'npm run test-unit:watch-build -s' 'npm run test-unit:watch-run -s'",
     "test-unit:watch-run": "cd frontend && karma start --single-run=false --auto-watch",

@@ -143,6 +143,9 @@ Vagrant.configure("2") do |config|
 	su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
 	sleep 3
 
+  echo "Setting password for vagrant user for PostgreSQL"
+  su postgres -c "psql pkeeper -c \"ALTER USER vagrant PASSWORD 'vagrant';\""
+
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
 	
