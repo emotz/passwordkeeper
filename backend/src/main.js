@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -7,49 +8,46 @@ const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
 const jwt = require('jsonwebtoken');
 
-app.use(express.static('frontend/dist'));
+const DIST_PATH = path.resolve('./frontend/dist');
+
+app.use(express.static(DIST_PATH));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-
-app.get('/home', function (req, res, next) {
-	return res.redirect('/');
-});
-
-app.get('/api/entries', function (req, res, next) {
-    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
-        if (err){
+app.get('/api/entries', function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
+        if (err) {
             res.statusCode = 401;
             return res.send({ error: 'Server error: ' + err });
         }
         try {
-            const passEntryList = await passEntry.findAll({ where: {userID: user.id} });
+            const passEntryList = await passEntry.findAll({ where: { userID: user.id } });
             res.statusCode = 201;
             return res.send(passEntryList);
         } catch (err) {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
             return res.send({ error: 'Server error' });
         }
     })(req, res, next);
 });
 
-app.get('/api/entries/:id', async function (req, res, next) {
-    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+app.get('/api/entries/:id', async function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         try {
-            const passEntryOne = await passEntry.findOne({ where: {id: res.params[0]} });
+            const passEntryOne = await passEntry.findOne({ where: { id: res.params[0] } });
             return res.send(passEntryOne);
         } catch (err) {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });		
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
         }
     })(req, res, next);
 });
 
-app.post('/api/token', function (req, res, next) {
-    passport.authenticate('local', function (err, user){
+app.post('/api/token', function(req, res, next) {
+    passport.authenticate('local', function(err, user) {
         if (user === false) {
             res.body = "Login failed";
             return res.status(401).json({ status: 'error', code: 'unauthorized' });
@@ -60,7 +58,7 @@ app.post('/api/token', function (req, res, next) {
                 email: user.email
             };
             const token = jwt.sign(payload, "mysecretkey");
-            return res.json({user: user.username, access_token: token});
+            return res.json({ user: user.username, access_token: token });
         }
     })(req, res, next);
 });
@@ -90,61 +88,63 @@ app.post('/api/token', function (req, res, next) {
     }
 });*/
 
-app.delete('/api/token',  function (req, res, next) {
+app.delete('/api/token', function(req, res, next) {
     return res.location(`/home`).send();
 });
 
-app.post('/api/users', async function (req, res, next) {
+app.post('/api/users', async function(req, res, next) {
     try {
         await user.create({
             username: req.body.username,
             password: req.body.password,
-            email: req.body.email});
+            email: req.body.email
+        });
         log.info("new user entry created");
         res.status = 201;
         res.location(`/api/login`);
         res.send();
-    } catch(err) {
-        if(err.username == 'ValidationError') {
+    } catch (err) {
+        if (err.username == 'ValidationError') {
             res.statusCode = 400;
             res.send({ error: 'Validation error' });
         } else {
             res.statusCode = 500;
             res.send({ error: 'Server error' });
         }
-        log.error('Internal error(%d): %s',res.statusCode,err.message);
+        log.error('Internal error(%d): %s', res.statusCode, err.message);
     }
 });
 
-app.post('/api/entries', function (req, res, next) {
-    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+app.post('/api/entries', function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         try {
             let newentryID = await passEntry.create({
-            userID: user.id,
-            title: req.body.title,
-            user: req.body.user,
-            password: req.body.password}).get('id');
+                userID: user.id,
+                title: req.body.title,
+                user: req.body.user,
+                password: req.body.password
+            }).get('id');
             res.statusCode = 201;
             res.location(`/api/entries/${newentryID}`);
             res.send();
         } catch (err) {
-                if(err.name == 'ValidationError') {
-                    res.statusCode = 400;
-                    res.send({ error: 'Validation error' });
-                } else {
-                    res.statusCode = 500;
-                    res.send({ error: 'Server error' });
-                }
-                log.error('Internal error(%d): %s',res.statusCode,err.message);	
+            if (err.name == 'ValidationError') {
+                res.statusCode = 400;
+                res.send({ error: 'Validation error' });
+            } else {
+                res.statusCode = 500;
+                res.send({ error: 'Server error' });
+            }
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
         }
     })(req, res, next);
 });
 
-app.put('/api/entries/:id', async function (req, res, next) {
-    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
+app.put('/api/entries/:id', async function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         const updatedEntry = req.body;
-        try{
-            await passEntry.update({title: req.body.title, user: req.body.user, password: req.body.password}, {where: {id: req.params[0]}});
+        try {
+            await passEntry.update({ title: req.body.title, user: req.body.user, password: req.body.password }, { where: { id: req.params[0] } });
             res.statusCode = 200;
             res.send('OK');
         }
@@ -155,47 +155,51 @@ app.put('/api/entries/:id', async function (req, res, next) {
                 return;
             }
             if (updatedEntry.user === undefined || updatedEntry.user === "") {
-            res.status = 400;
-            res.body = { reason: "request must specify non-empty user" };
-            return;
+                res.status = 400;
+                res.body = { reason: "request must specify non-empty user" };
+                return;
             }
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });		
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
         }
     })(req, res, next);
 });
 
-app.delete('/api/entries/:id', async function (req, res, next) {
-    return passport.authenticate('jwt', {session: 'false'}, async function (err, user, info){
-        try{
-            await passEntry.destroy({where: {id: req.params[0]}});
+app.delete('/api/entries/:id', async function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
+        try {
+            await passEntry.destroy({ where: { id: req.params[0] } });
             res.status = 204;
             res.send('OK');
         }
         catch (err) {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });		
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
         }
     })(req, res, next);
 });
 
-app.use(function(req, res, next){
+app.get('*', function(req, res) {
+    res.sendFile(path.join(DIST_PATH, 'index.html'));
+});
+
+app.use(function(req, res, next) {
     res.status(404);
-    log.debug('Not found URL: %s',req.url);
+    log.debug('Not found URL: %s', req.url);
     res.send({ error: 'Not found' });
     return;
 });
 
-app.use(function(err, req, res, next){
+app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    log.error('Internal error(%d): %s',res.statusCode,err.message);
+    log.error('Internal error(%d): %s', res.statusCode, err.message);
     res.send({ error: err.message });
     return;
 });
 
-app.listen(1337, function(){
+app.listen(1337, function() {
     //console.log('Express server listening on port 1337');
     return;
 });
