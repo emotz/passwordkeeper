@@ -3,8 +3,8 @@ export default class CommandGroup {
         this.commands = [];
     }
     /**
-     * 
-     * @param {Command} cmd 
+     *
+     * @param {Command} cmd
      */
     add_command(cmd) {
         if (~this.commands.indexOf(cmd)) return;

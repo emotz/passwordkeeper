@@ -101,7 +101,7 @@ export default {
 };
 
 /**
- * 
+ *
  * @returns {Entry}
  */
 function ctor_entry(obj = {}) {

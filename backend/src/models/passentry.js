@@ -1,12 +1,12 @@
 const sequelize = require('../libs/sequelize.js');
 const Sequelize = require('sequelize');
 const PassEntry = sequelize.define('passentry', {
-    id : {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    userID : {
+    userID: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },

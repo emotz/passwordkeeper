@@ -9,12 +9,12 @@ passport.use(new LocalStrategy({
     usernameField: 'user',
     passwordField: 'password',
     session: false
-    },
-    async function (username, password, done) {
+},
+    async function(username, password, done) {
         try {
-            const userOne = await User.findOne({where: {username: username}});
+            const userOne = await User.findOne({ where: { username: username } });
             if (!userOne || !userOne.checkPassword(password)) {
-                return done(null, false, {message: 'Нет такого пользователя или пароль неверен.'});
+                return done(null, false, { message: 'Нет такого пользователя или пароль неверен.' });
             }
             return done(null, userOne);
         } catch (err) {
@@ -28,7 +28,7 @@ const jwtOptions = {
     secretOrKey: jwtsecret
 };
 
-passport.use(new JwtStrategy (jwtOptions, async function (payload, done) {
+passport.use(new JwtStrategy(jwtOptions, async function(payload, done) {
     try {
         const userOne = await User.findById(payload._id);
         if (userOne) {

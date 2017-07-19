@@ -17,8 +17,8 @@ class ValidationResult {
 }
 
 /**
- * 
- * @param {*} pass_entry 
+ *
+ * @param {*} pass_entry
  * @returns {ValidationResult}
  */
 function validate(pass_entry) {

@@ -9,8 +9,8 @@ import * as loader from 'src/services/loader.js';
 
 export default class BasicCommand extends Command {
     /**
-     * 
-     * @param {function} action 
+     *
+     * @param {function} action
      * @param {Options} options
      */
     constructor(action, options = {}) {

@@ -2,7 +2,7 @@ const sequelize = require('../libs/sequelize.js');
 const Sequelize = require('sequelize');
 const crypto = require('crypto');
 const User = sequelize.define('user', {
-    id : {
+    id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
@@ -27,13 +27,13 @@ const User = sequelize.define('user', {
     },
     password: {
         type: Sequelize.VIRTUAL,
-        set: function (val) {
+        set: function(val) {
             this.setDataValue('password', val);
             this.setDataValue('salt', crypto.randomBytes(128).toString('base64'));
             this.setDataValue('passwordHash', crypto.pbkdf2Sync(val, this.salt, 1, 128, 'sha1').toString('hex'));
         },
         validate: {
-            isLongEnough: function (val) {
+            isLongEnough: function(val) {
                 if (val.length < 7) {
                     throw new Error("Please choose a longer password");
                 }
@@ -42,11 +42,11 @@ const User = sequelize.define('user', {
     }
 });
 
-User.prototype.checkPassword = function (password){
+User.prototype.checkPassword = function(password) {
     if (!password) return false;
     if (!this.passwordHash) return false;
     return crypto.pbkdf2Sync(password, this.salt, 1, 128, 'sha1').toString('hex') == this.passwordHash;
-}
+};
 
 User.sync();
 

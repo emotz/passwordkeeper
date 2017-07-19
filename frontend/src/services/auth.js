@@ -18,7 +18,7 @@ export const login_cmd = new (class LoginCommand extends Command {
             return response;
         });
     }
-}) ();
+})();
 
 export async function signup(input) {
     // TODO finish this signup
@@ -64,4 +64,3 @@ function is_valid_token(token) {
     }
     return false;
 }
-

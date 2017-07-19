@@ -76,7 +76,7 @@ export function get_entries() {
 export const pull_cmd = new BasicCommand(async () => {
     /** @type {DtoEntry[]} */
     let entries = (await http.get(API_ENTRIES_URL)).body;
-    // TODO: validate response    
+    // TODO: validate response
     data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
     actions = actions.filter(item => ~data.entries.findIndex(e => e._id === item._id));
     utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
@@ -96,8 +96,8 @@ export const pull_cmd = new BasicCommand(async () => {
 
 // TODO: add interaction with server for all actions/commands
 /**
- * 
- * @param {DtoViewEntry} dto 
+ *
+ * @param {DtoViewEntry} dto
  */
 export function add_entry(dto) {
     assert(data.entries.find(e => e._id === dto._id) === undefined);
@@ -139,7 +139,7 @@ function ctor(obj) {
 }
 
 /**
- * 
+ *
  * @returns {Entry}
  */
 function ctor_entry(obj = {}) {

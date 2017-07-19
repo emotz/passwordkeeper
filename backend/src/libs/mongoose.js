@@ -16,5 +16,5 @@ function initConnect()
     });
 }
 
-module.exports = mongoose; 
+module.exports = mongoose;
 module.exports.initConnect = initConnect;*/

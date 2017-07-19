@@ -14,14 +14,14 @@ Vagrant.configure("2") do |config|
 
   # Private key for SSH
   #config.ssh.private_key_path = "d:/Work/Sources/JS/passwordkeeper/.vagrant/machines/default/virtualbox/private_key"
-  
+
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "debian/jessie64"
 
 	#config.ssh.username = 'vagrant'
 	#config.ssh.password = 'vagrant'
-  
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -87,12 +87,7 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
 
-  # HACK: fix https://www.virtualbox.org/ticket/16670
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-  # config.vm.provision "shell", name: "VirtualBox bugfix", inline: <<-SHELL
-  #   ln -sf /usr/lib/x86_64-linux-gnu/VBoxGuestAdditions/mount.vboxsf /sbin/mount.vboxsf
-  #   mount -t vboxsf -o uid=1000,gid=1000 vagrant /vagrant
-  # SHELL
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     echo "Preparing local node_modules folder..."
     mkdir ~/vagrant_node_modules 2>/dev/null
@@ -116,39 +111,36 @@ Vagrant.configure("2") do |config|
 
     # Add NodeJS to the apt-get source list
     wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
-	
-	# Add MongoDB to the apt-get source list
-	#echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-	
-	# Add PostgreSQL to the apt-get source list
-	echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list 
-	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-	apt-key add -
-	
+
+    # Add MongoDB to the apt-get source list
+    #echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+
+    # Add PostgreSQL to the apt-get source list
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
+    apt-key add -
+
     apt-get update
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
-	#apt-get install -y mongodb-org
-	apt-get install -y postgresql postgresql-client
-	
-	echo "Starting PostgreSQL server"
-	service postgresql restart
-	sleep 3
-	
-	echo "Creating role for vagrant user for PostgreSQL"
-	su postgres -c "createuser -d -l -r -s -w -i vagrant"
-	sleep 3
-	
-	echo "Creating database pkeeper"
-	su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
-	sleep 3
+    apt-get install -y postgresql postgresql-client
 
-  echo "Setting password for vagrant user for PostgreSQL"
-  su postgres -c "psql pkeeper -c \"ALTER USER vagrant PASSWORD 'vagrant';\""
+    echo "Starting PostgreSQL server"
+    service postgresql restart
+    sleep 3
 
+    echo "Creating role for vagrant user for PostgreSQL"
+    su postgres -c "createuser -d -l -r -s -w -i vagrant"
+    sleep 3
+
+    echo "Creating database pkeeper"
+    su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
+    sleep 3
+
+    echo "Setting password for vagrant user for PostgreSQL"
+    su postgres -c "psql pkeeper -c \"ALTER USER vagrant PASSWORD 'vagrant';\""
   SHELL
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
-	
     cd /vagrant
 
     echo "Installing node modules (this will take a while)"
@@ -158,14 +150,12 @@ Vagrant.configure("2") do |config|
     npm run clean -s
 
     mkdir logs 2>/dev/null
-	
+
     echo "Starting watch on everything"
     npm run watch -s > logs/watch.log 2>&1 &
 
     echo "Starting virtual graphics server"
     Xvfb :99 -screen 0 1920x1080x8 -nolisten tcp > logs/xvfb.log 2>&1 &
     XAUTHLOCALHOSTNAME=localhost x11vnc -display :99 -nopw > logs/x11vnc.log 2>&1 &
-	
   SHELL
-
 end

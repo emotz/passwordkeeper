@@ -18,8 +18,8 @@ export default class Command {
     }
 
     /**
-     * 
-     * @param {CommandGroup} group 
+     *
+     * @param {CommandGroup} group
      */
     set_group(group) {
         this._group = group;
