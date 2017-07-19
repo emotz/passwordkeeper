@@ -8,8 +8,7 @@
                okClass="btn btn-primary pk-btn-editor-ok"
                :okText="$t('button_ok')"
                :cancelText="$t('button_cancel')">
-            <div class="form-group"
-                 :class="{'has-error': title_error}">
+            <div class="form-group">
                 <label class="control-label"
                        :for="`pk-user-input-${_uid}`">{{ $t('label_user') }}</label>
                 <input type="text"
