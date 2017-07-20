@@ -6,7 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.post_up_message = "If you don't see any errors above, then virtual machine is set up and running, all builds, watches and dev servers are running. You are ready to go! Open `http://localhost:8000` in your browser."
+  config.vm.post_up_message = "If you don't see any errors above, then virtual machine is set up and running, all builds, watches and dev servers are running. You are ready to go! Open `http://localhost:1337` in your browser."
 
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -115,31 +115,11 @@ Vagrant.configure("2") do |config|
     # Add MongoDB to the apt-get source list
     #echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
 
-    # Add PostgreSQL to the apt-get source list
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-    apt-key add -
-
     apt-get update
     apt-get install -y -t jessie-backports openjdk-8-jre
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
-    apt-get install -y postgresql postgresql-client
-
-    echo "Starting PostgreSQL server"
-    service postgresql restart
-    sleep 3
-
-    echo "Creating role for vagrant user for PostgreSQL"
-    su postgres -c "createuser -d -l -r -s -w -i vagrant"
-    sleep 3
-
-    echo "Creating database pkeeper"
-    su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant pkeeper"
-    sleep 3
-
-    echo "Setting password for vagrant user for PostgreSQL"
-    su postgres -c "psql pkeeper -c \"ALTER USER vagrant PASSWORD 'vagrant';\""
   SHELL
+  config.vm.provision "shell", name: "Preparing postgres", path: "vagrant/postgres.sh"
   config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
     cd /vagrant
 
