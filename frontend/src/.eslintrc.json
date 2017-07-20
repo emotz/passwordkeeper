@@ -1,5 +1,6 @@
 {
     "extends": "../../.eslintrc.json",
+    "parser": "babel-eslint",
     "env": {
         "jquery": true,
         "browser": true,

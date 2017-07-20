@@ -2,8 +2,11 @@ import PkPassAdder from './pk-pass-adder.vue';
 import PkPassEditor from './pk-pass-editor.vue';
 import PkPassFilter from './pk-pass-filter.vue';
 
+import { Status as CommandStatus } from 'command-decorator';
 import * as pass_store from 'src/services/pass-store.js';
 import * as utls from 'src/utility.js';
+
+import * as modal from 'src/services/modal.js';
 
 /**
  * @typedef {Object} Entry
@@ -19,7 +22,6 @@ import * as utls from 'src/utility.js';
 export default {
     components: {
         PkPassAdder,
-        PkPassEditor,
         PkPassFilter
     },
     data: function() {
@@ -53,32 +55,47 @@ export default {
     },
     methods: {
         get_last_op(item) {
-            return pass_store.get_entry_cmdhistory(item._id, 0);
+            const history = get_entry_cmd(item).history;
+            return history[history.length - 1];
         },
         get_last_last_op(item) {
-            return pass_store.get_entry_cmdhistory(item._id, 1);
+            const history = get_entry_cmd(item).history;
+            return history[history.length - 2];
         },
         requires_attention(item) {
             let last_op = this.get_last_op(item);
-            return (item.synced === false && !this.is_saving(item)) || last_op.status === 'failure' || (last_op.status === 'inprogress' && this.get_last_last_op(item).status === 'failure');
-        },
-        cancel_edit() {
-            this.editing_item = undefined;
+            if (item.synced === false && !this.is_saving(item)) return true;
+            if (last_op) {
+                if (last_op.status === CommandStatus.Failed) return true;
+                let last_last_op = this.get_last_last_op(item);
+                if (last_last_op) {
+                    if (last_op.status === CommandStatus.Pending && last_last_op.status === CommandStatus.Failure) return true;
+                }
+            }
+            return false;
         },
         can_edit(item) {
-            return this.editing_item === undefined && get_save_cmd(item).can_execute();
+            const last_op = this.get_last_op(item);
+            if (last_op && last_op.status === CommandStatus.Pending) {
+                return false;
+            }
+            return true;
         },
         can_remove(item) {
-            return get_remove_cmd(item).can_execute();
+            return get_entry_cmd(item).can_delete().canExecute;
         },
         is_removing(item) {
-            return get_remove_cmd(item).is_executing();
+            let cmd = get_entry_cmd(item);
+            let last_op = this.get_last_op(item);
+            return cmd.is_executing() && last_op.cmd === 'delete' && last_op.status === CommandStatus.Pending;
         },
         can_save(item) {
-            return item.synced === false && get_save_cmd(item).can_execute();
+            return get_entry_cmd(item).can_save(item).canExecute;
         },
         is_saving(item) {
-            return get_save_cmd(item).is_executing();
+            let cmd = get_entry_cmd(item);
+            let last_op = this.get_last_op(item);
+            return cmd.is_executing() && last_op.cmd === 'save' && last_op.status === CommandStatus.Pending;
         },
         add(item) {
             pass_store.add_entry({
@@ -87,15 +104,32 @@ export default {
                 password: item.password
             });
         },
-        apply_edit(item) {
-            get_save_cmd(this.editing_item).execute(item);
-            this.editing_item = undefined;
+        async edit(item) {
+            const props = {
+                item: {
+                    user: item.user,
+                    title: item.title,
+                    password: item.password
+                }
+            };
+
+            let newitem;
+            try {
+                newitem = await modal.open(PkPassEditor, props);
+            } catch (err) {
+                return;
+            }
+            item.title = newitem.title;
+            item.password = newitem.password;
+            item.user = newitem.user;
+            item.synced = false;
+            this.save(item);
         },
         save(item) {
-            get_save_cmd(item).execute();
+            get_entry_cmd(item).save(item);
         },
         remove(item) {
-            get_remove_cmd(item).execute();
+            get_entry_cmd(item).delete();
         }
     }
 };
@@ -116,10 +150,6 @@ function ctor_entry(obj = {}) {
     };
 }
 
-function get_save_cmd(item) {
-    return pass_store.get_entry_cmds(item._id).save_cmd;
-}
-
-function get_remove_cmd(item) {
-    return pass_store.get_entry_cmds(item._id).remove_cmd;
+function get_entry_cmd(item) {
+    return pass_store.get_entry_cmd(item._id);
 }

@@ -1,15 +1,10 @@
 <template>
     <div class="pk-signup"
          :id="`pk-signup-${_uid}`">
-        <modal :title="$t('signup_title')"
-               :show="show"
+        <modal :show="true"
                @ok="ok"
-               @cancel="cancel"
-               okClass="btn btn-primary pk-btn-signup-ok"
-               :okText="$t('button_ok')"
-               :cancelText="$t('button_cancel')">
-            <div class="form-group"
-                 :class="{'has-error': username_error}">
+               @cancel="cancel">
+            <div class="form-group">
                 <label class="control-label"
                        :for="`pk-username-input-${_uid}`">{{ $t('label_username') }}</label>
                 <input type="text"
@@ -18,8 +13,7 @@
                        placeholder="UserName"
                        v-model="username">
             </div>
-            <div class="form-group"
-                 :class="{'has-error': email_error}">
+            <div class="form-group">
                 <label class="control-label"
                        :for="`pk-email-input-${_uid}`">{{ $t('label_email') }}</label>
                 <input type="text"

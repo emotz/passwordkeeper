@@ -1,43 +1,26 @@
 import * as auth from 'src/services/auth.js';
-import Modal from 'vue-bootstrap-modal';
+import { Modal } from 'vue-bootstrap-modal';
 
 export default {
     components: { Modal },
-    props: ['user', 'showsignin'],
     data() {
-        let user = this.user === undefined ? {} : this.user;
         return {
-            username: user.username,
-            password: user.password,
-            username_error: false,
-            email_error: false,
+            username: "",
+            password: "",
             show_password: false
         };
     },
     methods: {
-        async signin() {
-            let val;
+        async ok() {
             try {
-                val = await auth.login_cmd.execute(this.username, this.password);
+                await auth.login(this.username, this.password);
             } catch (err) {
-                this.user_error = true;
-                this.password_error = true;
                 throw err;
             }
-            this.user = "";
-            this.password = "";
-            return val;
+            this.$emit("ok");
         },
         cancel() {
             this.$emit("cancel");
-        }
-    },
-    watch: {
-        user() {
-            this.user_error = false;
-        },
-        password() {
-            this.password_error = false;
         }
     }
 };

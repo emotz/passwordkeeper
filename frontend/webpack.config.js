@@ -33,7 +33,7 @@ if (!isDev) {
 }
 
 module.exports = {
-    entry: ['./src/index.js'],
+    entry: ['babel-polyfill', './src/index.js'],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -57,6 +57,7 @@ module.exports = {
     },
     module: {
         loaders: [
+            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
             // the url-loader uses DataUrls.
             // the file-loader emits files.
             // for font-awesome

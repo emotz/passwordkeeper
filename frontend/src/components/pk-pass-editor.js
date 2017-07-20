@@ -1,10 +1,9 @@
-
 import * as PassValidator from 'src/pass-validator.js';
-import Modal from 'vue-bootstrap-modal';
+import { Modal } from 'vue-bootstrap-modal';
 
 export default {
     components: { Modal },
-    props: ['item', 'show'],
+    props: ['item'],
     data() {
         let item = this.item === undefined ? {} : this.item;
         return {
@@ -28,7 +27,7 @@ export default {
             if (validation_result.title_errors.length > 0) this.title_error = true;
             if (validation_result.user_errors.length > 0) this.user_error = true;
             if (validation_result.is_valid()) {
-                this.$emit('edit', item_to_add);
+                this.$emit('ok', item_to_add);
             }
         },
         cancel() {
@@ -36,16 +35,11 @@ export default {
         }
     },
     watch: {
-        'item.title'(val) {
+        title(val) {
             this.title_error = false;
-            this.title = val;
         },
-        'item.user'(val) {
+        user(val) {
             this.user_error = false;
-            this.user = val;
-        },
-        'item.password'(val) {
-            this.password = val;
         }
     }
 };

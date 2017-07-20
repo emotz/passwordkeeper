@@ -94,11 +94,14 @@ app.delete('/api/token', function(req, res, next) {
 
 app.post('/api/users', async function(req, res, next) {
     try {
-        await user.create({
+        const dto = {
             username: req.body.username,
             password: req.body.password,
             email: req.body.email
-        });
+        };
+        log.debug("received post api/users");
+        log.debug(dto);
+        await user.create(dto);
         log.info("new user entry created");
         res.status = 201;
         res.location(`/api/login`);

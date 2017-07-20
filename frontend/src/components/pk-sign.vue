@@ -1,20 +1,16 @@
 <template>
     <ul class="pk-sign navbar-form navbar-right"
         :id="`pk-sign-${_uid}`">
-        <pk-sign-up :show="show"
-            @cancel="show = false"></pk-sign-up>
-        <pk-sign-in :showsignin="showsignin"
-            @cancel="showsignin = false"></pk-sign-in>
         <div v-if="!authenticated"
-              style="display: inline">
+             style="display: inline">
             <button class="pk-btn-signin btn btn-success"
-                    @click="showsignin = true">
+                    @click="signin">
                 <slot>{{ $t('signin') }}</slot>
             </button>
             <button class="pk-btn-signup btn btn-success"
-                @click="show = true">
-            <slot>{{ $t('signup') }}</slot>
-        </button>
+                    @click="signup">
+                <slot>{{ $t('signup') }}</slot>
+            </button>
         </div>
         <button v-else
                 class="pk-btn-signout btn btn-default"

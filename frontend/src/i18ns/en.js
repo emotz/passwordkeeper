@@ -41,6 +41,8 @@ export default {
         itemsfetched_timeout: "Request timed-out when fetching items.",
         itemsfetched_unknown: "Couldn't fetch all items."
     },
+    confirm_text: "Are you sure?",
+    confirm_title: "Confirm",
     label_title: "Title",
     label_username: "Username",
     label_email: "Email Address",
