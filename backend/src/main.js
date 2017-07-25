@@ -33,8 +33,6 @@ app.get('/api/entries', function(req, res, next) {
     })(req, res, next);
 });
 
-app.get('/api/entries/:id', async function(req, res, next) {
-    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         try {
             const passEntryOne = await passEntry.findOne({ where: { id: res.params[0] } });
             return res.send(passEntryOne);

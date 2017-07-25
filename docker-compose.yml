@@ -1,14 +1,15 @@
-passwordkeeper:
-	build: .
-	command: echo 'ready'
-	volumes:
-		- .:/usr/src/passwordkeeper
+version: '3'
+
 services:
-	jre8:
-		image: openjdk:8-jre
-	postgres:
-		image: postgres:latest
-		environment:
-			POSTGRES_USER: pkeeper
-			POSTGRES_PASSWORD: pkeeper
-			POSTGRES_DB
+  passwordkeeper:
+    build: .
+    volumes:
+     - .:/usr/src/passwordkeeper
+    depends_on:
+     - postgres
+    ports:
+     - "8000:8000"
+     - "1337:1337"
+    tty: true
+  postgres:
+    image: postgres:latest
