@@ -10,35 +10,35 @@
 
             <div class="form-group">
                 <label class="control-label"
-                       :for="`pk-username-input-${_uid}`">{{ $t('label_username') }}</label>
+                       :for="`pk-signup-username-input-${_uid}`">{{ $t('label_username') }}</label>
                 <input type="text"
-                       class="pk-username-input form-control"
-                       :id="`pk-username-input-${_uid}`"
+                       class="pk-signup-username-input form-control"
+                       :id="`pk-signup-username-input-${_uid}`"
                        placeholder="UserName"
                        v-model="username">
             </div>
             <div class="form-group">
                 <label class="control-label"
-                       :for="`pk-email-input-${_uid}`">{{ $t('label_email') }}</label>
+                       :for="`pk-signup-email-input-${_uid}`">{{ $t('label_email') }}</label>
                 <input type="text"
-                       class="pk-email-input form-control"
-                       :id="`pk-email-input-${_uid}`"
+                       class="pk-signup-email-input form-control"
+                       :id="`pk-signup-email-input-${_uid}`"
                        placeholder="jane.doe@example.com"
                        v-model="email">
             </div>
             <div class="form-group">
-                <label :for="`pk-pass-input-${_uid}`">{{ $t('label_password') }}</label>
+                <label :for="`pk-signup-pass-input-${_uid}`">{{ $t('label_password') }}</label>
                 <div class="input-group">
                     <input v-if="show_password"
                            type="text"
-                           class="pk-pass-input form-control"
-                           :id="`pk-pass-input-${_uid}`"
+                           class="pk-signup-pass-input form-control"
+                           :id="`pk-signup-pass-input-${_uid}`"
                            placeholder="Password123"
                            v-model="password">
                     <input v-else
                            type="password"
-                           class="pk-pass-input form-control"
-                           :id="`pk-pass-input-${_uid}`"
+                           class="pk-signup-pass-input form-control"
+                           :id="`pk-signup-pass-input-${_uid}`"
                            placeholder="Password123"
                            v-model="password">
                     <div class="btn btn-default input-group-addon"

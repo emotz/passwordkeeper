@@ -63,31 +63,6 @@ app.post('/api/token', function(req, res, next) {
     })(req, res, next);
 });
 
-/*app.post('/api/token', async function (req, res, next) {
-    if (req.body.user && req.body.password) {
-        var username = req.body.user;
-        var password = req.body.password;
-        var usertest = user.find(function(u) {
-            return u.email === email && u.password === password;
-        });
-        if (usertest) {
-            var payload = {
-                id: usertest._id,
-                displayName: usertest.username,
-                email: usertest.email
-            };
-            var token = jwt.sign(payload, "mysecretkey");
-            res.json({
-                token: token
-            });
-        } else {
-            res.sendStatus(401);
-        }
-    } else {
-        res.sendStatus(401);
-    }
-});*/
-
 app.delete('/api/token', function(req, res, next) {
     return res.location(`/home`).send();
 });
@@ -172,7 +147,7 @@ app.put('/api/entries/:id', async function(req, res, next) {
 app.delete('/api/entries/:id', async function(req, res, next) {
     return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         try {
-            await passEntry.destroy({ where: { id: req.params[0] } });
+            await passEntry.destroy({ where: { id: req.params.id } });
             res.status = 204;
             res.send('OK');
         }

@@ -76,10 +76,11 @@
     "test-unit:watch": "npm run test-unit && parallelshell 'npm run test-unit:watch-build -s' 'npm run test-unit:watch-run -s'",
     "test-unit:watch-run": "cd frontend && karma start --single-run=false --auto-watch",
     "test-unit:watch-build": "cd frontend && webpack-runner --config=test.webpack.config.js --watch",
-    "test-e2e": "echo \"Starting e2e-tests...\" && cd e2e && wdio",
+    "test-e2e": "echo \"Starting e2e-tests...\" && npm run clean-postgres && cd e2e && wdio",
     "test": "npm run test-unit && npm run test-e2e",
     "lint": "eslint . --format unix",
-    "clean": "rimraf bin frontend/dist .vscode/chrome"
+    "clean": "rimraf bin frontend/dist .vscode/chrome",
+    "clean-postgres": "sudo su postgres -c \"psql pkeeper -c \\\"TRUNCATE users\\\"\""
   },
   "repository": {
     "type": "git",

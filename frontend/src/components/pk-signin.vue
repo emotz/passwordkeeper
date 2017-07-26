@@ -10,26 +10,26 @@
 
             <div class="form-group">
                 <label class="control-label"
-                       :for="`pk-user-input-${_uid}`">{{ $t('label_user') }}</label>
+                       :for="`pk-signin-user-input-${_uid}`">{{ $t('label_user') }}</label>
                 <input type="text"
-                       class="pk-user-input form-control"
-                       :id="`pk-user-input-${_uid}`"
+                       class="pk-signin-user-input form-control"
+                       :id="`pk-signin-user-input-${_uid}`"
                        placeholder="User or e-mail"
                        v-model="username">
             </div>
             <div class="form-group">
-                <label :for="`pk-pass-input-${_uid}`">{{ $t('label_password') }}</label>
+                <label :for="`pk-signin-pass-input-${_uid}`">{{ $t('label_password') }}</label>
                 <div class="input-group">
                     <input v-if="show_password"
                            type="text"
-                           class="pk-pass-input form-control"
-                           :id="`pk-pass-input-${_uid}`"
+                           class="pk-signin-pass-input form-control"
+                           :id="`pk-signin-pass-input-${_uid}`"
                            placeholder="Password123"
                            v-model="password">
                     <input v-else
                            type="password"
-                           class="pk-pass-input form-control"
-                           :id="`pk-pass-input-${_uid}`"
+                           class="pk-signin-pass-input form-control"
+                           :id="`pk-signin-pass-input-${_uid}`"
                            placeholder="Password123"
                            v-model="password">
                     <div class="btn btn-default input-group-addon"

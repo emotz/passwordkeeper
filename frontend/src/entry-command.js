@@ -32,7 +32,7 @@ export class EntryCommand extends Command {
             response = await http.put(`${API_ENTRIES_URL}/${this.entry.id}`, dto);
         } else {
             response = await http.post(API_ENTRIES_URL, dto);
-            this.entry.id = parse_location(response);
+            this.entry.id = parseInt(parse_location(response));
         }
         this.entry.user = dto.user;
         this.entry.title = dto.title;
