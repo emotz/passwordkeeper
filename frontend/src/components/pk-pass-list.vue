@@ -1,10 +1,6 @@
 <template>
     <div class="pk-pass-list panel panel-primary"
          :id="`pk-pass-list-${_uid}`">
-        <pk-pass-editor :show="editing_item !== undefined"
-                        :item="editing_item"
-                        @cancel="cancel_edit"
-                        @edit="apply_edit"></pk-pass-editor>
         <div class="panel-heading">
             <h3 class="panel-title">{{ $t('passlist.panel_title') }}</h3>
         </div>
@@ -27,7 +23,7 @@
                             <transition-group name="fade"
                                               tag="tbody">
                                 <tr v-for="(item, index) in filtered_items"
-                                    :key="item"
+                                    :key="item._id"
                                     :class="{danger: requires_attention(item)}">
                                     <td>{{ item.title }}</td>
                                     <td>{{ item.user }}</td>
@@ -46,7 +42,7 @@
                                     <td>
                                         <button :disabled="!can_edit(item)"
                                                 class="btn btn-default pk-btn-pass-edit"
-                                                @click="editing_item = item"><span class="fa fa-edit"></span></button>
+                                                @click="edit(item)"><span class="fa fa-edit"></span></button>
                                         <button v-if="is_removing(item)"
                                                 class="btn btn-danger pk-btn-pass-remove"
                                                 disabled><span class="fa fa-remove fa-spin"></span></button>

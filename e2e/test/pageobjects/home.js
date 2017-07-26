@@ -3,6 +3,7 @@ const Page = require('./page.js');
 class HomePage extends Page {
     get passEntriesSelector() { return '.pk-pass-list tbody tr'; }
     /////////////////////////////////////////
+    get modalButtonOk() { return browser.$('.btn-modal-ok'); }
     get searchInput() { return browser.$('.pk-pass-filter-input'); }
     get lastPassEntry() { return browser.$('.pk-pass-list tbody tr:last-child'); }
     get passEntries() { return browser.$$(this.passEntriesSelector); }
@@ -33,7 +34,7 @@ class HomePage extends Page {
         editor.$('.pk-title-input').setValue(pass.title);
         editor.$('.pk-user-input').setValue(pass.user);
         editor.$('.pk-pass-input').setValue(pass.password);
-        editor.$('.pk-btn-editor-ok').click();
+        editor.$('.btn-modal-ok').click();
         editor.waitForVisible(undefined, true);
     }
     removePass(pass) {
@@ -53,6 +54,8 @@ class HomePage extends Page {
     }
     refreshAllPasses() {
         browser.click('.pk-btn-refresh-all-pass');
+        this.modalButtonOk.waitForEnabled();
+        this.modalButtonOk.click();
         this.waitForSuccessNotification("Items fetched.");
     }
     waitForPass(pass, ...args) {

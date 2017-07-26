@@ -83,6 +83,11 @@ Vagrant.configure("2") do |config|
   #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
   # end
 
+  config.vm.provider "virtualbox" do |vb|
+    # Customize the amount of memory on the VM:
+    vb.memory = "1024"
+  end
+
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
@@ -120,11 +125,14 @@ Vagrant.configure("2") do |config|
     apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
   SHELL
   config.vm.provision "shell", name: "Preparing postgres", path: "vagrant/postgres.sh"
-  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", keep_color: true, inline: <<-SHELL
+  config.vm.provision "shell", name: "Preparing app", privileged: false, run: "always", inline: <<-SHELL
     cd /vagrant
 
     echo "Installing node modules (this will take a while)"
     npm install
+
+    # this is fcking retarted, it picks up phantomjs launcher from another package dependency
+    npm remove karma-phantomjs-launcher
 
     echo "Cleaning dist"
     npm run clean -s

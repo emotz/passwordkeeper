@@ -42,8 +42,9 @@ Selenium as engine.
 
 ## Vagrant setup (for Windows host)
 
-If you already have *VirtualBox*, *Vagrant* and *OpenSSH* installed, you can
-skip this section and move to `Build & Run`.
+If you already have *VirtualBox* (required version > 5.1.20 because of bug in
+that version), *Vagrant* and *OpenSSH* installed, you can skip this section and
+move to `Build & Run`.
 
 *Optional*: Install [choco](https://chocolatey.org/) - package manager for
 Windows to simplify installation process by executing following command:
@@ -117,12 +118,16 @@ vagrant up
 watches and dev servers. You are ready to go! Open `http://localhost:8000` in
 your browser.
 
+## Debug
+
 To debug with *VSCode*:
 
 Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
 
-Open project in *VSCode*, press `ctrl-shift-d`, select `Both` for launch
+Open project in *VSCode*, press `ctrl-shift-d`, select `Launch frontend` for launch
 configuration and press `f5`.
+
+*Note*: attaching to backend does not work yet.
 
 ## Linting
 
