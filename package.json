@@ -19,7 +19,7 @@
     "passport-local": "^1.0.0",
     "pg": "^6.4.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.3.2",
+    "sequelize": "^4.4.2",
     "toastr": "^2.1.2",
     "vue": "^2.2.4",
     "vue-bootstrap-modal": "git+https://github.com/emotz/vue-bootstrap-modal#6412f93ee765f322e8a4ae1a54e7a8f13a2a42f3",

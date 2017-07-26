@@ -13,3 +13,7 @@ services:
     tty: true
   postgres:
     image: postgres:latest
+    environment:
+     POSTGRES_USER: 'vagrant'
+     POSTGRES_PASSWORD: 'vagrant'
+     POSTGRES_DB: 'pkeeper'

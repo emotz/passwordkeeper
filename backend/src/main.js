@@ -15,9 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-app.get('/api/entries', function(req, res, next) {
-    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
-        if (err) {
+
             res.statusCode = 401;
             return res.send({ error: 'Server error: ' + err });
         }

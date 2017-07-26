@@ -1,4 +1,8 @@
-FROM node:latest
+FROM debian:jessie
+
+RUN apt-get update && apt-get install -y locales wget sudo net-tools ca-certificates && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
 
 #Creating env for container
 RUN echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
@@ -20,28 +24,6 @@ RUN	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
 RUN apt-get update
 RUN apt-get install -y -t jessie-backports openjdk-8-jre
 RUN apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc
-#RUN apt-get install -y postgresql postgresql-client
-	
-#RUN echo "Starting PostgreSQL server"
-#RUN service postgresql restart
-#RUN sleep 3
-
-RUN ["mkdir", "/docker-entrypoint-initdb.d"]
-ADD init-user-db.sh /docker-entrypoint-initdb.d/
-
-#RUN /etc/init.d/postgresql stop -- -m smart &&\
-#sleep 30 &&\
-#	/etc/init.d/postgresql start &&\
-#	sleep 60 &&\
-#   psql --command "CREATE USER vagrant WITH SUPERUSER PASSWORD 'vagrant';" &&\
-#  createdb -O docker pkeeper
-
-#RUN echo "listen_addresses='*'" >> /etc/postgresql/9.6/main/postgresql.conf
-#RUN /etc/init.d/postgresql start
-#RUN su postgres sh postgres -c "createuser -d -l -r -s -w -i vagrant"
-#RUN psql -p 5432 -h localhost --command "CREATE USER vagrant WITH SUPERUSER PASSWORD 'vagrant';"
-#RUN createdb -O vagrant pkeeper
-#RUN su postgres -c "createuser -d -l -r -s -w -i vagrant"
 
 # Create app directory
 RUN mkdir -p /usr/src/passwordkeeper
@@ -54,13 +36,8 @@ RUN npm install
 # Bundle app source
 COPY . /usr/src/passwordkeeper
 
-#RUN echo "Cleaning dist"
+# Cleaning dist
 RUN npm run clean -s
 
-#RUN mkdir /usr/src/passwordkeeper/logs
-#CMD npm run nodemon -L --watch backend -x 'node --debug --harmony' backend/src/main.js
-#RUN npm run-script parallelshell 'npm run dev -s' 'npm run build:watch -s' 'npm run backend -s'
-CMD npm run watch -s > logs/watch.log 2>&1 &
-#RUN npm run ./backend/src/main.js
-#RUN npm run /usr/src/passwordkeeper/backend/src/main.js
-#watch -s > /usr/src/passwordkeeper/logs/watch.log 2>&1 &
+CMD ["npm", "run" ,"watch" ,"-s"]
+# ">", "/usr/src/passwordkeeper/logs/watch.log"]
