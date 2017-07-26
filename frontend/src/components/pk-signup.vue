@@ -4,6 +4,10 @@
         <modal :show="true"
                @ok="ok"
                @cancel="cancel">
+            <span slot="title">{{ $t('signup_title') }}</span>
+            <span slot="button_ok">{{ $t('button_ok') }}</span>
+            <span slot="button_cancel">{{ $t('button_cancel') }}</span>
+
             <div class="form-group">
                 <label class="control-label"
                        :for="`pk-username-input-${_uid}`">{{ $t('label_username') }}</label>
