@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-
             res.statusCode = 401;
             return res.send({ error: 'Server error: ' + err });
         }
