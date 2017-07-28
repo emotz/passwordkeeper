@@ -15,6 +15,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
+app.get('/api/entries', function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
+        if (err) {
             res.statusCode = 401;
             return res.send({ error: 'Server error: ' + err });
         }
@@ -30,6 +33,8 @@ app.use(passport.initialize());
     })(req, res, next);
 });
 
+app.get('/api/entries/:id', async function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         try {
             const passEntryOne = await passEntry.findOne({ where: { id: res.params[0] } });
             return res.send(passEntryOne);
