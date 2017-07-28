@@ -4,8 +4,11 @@ Simple storage for passwords. Uses VueJS for front-end.
 
 ## Tech description
 
-`Vagrantfile` is a configuration file for `Vagrant`. It is used to provide
-conservative environment amongst developers machines.
+`Dockerfile` is a configuration file for `Docker`. It is used to build docker
+image and provide conservative environment amongst developers machines.
+
+`docker-compose.yml` is a configuration file for `docker-compose`. It is used to connect
+containers between themselvse and attach them to each other.
 
 `jsconfig.json` is a Visual Studio Code file for project definition. There are
 number of those files amongst the project to separate execution context.
@@ -40,94 +43,63 @@ Route-handlers are located at `frontend/server-mocks/src`.
 `WebDriverIO` is used to run end-to-end tests (full-stack tests). It uses
 Selenium as engine.
 
-## Vagrant setup (for Windows host)
+## Docker setup (for Windows host)
 
-If you already have *VirtualBox* (required version > 5.1.20 because of bug in
-that version), *Vagrant* and *OpenSSH* installed, you can skip this section and
-move to `Build & Run`.
+If you already have *Docker* installed, you can
+skip this section and move to `Build & Run`.
 
-*Optional*: Install [choco](https://chocolatey.org/) - package manager for
-Windows to simplify installation process by executing following command:
+If your operation system is `Windows 10 Pro` and your processor supports `Hyper-V` technology,
+you can install `Docker for Windows` from [here](https://docs.docker.com/docker-for-windows/install/).
+Reccomends to install `stable` version.
 
-```bat
-:: elevated CMD (with Administrator rights):
-
-@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-refreshenv
-```
-
-Install [Vagrant](https://www.vagrantup.com/),
-[VirtualBox](https://www.virtualbox.org/), and *OpenSSH*:
-
-*Notice*: If you have *PUTTY* ssh installed, you might need to move *OpenSSH*
-before *PUTTY* in **PATH**
+Else, you must install `Docker Toolbox` from [here](https://docs.docker.com/toolbox/toolbox_install_windows/).
+After install for checking docker workability you can enter windows command line and then
 
 ```bat
-:: elevated CMD (with Administrator rights):
-
-choco install vagrant
-choco install virtualbox
-choco install openssh
+docker info
 ```
 
-You might need to reboot after installing virtualbox.
+You must have Hyper-V technology enabled or docker enables it in installing process.
+If you want to enable `Hyper-V` technology before installing, how to do it you can read [here](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v).
 
-Since virtual machines are taking a lot of disk space, you probably want to move
-them out of system drive.
+You might need to reboot after installing docker.
 
-To do that with *VirtualBox*, open up `Oracle VM VirtualBox` manager and press
-`Settings` button. There select `General` and adjust vm location.
-
-To move *Vagrant* files to another drive, you need to change **VAGRANT_HOME**
-env variable:
-
-![Changing VAGRANT_HOME](/doc/vagrant_home.png?raw=true "Changing VAGRANT_HOME")
-
-Set up *Vagrant*:
-
-```bat
-:: ordinal CMD (without Administrator rights):
-
-vagrant plugin install vagrant-vbguest
-```
+Docker has a virtual hard disk where it stores its containers.
+It takes a lot of space. If you want to move it open up Docker `Settings`, then select
+`Advanced` and adjust VHD location by setting `Images and volumes VHD location` parameter.
 
 ## Build & Run
 
-Firstly finish `Vagrant setup` section.
+Firstly finish `Docker setup` section.
 
 Then `cd` into project root directory.
 
 And then
 
 ```bat
-vagrant up
+docker-compose up --build
 ```
 
 This will take ~25-30 min to finish.
 
-All future start-ups should be like following, without `vagrant provision` (and much
-faster than first one):
+All future start-ups should be like following (and much faster than first one):
 
 ```bat
-vagrant up
+docker-compose up
 ```
 
-(wait about 15 secs after `vagrant up` is finished for build to complete)
+(wait about 30 secs after `docker-compose up` is finished for build to complete)
 
-`vagrant up` command makes Vagrant to launch virtual machine, set up all builds,
+`docker-compose up` command makes Docker to start containers, attaching them to themselfes, set up all builds,
 watches and dev servers. You are ready to go! Open `http://localhost:8000` in
 your browser.
-
-## Debug
 
 To debug with *VSCode*:
 
 Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
 
-Open project in *VSCode*, press `ctrl-shift-d`, select `Launch frontend` for launch
+Open project in *VSCode*, press `ctrl-shift-d`, select `Both` for launch
 configuration and press `f5`.
-
-*Note*: attaching to backend does not work yet.
 
 ## Linting
 
@@ -137,11 +109,11 @@ editor access to the tools like `eslint`. After that (or if you installed
 
 ## Advanced: Build & Run
 
-For more precise control, after `vagrant up` you can ssh into virtual machine by
+For more precise control, after `docker-compose up` you can ssh into virtual machine by
 using
 
 ```bat
-vagrant ssh
+docker exec -it passwordkeeper_passwordkeeper_1 bash
 ```
 
 While you are in ssh, you can do other commands, listed below (or simply do `npm
@@ -149,7 +121,7 @@ run` to get list of available scripts to run).
 
 ### Build
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 ```bat
 NODE_ENV=development
@@ -158,7 +130,7 @@ npm run build
 
 ### Start dev server
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 ```bat
 npm run dev
@@ -166,7 +138,7 @@ npm run dev
 
 ### Run unit tests
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 ```bat
 npm run test-unit
@@ -182,7 +154,7 @@ npm run test-unit:watch
 
 ### Run e2e tests
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 *Notice*: First start will take quite a bit of time because it downloads selenium and chrome driver.
 
@@ -194,7 +166,7 @@ npm run test-e2e
 
 ### Run all tests
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 ```bat
 npm run test
@@ -204,7 +176,7 @@ npm run test
 
 ### Production build
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 ```bat
 NODE_ENV=production
@@ -213,7 +185,7 @@ npm run build
 
 ### Clean
 
-*Warn*: Don't forget to `vagrant ssh`
+*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
 
 ```bat
 npm run clean

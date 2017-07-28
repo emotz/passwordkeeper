@@ -1,8 +1,10 @@
-version: '3'
+version: '2'
 
 services:
   passwordkeeper:
-    build: .
+    build:
+     context: .
+     dockerfile: Dockerfile
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
@@ -22,3 +24,33 @@ services:
      POSTGRES_USER: 'vagrant'
      POSTGRES_PASSWORD: 'vagrant'
      POSTGRES_DB: 'pkeeper'
+  test-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/node_modules
+    depends_on:
+     - postgres
+    expose:
+     - "1337"
+     - "8000"
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./wait-for-it.sh --timeout=60 test-database:5432 test-server:1337 -- npm run test-e2e
+    volumes:
+      - ./e2e:/e2e
+    depends_on:
+      - test-server
+      - postgres
+      - selenium
+
+  selenium:
+    image: selenium/standalone-chrome-debug
+    expose:
+     - "4444"
+    ports:
+     - 5901:5900
