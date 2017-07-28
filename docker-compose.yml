@@ -5,6 +5,7 @@ services:
     build: .
     volumes:
      - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/node_modules
     depends_on:
      - postgres
     ports:
