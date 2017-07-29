@@ -40,9 +40,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ./wait-for-it.sh --timeout=60 test-database:5432 test-server:1337 -- npm run test-e2e
     volumes:
       - ./e2e:/e2e
+    command: ./wait-for-it.sh --timeout=60 test-database:5432 test-server:1337 -- npm run test-e2e
     depends_on:
       - test-server
       - postgres

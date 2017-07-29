@@ -2,6 +2,8 @@
 
 exports.config = {
 
+    host: 'selenium',
+    port: 4444,
     //
     // ==================
     // Specify Test Files
@@ -79,7 +81,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: 'http://localhost:1337',
+    baseUrl: 'http://test-server:1337',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 2000,
