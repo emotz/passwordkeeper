@@ -77,7 +77,7 @@ Then `cd` into project root directory.
 And then
 
 ```bat
-docker-compose up --build
+docker-compose build
 ```
 
 This will take ~25-30 min to finish.
@@ -85,13 +85,13 @@ This will take ~25-30 min to finish.
 All future start-ups should be like following (and much faster than first one):
 
 ```bat
-docker-compose up
+docker-compose up passwordkeeper
 ```
 
-(wait about 30 secs after `docker-compose up` is finished for build to complete)
+(wait about 30 secs after `docker-compose up passwordkeeper` is finished for build to complete)
 
-`docker-compose up` command makes Docker to start containers, attaching them to themselfes, set up all builds,
-watches and dev servers. You are ready to go! Open `http://localhost:8000` in
+`docker-compose up passwordkeeper` command makes Docker to start containers, attaching them to themselfes, set up all builds,
+watches and dev servers. You are ready to go! Open `http://localhost:1337` in
 your browser.
 
 To debug with *VSCode*:
@@ -109,7 +109,7 @@ editor access to the tools like `eslint`. After that (or if you installed
 
 ## Advanced: Build & Run
 
-For more precise control, after `docker-compose up` you can ssh into virtual machine by
+For more precise control, after `docker-compose up passwordkeeper` you can ssh into virtual machine by
 using
 
 ```bat
@@ -154,7 +154,7 @@ npm run test-unit:watch
 
 ### Run e2e tests
 
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
+*Warn*: Don't forget to `docker-compose run test-runner`
 
 *Notice*: First start will take quite a bit of time because it downloads selenium and chrome driver.
 
