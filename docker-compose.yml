@@ -11,7 +11,6 @@ services:
     depends_on:
      - postgres
     ports:
-     - "8000:8000"
      - "1337:1337"
      - "4444:4444"
      - "35729:35729"
@@ -35,7 +34,6 @@ services:
      - postgres
     expose:
      - "1337"
-     - "8000"
   test-runner:
     build:
       context: .
