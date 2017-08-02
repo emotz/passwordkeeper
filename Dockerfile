@@ -16,11 +16,6 @@ RUN echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | \
 # Add NodeJS to the apt-get source list
 RUN wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
 
-# Add PostgreSQL to the apt-get source list
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list 
-RUN	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
-	apt-key add -
-
 RUN apt-get update
 RUN apt-get install -y -t jessie-backports openjdk-8-jre
 RUN apt-get install -y nodejs git g++ build-essential google-chrome-stable xvfb x11vnc

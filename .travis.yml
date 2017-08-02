@@ -5,8 +5,8 @@ language: node_js
 services:
   - docker
 before_install:
-- docker-compose build
-- docker-compose run passwordkeeper
+  - docker-compose build
+  - docker compose run passwordkeeper npm run bild
+  - docker compose run passwordkeeper npm run test-unit
+  - docker compose run test-runner
 
-script:
-- npm run watch -s
