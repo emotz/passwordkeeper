@@ -94,7 +94,9 @@ docker-compose up passwordkeeper
 watches and dev servers. You are ready to go! Open `http://localhost:1337` in
 your browser.
 
-To debug with *VSCode*:
+## Debug
+
+### VSCode
 
 Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
 

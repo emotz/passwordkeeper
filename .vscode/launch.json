@@ -11,20 +11,21 @@
     ],
     "configurations": [
         {
+            "name": "Attach to backend",
             "type": "node",
             "request": "attach",
-            "name": "Attach to backend",
-            "port": 5858,
-            "protocol": "legacy",
+            "port": 9229,
+            "address": "localhost",
+            "restart": true,
+            "sourceMaps": false,
             "localRoot": "${workspaceRoot}",
-            "remoteRoot": "/vagrant",
-            "restart": true
+            "remoteRoot": "/usr/src/passwordkeeper"
         },
         {
             "name": "Launch frontend",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:8000",
+            "url": "http://localhost:1337",
             "webRoot": "${workspaceRoot}/frontend/dist",
             "sourceMapPathOverrides": {
                 "webpack:///./*": "${workspaceRoot}/frontend/*", // Example: "webpack:///./src/app.js" -> "/users/me/project/src/app.js",

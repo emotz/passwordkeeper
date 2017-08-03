@@ -69,7 +69,7 @@
   },
   "scripts": {
     "backend": "node --harmony backend/src/main.js",
-    "backend:watch": "nodemon -L --watch backend -x 'node --debug --harmony' backend/src/main.js",
+    "backend:watch": "nodemon -L --watch backend -x 'node --inspect=0.0.0.0:9229 --harmony' backend/src/main.js",
     "build": "cd frontend && webpack --config vendor.webpack.config.js && webpack",
     "build:watch": "cd frontend && webpack --config vendor.webpack.config.js && webpack-runner --config=webpack.config.js --watch",
     "watch": "parallelshell 'npm run build:watch -s' 'npm run backend:watch -s'",
