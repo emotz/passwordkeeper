@@ -177,7 +177,7 @@ app.use(function(err, req, res, next) {
     return;
 });
 
-app.listen(1337, function() {
+app.listen(process.env.PORT || 1337, function() {
     //console.log('Express server listening on port 1337');
     return;
 });
