@@ -20,4 +20,4 @@ ENV NODE_ENV $nodeenv
 
 RUN npm run build
 
-CMD ["./launch.sh"]
+CMD ["bash", "./launch.sh"]
