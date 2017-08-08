@@ -15,7 +15,7 @@ COPY . /usr/src/passwordkeeper
 RUN npm run clean -s
 
 ARG nodeenv
-#ARG nodeenv=development
+ARG nodeenv=development
 ENV NODE_ENV $nodeenv
 
 RUN npm run build
