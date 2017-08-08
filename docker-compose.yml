@@ -48,7 +48,7 @@ services:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
     environment:
-     NODE_ENV: development
+     NODE_ENV: production
     depends_on:
      - postgres
     expose:
