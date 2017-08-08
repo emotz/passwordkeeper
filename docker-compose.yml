@@ -5,7 +5,6 @@ services:
     build:
      context: .
      dockerfile: Dockerfile
-    command: ["npm", "run" ,"watch" ,"-s"]
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
@@ -22,8 +21,6 @@ services:
   web:
     build:
      context: .
-     dockerfile: Dockerfile
-    command: npm run backend
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
@@ -47,7 +44,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: npm run watch -s
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules

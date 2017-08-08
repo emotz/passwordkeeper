@@ -1,8 +1,9 @@
 describe('main', function() {
     browser.windowHandleSize({ width: 1920, height: 1080 });
 
-    const USER = 'myuser';
+    const USER = 'myuseruser';
     const PASS = 'mypassmypass';
+    const EMAIL = 'myemail@myemail.ru';
 
     describe('login', function() {
         const Page = require('./pageobjects/page.js');
@@ -17,7 +18,7 @@ describe('main', function() {
             page.waitForFailedLogin();
         });
         it('should signup', function() {
-            page.signup(USER, PASS, 'myemail');
+            page.signup(USER, PASS, EMAIL);
             page.waitForSuccessSignup();
         });
         it('should login and logout', function() {

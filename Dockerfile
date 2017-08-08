@@ -13,3 +13,11 @@ COPY . /usr/src/passwordkeeper
 
 # Cleaning dist
 RUN npm run clean -s
+
+ARG nodeenv
+ARG nodeenv=development
+ENV NODE_ENV $nodeenv
+
+RUN npm run build
+
+CMD ["./launch.sh"]

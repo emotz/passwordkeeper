@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/emotz/passwordkeeper.svg?branch=master)](https://travis-ci.org/emotz/passwordkeeper)
+
 # PasswordKeeper
 
 Simple storage for passwords. Uses VueJS for front-end.
