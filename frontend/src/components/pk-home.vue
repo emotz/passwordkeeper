@@ -1,6 +1,7 @@
 <template>
     <div class="pk-home"
          :id="`pk-home-${_uid}`">
+         <p>!!test!!</p>
         <div class="jumbotron">
             <h1 v-html="$t('home.greeting')"></h1>
             <p>

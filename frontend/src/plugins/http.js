@@ -12,5 +12,5 @@ export function msg_for_error_response(response) {
 }
 
 export function parse_location(response) {
-    return response.headers.map.Location[0].split('/')[3];
+    return response.headers.map.location[0].split('/')[3];
 }
