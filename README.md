@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/emotz/passwordkeeper.svg?branch=master)](https://travis-ci.org/emotz/passwordkeeper)
+[![Build Status](https://travis-ci.org/emotz/passwordkeeper.svg?branch=v1.0)](https://travis-ci.org/emotz/passwordkeeper)
 
 # PasswordKeeper
 
