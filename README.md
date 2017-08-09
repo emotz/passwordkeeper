@@ -6,11 +6,11 @@ Simple storage for passwords. Uses VueJS for front-end.
 
 ## Tech description
 
-`Dockerfile` is a configuration file for `Docker`. It is used to build docker
+`Dockerfile.*` are configuration files for `Docker`. They are used to build docker
 image and provide conservative environment amongst developers machines.
 
 `docker-compose.yml` is a configuration file for `docker-compose`. It is used to connect
-containers between themselvse and attach them to each other.
+containers between themselves and attach them to each other.
 
 `jsconfig.json` is a Visual Studio Code file for project definition. There are
 number of those files amongst the project to separate execution context.
@@ -52,7 +52,7 @@ skip this section and move to `Build & Run`.
 
 If your operation system is `Windows 10 Pro` and your processor supports `Hyper-V` technology,
 you can install `Docker for Windows` from [here](https://docs.docker.com/docker-for-windows/install/).
-Reccomends to install `stable` version.
+It is recommended to install `stable` version.
 
 Else, you must install `Docker Toolbox` from [here](https://docs.docker.com/toolbox/toolbox_install_windows/).
 After install for checking docker workability you can enter windows command line and then
@@ -79,22 +79,16 @@ Then `cd` into project root directory.
 And then
 
 ```bat
-docker-compose build
+docker-compose up backend
 ```
 
 This will take ~25-30 min to finish.
 
-All future start-ups should be like following (and much faster than first one):
+All future start-ups should be much faster than first one.
 
-```bat
-docker-compose up passwordkeeper
-```
-
-(wait about 30 secs after `docker-compose up passwordkeeper` is finished for build to complete)
-
-`docker-compose up passwordkeeper` command makes Docker to start containers, attaching them to themselfes, set up all builds,
-watches and dev servers. You are ready to go! Open `http://localhost:1337` in
-your browser.
+`docker-compose up backend` command makes Docker to start containers, attaching
+them to themselves, set up all builds, watches and dev servers. You are ready to
+go! Open `http://localhost:1337` in your browser.
 
 ## Debug
 
@@ -111,87 +105,53 @@ You probably want to `npm install` from your host machine as well to have your
 editor access to the tools like `eslint`. After that (or if you installed
 `eslint` globally) you can do `npm run lint -s` to lint the entire project.
 
-## Advanced: Build & Run
+<!-- ## Advanced: Build & Run -->
 
-For more precise control, after `docker-compose up passwordkeeper` you can ssh into virtual machine by
-using
+<!-- For more precise control, after `docker-compose up passwordkeeper` you can ssh into virtual machine by -->
+<!-- using -->
 
-```bat
-docker exec -it passwordkeeper_passwordkeeper_1 bash
-```
+<!-- ```bat -->
+<!-- docker exec -it passwordkeeper_passwordkeeper_1 bash -->
+<!-- ``` -->
 
-While you are in ssh, you can do other commands, listed below (or simply do `npm
-run` to get list of available scripts to run).
+<!-- While you are in ssh, you can do other commands, listed below (or simply do `npm -->
+<!-- run` to get list of available scripts to run). -->
 
-### Build
+<!-- ### Build -->
 
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
+<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
 
-```bat
-NODE_ENV=development
-npm run build
-```
-
-### Start dev server
-
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
-
-```bat
-npm run dev
-```
+<!-- ```bat -->
+<!-- NODE_ENV=development -->
+<!-- npm run build -->
+<!-- ``` -->
 
 ### Run unit tests
 
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
-
 ```bat
-npm run test-unit
-```
-
-*Notice*: It doesn't build the project, it builds only tests.
-
-To watch on the unit-test:
-
-```bat
-npm run test-unit:watch
+docker-compose run frontend npm run test-unit
 ```
 
 ### Run e2e tests
 
-*Warn*: Don't forget to `docker-compose run test-runner`
-
-*Notice*: First start will take quite a bit of time because it downloads selenium and chrome driver.
-
 ```bat
-npm run test-e2e
+docker-compose run test-runner
 ```
 
-*Notice*: It doesn't build the project
+<!-- ### Production build -->
 
-### Run all tests
+<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
 
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
+<!-- ```bat -->
+<!-- NODE_ENV=production -->
+<!-- npm run build -->
+<!-- ``` -->
 
-```bat
-npm run test
-```
+<!-- ### Clean -->
 
-*Notice*: It doesn't build the project
+<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
 
-### Production build
-
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
-
-```bat
-NODE_ENV=production
-npm run build
-```
-
-### Clean
-
-*Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash`
-
-```bat
-npm run clean
-```
+<!-- ```bat -->
+<!-- npm run clean -->
+<!-- ``` -->
 

@@ -1,73 +1,59 @@
 version: '2'
 
 services:
-  passwordkeeper:
-    build:
-     context: .
-     dockerfile: Dockerfile
-    volumes:
-     - .:/usr/src/passwordkeeper
-     - /usr/src/passwordkeeper/node_modules
-    depends_on:
-     - postgres
-    environment:
-     NODE_ENV: development
-    ports:
-     - "1337:1337"
-     - "4444:4444"
-     - "35729:35729"
-     - "9229:9229"
-     - "5900:5900"
-  web:
-    build:
-     context: .
-    volumes:
-     - .:/usr/src/passwordkeeper
-     - /usr/src/passwordkeeper/node_modules
-    depends_on:
-     - postgres
-    environment:
-     NODE_ENV: production
-    ports:
-     - "1337:1337"
-     - "4444:4444"
-     - "35729:35729"
-     - "9229:9229"
-     - "5900:5900"
+  # NON-watch workflow
   postgres:
     image: postgres:latest
     environment:
      POSTGRES_USER: 'vagrant'
      POSTGRES_PASSWORD: 'vagrant'
      POSTGRES_DB: 'pkeeper'
-  test-server:
+  frontend:
     build:
-      context: .
-      dockerfile: Dockerfile
+     context: .
+     dockerfile: Dockerfile.frontend
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
-    environment:
-     NODE_ENV: development
+    ports:
+     - "35729:35729" # livereload
+  backend:
+    build:
+     context: .
+     dockerfile: Dockerfile.backend
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/node_modules
+    ports:
+     - "1337:1337" # main app port
+     - "9229:9229" # node debug
     depends_on:
      - postgres
-    expose:
-     - "1337"
+     - frontend
+  # NON-watch tests
+  test-server:
+    build:
+     context: .
+     dockerfile: Dockerfile.backend
+    image: passwordkeeper_backend
+    ports:
+     - "1337:1337" # port for testing app
+    depends_on:
+     - postgres
+     - frontend
   test-runner:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.e2e
     volumes:
-      - ./e2e:/e2edocker
-    command: npm run test-e2e
+      - ./e2e:/usr/src/passwordkeeper/e2e
+      - /usr/src/passwordkeeper/e2e/node_modules
     depends_on:
-      - test-server
-      - postgres
+      - test-server 
       - selenium
-
   selenium:
     image: selenium/standalone-chrome-debug
     expose:
      - "4444"
     ports:
-     - 5901:5900
+     - 5900:5900
