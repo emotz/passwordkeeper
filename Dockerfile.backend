@@ -1,4 +1,5 @@
-FROM passwordkeeper/frontend as frontend
+# HACK: I would use multistage build, but travis has old version of docker
+# FROM passwordkeeper/frontend as frontend
 
 FROM passwordkeeper/base
 
@@ -8,7 +9,8 @@ COPY package.json .
 RUN npm install
 
 COPY backend backend
-COPY --from=frontend /usr/src/passwordkeeper/frontend/dist frontend/dist
+# COPY --from=frontend /usr/src/passwordkeeper/frontend/dist frontend/dist
+COPY frontend/dist frontend/dist
 
 COPY launch.backend.sh wait-for-it.sh ./
 ENTRYPOINT ["bash", "./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]

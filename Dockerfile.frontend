@@ -7,6 +7,4 @@ WORKDIR /usr/src/passwordkeeper/frontend
 COPY frontend .
 RUN npm install
 
-RUN npm run build
-
 CMD ["npm", "run", "build:watch"]

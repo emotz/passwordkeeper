@@ -36,13 +36,14 @@ services:
      - 9229:9229 # node debug
     depends_on:
      - postgres
+     - frontend
   # karma tests
   karma-server:
     build:
      context: .
      dockerfile: Dockerfile.frontend
     image: passwordkeeper/frontend
-    command: npm run test
+    command: ./wait-for-it.sh -t 30 frontend:35729 -- npm run test
     volumes:
      - ./frontend:/usr/src/passwordkeeper/frontend
      - /usr/src/passwordkeeper/frontend/node_modules
@@ -50,6 +51,7 @@ services:
      - 9876
     depends_on:
      - karma-runner
+     - frontend
   karma-runner:
     build:
      context: .
@@ -73,6 +75,8 @@ services:
      - 1337 # port for testing app
     links:
      - test-postgres:postgres
+    depends_on:
+     - frontend
   test-runner:
     build:
       context: .
