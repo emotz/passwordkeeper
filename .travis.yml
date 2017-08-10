@@ -5,6 +5,7 @@ services:
 install:
 - docker --version
 - docker-compose build base
+- docker-compose up -d frontend
 script:
 - docker-compose up karma-server
 - docker-compose run --rm test-runner

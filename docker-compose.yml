@@ -19,7 +19,7 @@ services:
      dockerfile: Dockerfile.frontend
     image: passwordkeeper/frontend
     volumes:
-     - ./frontend:/usr/src/passwordkeeper/frontend
+     - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/frontend/node_modules
     ports:
      - 35729:35729 # livereload
@@ -43,15 +43,14 @@ services:
      context: .
      dockerfile: Dockerfile.frontend
     image: passwordkeeper/frontend
-    command: ./wait-for-it.sh -t 30 frontend:35729 -- npm run test
+    command: sh -c "npm run build && npm run test"
     volumes:
-     - ./frontend:/usr/src/passwordkeeper/frontend
+     - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/frontend/node_modules
     expose:
      - 9876
     depends_on:
      - karma-runner
-     - frontend
   karma-runner:
     build:
      context: .
@@ -83,7 +82,7 @@ services:
       dockerfile: Dockerfile.e2e
     image: passwordkeeper/test-runner
     volumes:
-      - ./e2e:/usr/src/passwordkeeper/e2e
+     - .:/usr/src/passwordkeeper
       - /usr/src/passwordkeeper/e2e/node_modules
     depends_on:
       - test-server 

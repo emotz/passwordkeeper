@@ -1,12 +1,12 @@
 #!/bin/bash
 case $NODE_ENV in
-    development )
-        npm run backend:watch
-        ;;
     production )
         npm run backend
         ;;
+    development )
+        npm run backend:watch
+        ;;
     * )
-        exit 1
+        npm run backend:watch
         ;;
 esac
