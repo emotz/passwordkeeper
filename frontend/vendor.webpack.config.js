@@ -16,7 +16,8 @@ const plugins = [
     })
 ];
 if (!isDev) {
-    plugins.push(new BabiliPlugin());
+    // TODO: https://github.com/emotz/passwordkeeper/issues/81
+    // plugins.push(new BabiliPlugin());
 }
 
 module.exports = {
