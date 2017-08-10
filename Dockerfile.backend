@@ -1,29 +1,15 @@
-FROM passwordkeeper_frontend as frontend
+FROM passwordkeeper/frontend as frontend
 
-FROM debian:jessie
+FROM passwordkeeper/base
 
-RUN apt-get update && apt-get install -y locales wget sudo net-tools ca-certificates && rm -rf /var/lib/apt/lists/* \
-    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
-# Add NodeJS to the apt-get source list
-RUN wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
-RUN apt-get update
-RUN apt-get install -y nodejs
-
-# Create app directory
 WORKDIR /usr/src/passwordkeeper
 
-# Install app dependencies
 COPY package.json .
-RUN npm install --only=production
+RUN npm install
 
-ARG nodeenv=development
-ENV NODE_ENV $nodeenv
-
-# Bundle app source
 COPY backend backend
 COPY --from=frontend /usr/src/passwordkeeper/frontend/dist frontend/dist
-# COPY launch.backend.sh .
 
-CMD ["npm", "run", "backend"]
-# CMD ["bash", "./launch.backend.sh"]
+COPY launch.backend.sh wait-for-it.sh ./
+ENTRYPOINT ["bash", "./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
+CMD ["bash", "./launch.backend.sh"]

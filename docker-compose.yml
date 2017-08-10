@@ -1,7 +1,12 @@
 version: '2'
 
 services:
-  # NON-watch workflow
+  # main
+  base:
+    build:
+     context: .
+     dockerfile: Dockerfile.base
+    image: passwordkeeper/base
   postgres:
     image: postgres:latest
     environment:
@@ -12,39 +17,67 @@ services:
     build:
      context: .
      dockerfile: Dockerfile.frontend
+    image: passwordkeeper/frontend
     volumes:
-     - .:/usr/src/passwordkeeper
-     - /usr/src/passwordkeeper/node_modules
+     - ./frontend:/usr/src/passwordkeeper/frontend
+     - /usr/src/passwordkeeper/frontend/node_modules
     ports:
-     - "35729:35729" # livereload
+     - 35729:35729 # livereload
   backend:
     build:
      context: .
      dockerfile: Dockerfile.backend
+    image: passwordkeeper/backend
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
     ports:
-     - "1337:1337" # main app port
-     - "9229:9229" # node debug
+     - 1337:1337 # main app port
+     - 9229:9229 # node debug
     depends_on:
      - postgres
-     - frontend
-  # NON-watch tests
+  # karma tests
+  karma-server:
+    build:
+     context: .
+     dockerfile: Dockerfile.frontend
+    image: passwordkeeper/frontend
+    command: npm run test
+    volumes:
+     - ./frontend:/usr/src/passwordkeeper/frontend
+     - /usr/src/passwordkeeper/frontend/node_modules
+    expose:
+     - 9876
+    depends_on:
+     - karma-runner
+  karma-runner:
+    build:
+     context: .
+     dockerfile: Dockerfile.karma-runner
+    image: passwordkeeper/karma-runner
+    cap_add:
+     - SYS_ADMIN
+  # e2e tests
+  test-postgres:
+    image: labianchin/docker-postgres-for-testing:latest
+    environment:
+     POSTGRES_USER: 'vagrant'
+     POSTGRES_PASSWORD: 'vagrant'
+     POSTGRES_DB: 'pkeeper'
   test-server:
     build:
      context: .
      dockerfile: Dockerfile.backend
-    image: passwordkeeper_backend
-    ports:
-     - "1337:1337" # port for testing app
-    depends_on:
-     - postgres
-     - frontend
+    image: passwordkeeper/backend
+    expose:
+     - 1337 # port for testing app
+    links:
+     - test-postgres:postgres
   test-runner:
     build:
       context: .
       dockerfile: Dockerfile.e2e
+    image: passwordkeeper/test-runner
     volumes:
       - ./e2e:/usr/src/passwordkeeper/e2e
       - /usr/src/passwordkeeper/e2e/node_modules
@@ -52,8 +85,8 @@ services:
       - test-server 
       - selenium
   selenium:
-    image: selenium/standalone-chrome-debug
+    image: selenium/standalone-chrome
     expose:
-     - "4444"
+     - 4444
     ports:
      - 5900:5900

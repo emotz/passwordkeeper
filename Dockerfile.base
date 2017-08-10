@@ -1,3 +1,4 @@
+
 FROM debian:jessie
 
 RUN apt-get update && apt-get install -y locales wget sudo net-tools ca-certificates && rm -rf /var/lib/apt/lists/* \
@@ -7,15 +8,3 @@ ENV LANG en_US.utf8
 RUN wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
 RUN apt-get update
 RUN apt-get install -y nodejs
-
-RUN apt-get install -y g++ build-essential
-# Create app directory
-WORKDIR /usr/src/passwordkeeper/e2e
-
-# Install app dependencies
-COPY e2e .
-RUN npm install
-
-COPY wait-for-it.sh ../
-ENTRYPOINT ["bash", "../wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
-CMD ["npm", "run", "test"]

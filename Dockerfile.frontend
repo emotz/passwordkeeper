@@ -1,38 +1,12 @@
-FROM debian:jessie
-
-RUN apt-get update && apt-get install -y locales wget sudo net-tools ca-certificates && rm -rf /var/lib/apt/lists/* \
-    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
-
-# Add NodeJS
-RUN wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
-RUN apt-get update
-RUN apt-get install -y nodejs
-
-# Add Google Chrome
-RUN wget -q -O - "https://dl-ssl.google.com/linux/linux_signing_key.pub" | apt-key add -
-
-RUN echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | \
-    tee /etc/apt/sources.list.d/google-chrome.list
-
-RUN apt-get update
-RUN apt-get install -y google-chrome-stable
+FROM passwordkeeper/base
 
 RUN apt-get install -y git
 
-WORKDIR /usr/src/passwordkeeper
+WORKDIR /usr/src/passwordkeeper/frontend
 
-# Install app dependencies
-COPY package.json .
+COPY frontend .
 RUN npm install
-
-# Must be AFTER npm install so that dev deps are installed even on production env
-ARG nodeenv=development
-ENV NODE_ENV $nodeenv
-
-# Bundle app source
-COPY frontend frontend
 
 RUN npm run build
 
-# CMD ["npm", "run", "build:watch"]
+CMD ["npm", "run", "build:watch"]

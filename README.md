@@ -37,11 +37,6 @@ There is also `frontend/test.webpack.config.js`. This is for building unit
 tests. They are first built into bundle `frontend/dist/test.bundle.js` and then
 this bundle is monitored by `karma` to run unit tests.
 
-Development server is `local-web-server`. It is simple http server, designed to
-be easily mockable and configurable for easy startup. Its config file along with
-registered routes is `frontend/server-mocks/.local-web-server.json`.
-Route-handlers are located at `frontend/server-mocks/src`.
-
 `WebDriverIO` is used to run end-to-end tests (full-stack tests). It uses
 Selenium as engine.
 
@@ -79,16 +74,21 @@ Then `cd` into project root directory.
 And then
 
 ```bat
-docker-compose up backend
+docker-compose up backend frontend
 ```
 
 This will take ~25-30 min to finish.
 
 All future start-ups should be much faster than first one.
 
-`docker-compose up backend` command makes Docker to start containers, attaching
-them to themselves, set up all builds, watches and dev servers. You are ready to
-go! Open `http://localhost:1337` in your browser.
+`docker-compose up frontend` command makes Docker to start container for the
+frontend, build it and set up watches on file changes to rebuild the UI and
+starts livereload server.
+
+`docker-compose up backend` command starts up the web
+server and other required services.
+
+You are ready to go! Open `http://localhost:1337` in your browser and enjoy!
 
 ## Debug
 
@@ -105,37 +105,34 @@ You probably want to `npm install` from your host machine as well to have your
 editor access to the tools like `eslint`. After that (or if you installed
 `eslint` globally) you can do `npm run lint -s` to lint the entire project.
 
-<!-- ## Advanced: Build & Run -->
+## Advanced: Build & Run
 
-<!-- For more precise control, after `docker-compose up passwordkeeper` you can ssh into virtual machine by -->
-<!-- using -->
+For more precise control, after `docker-compose up backend frontend` you can ssh
+into Docker by using
 
-<!-- ```bat -->
-<!-- docker exec -it passwordkeeper_passwordkeeper_1 bash -->
-<!-- ``` -->
+```bat
+docker-compose exec backend bash
+```
 
-<!-- While you are in ssh, you can do other commands, listed below (or simply do `npm -->
-<!-- run` to get list of available scripts to run). -->
+and
 
-<!-- ### Build -->
+```bat
+docker-compose exec frontend bash
+```
 
-<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
-
-<!-- ```bat -->
-<!-- NODE_ENV=development -->
-<!-- npm run build -->
-<!-- ``` -->
+While you are in ssh, you can do other commands - do `npm run` for available
+commands.
 
 ### Run unit tests
 
 ```bat
-docker-compose run frontend npm run test-unit
+docker-compose up karma-server & docker-compose stop karma-runner
 ```
 
 ### Run e2e tests
 
 ```bat
-docker-compose run test-runner
+docker-compose run --rm test-runner & docker-compose stop test-postgres test-server && docker-compose rm -f test-postgres
 ```
 
 <!-- ### Production build -->
