@@ -2,7 +2,8 @@ sudo: required
 language: node_js
 services:
 - docker
-install: true
+install:
+- docker-compose build base
 script:
 - docker-compose run --rm frontend npm run test
 - docker-compose up karma-server

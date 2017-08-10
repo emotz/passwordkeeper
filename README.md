@@ -74,6 +74,7 @@ Then `cd` into project root directory.
 And then
 
 ```bat
+docker-compose build base
 docker-compose up backend frontend
 ```
 
