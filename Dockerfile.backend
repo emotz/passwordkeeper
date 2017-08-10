@@ -3,6 +3,9 @@
 
 FROM passwordkeeper/base
 
+ARG NODE_ENV
+ENV NODE_ENV "$NODE_ENV"
+
 WORKDIR /usr/src/passwordkeeper
 
 COPY package.json .

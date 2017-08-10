@@ -27,6 +27,8 @@ services:
     build:
      context: .
      dockerfile: Dockerfile.backend
+     args:
+      - NODE_ENV
     image: passwordkeeper/backend
     command: ["bash", "./wait-for-it.sh", "-t", "30", "postgres:5432", "--", "bash", "./launch.backend.sh"]
     volumes:
@@ -58,7 +60,7 @@ services:
     # TODO: fix wait-for-it for several services - selenium+karma-server
     entrypoint: ["bash", "../wait-for-it.sh", "-t", "60", "karma-server:9876", "--", "npm", "run", "karma"]
     volumes:
-     - .:/usr/src/passwordkeeper
+      - .:/usr/src/passwordkeeper
       - /usr/src/passwordkeeper/e2e/node_modules
     depends_on:
       - selenium
