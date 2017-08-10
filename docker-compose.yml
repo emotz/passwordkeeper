@@ -28,6 +28,7 @@ services:
      context: .
      dockerfile: Dockerfile.backend
     image: passwordkeeper/backend
+    command: ["bash", "./wait-for-it.sh", "-t", "30", "postgres:5432", "--", "bash", "./launch.backend.sh"]
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
@@ -70,6 +71,7 @@ services:
      context: .
      dockerfile: Dockerfile.backend
     image: passwordkeeper/backend
+    command: ["bash", "./wait-for-it.sh", "-t", "30", "postgres:5432", "--", "bash", "./launch.backend.sh"]
     expose:
      - 1337 # port for testing app
     links:
