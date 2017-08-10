@@ -4,7 +4,9 @@ RUN apt-get install -y git
 
 WORKDIR /usr/src/passwordkeeper/frontend
 
-COPY frontend .
+COPY frontend/package.json .
 RUN npm install
+
+COPY frontend .
 
 CMD ["npm", "run", "build:watch"]

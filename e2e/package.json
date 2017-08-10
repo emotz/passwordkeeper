@@ -4,6 +4,7 @@
     "webdriverio": "^4.6.2"
   },
   "scripts": {
-    "test": "wdio"
+    "test": "wdio",
+    "karma": "wdio karma.wdio.conf.js"
   }
 }

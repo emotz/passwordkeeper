@@ -44,21 +44,25 @@ services:
      context: .
      dockerfile: Dockerfile.frontend
     image: passwordkeeper/frontend
-    command: sh -c "npm run build && npm run test"
+    command: npm run test
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/frontend/node_modules
-    expose:
-     - 9876
-    depends_on:
-     - karma-runner
+    ports:
+     - 9876:9876
   karma-runner:
     build:
-     context: .
-     dockerfile: Dockerfile.karma-runner
-    image: passwordkeeper/karma-runner
-    cap_add:
-     - SYS_ADMIN
+      context: .
+      dockerfile: Dockerfile.e2e
+    image: passwordkeeper/test-runner
+    # TODO: fix wait-for-it for several services - selenium+karma-server
+    entrypoint: ["bash", "../wait-for-it.sh", "-t", "60", "karma-server:9876", "--", "npm", "run", "karma"]
+    volumes:
+     - .:/usr/src/passwordkeeper
+      - /usr/src/passwordkeeper/e2e/node_modules
+    depends_on:
+      - selenium
+      - karma-server
   # e2e tests
   test-postgres:
     image: labianchin/docker-postgres-for-testing:latest

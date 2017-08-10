@@ -5,9 +5,10 @@ RUN apt-get install -y g++ build-essential
 WORKDIR /usr/src/passwordkeeper/e2e
 
 # Install app dependencies
-COPY e2e .
+COPY e2e/package.json .
 RUN npm install
 
+COPY e2e .
 COPY wait-for-it.sh ../
 ENTRYPOINT ["bash", "../wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
 CMD ["npm", "run", "test"]

@@ -3,10 +3,10 @@ language: node_js
 services:
 - docker
 install:
-- docker --version
 - docker-compose build base
 script:
 - docker-compose run --rm frontend npm run build
+- docker-compose up karma-server karma-runner
 - docker-compose run --rm test-runner
 env:
   global:
@@ -20,3 +20,4 @@ after_success:
 - docker tag passwordkeeper/backend registry.heroku.com/passwordkeeper/web
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" registry.heroku.com
 - docker push registry.heroku.com/passwordkeeper/web
+

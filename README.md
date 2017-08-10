@@ -127,7 +127,7 @@ commands.
 ### Run unit tests
 
 ```bat
-docker-compose up karma-server & docker-compose stop karma-runner
+docker-compose up karma-server karma-runner
 ```
 
 ### Run e2e tests
