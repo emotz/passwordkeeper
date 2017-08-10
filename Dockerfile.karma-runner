@@ -2,7 +2,7 @@ FROM yukinying/chrome-headless-browser
 
 COPY wait-for-it.sh ./
 
-ENTRYPOINT ["bash", "./wait-for-it.sh", "-t", "30", "karma-server:9876", "--"]
+ENTRYPOINT ["bash", "./wait-for-it.sh", "-t", "120", "karma-server:9876", "--"]
 CMD ["/usr/bin/dumb-init", "--", \
 "/usr/bin/google-chrome-unstable", \
 "--disable-gpu", \
