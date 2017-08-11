@@ -23,6 +23,10 @@
                             </select>
                         </div>
                     </div>
+                    <button class="btn btn-primary pk-btn-refresh-all-pass"
+                        @click="exportToCSV">
+                        Exports password to CSV file
+                    </button>
                 </div>
             </div>
         </div>

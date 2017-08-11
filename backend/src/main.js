@@ -7,10 +7,13 @@ const passEntry = require('./models/passentry').PassEntry;
 const user = require('./models/user').user;
 const passport = require('./libs/passport.js');
 const jwt = require('jsonwebtoken');
+const exportfile = require('./services/exportfile.js');
 
 const DIST_PATH = path.resolve('./frontend/dist');
+const PUBLICFS_PATH = path.resolve('./public');
 
 app.use(express.static(DIST_PATH));
+app.use(express.static(PUBLICFS_PATH));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
@@ -21,6 +24,7 @@ app.get('/api/entries', function(req, res, next) {
             res.statusCode = 401;
             return res.send({ error: 'Server error: ' + err });
         }
+        console.log(user);
         try {
             const passEntryList = await passEntry.findAll({ where: { userID: user.id } });
             res.statusCode = 201;
@@ -159,6 +163,22 @@ app.delete('/api/entries/:id', async function(req, res, next) {
     })(req, res, next);
 });
 
+app.get('/api/export', function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
+        try {
+            let filestr = await exportfile.ExportToCSV(user);
+            if (filestr == '') throw new Error('Cannot export passentry');
+            res.statusCode = 200;
+            return res.download(filestr);
+        }
+        catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
+        }
+    })(req, res, next);
+});
+
 app.get('*', function(req, res) {
     res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
@@ -178,6 +198,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(process.env.PORT || 1337, function() {
-    //console.log('Express server listening on port 1337');
     return;
 });
