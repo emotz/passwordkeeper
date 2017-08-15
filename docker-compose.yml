@@ -58,7 +58,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./e2e:/e2edocker
+      - ./e2e:/usr/src/passwordkeeper/e2e
     command: npm run test-e2e
     depends_on:
       - test-server
