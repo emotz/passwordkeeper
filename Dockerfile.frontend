@@ -1,6 +1,4 @@
-FROM passwordkeeper/base
-
-RUN apt-get install -y git
+FROM passwordkeeper/base-frontend:0.1
 
 WORKDIR /usr/src/passwordkeeper/frontend
 

@@ -1,6 +1,5 @@
-FROM passwordkeeper/base
+FROM passwordkeeper/base-e2e:0.l
 
-RUN apt-get install -y g++ build-essential
 # Create app directory
 WORKDIR /usr/src/passwordkeeper/e2e
 

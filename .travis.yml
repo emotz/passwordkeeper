@@ -3,7 +3,9 @@ language: node_js
 services:
 - docker
 install:
-- docker-compose build base
+- docker-compose pull base
+- docker-compose pull base-e2e
+- docker-compose pull base-frontend
 script:
 - docker-compose run --rm frontend npm run build
 - docker-compose up karma-server karma-runner

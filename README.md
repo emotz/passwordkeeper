@@ -74,13 +74,21 @@ Then `cd` into project root directory.
 And then
 
 ```bat
-docker-compose build base
+docker-compose pull base
+docker-compose pull base-e2e
+docker-compose pull base-frontend
 docker-compose up backend frontend
 ```
 
 This will take ~25-30 min to finish.
 
-All future start-ups should be much faster than first one.
+Future start-ups should be just
+
+```bat
+docker-compose up backend frontend
+```
+
+They will be much faster than first one.
 
 `docker-compose up frontend` command makes Docker to start container for the
 frontend, build it and set up watches on file changes to rebuild the UI and
