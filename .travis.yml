@@ -3,12 +3,10 @@ language: node_js
 services:
 - docker
 install:
-- docker-compose pull base
-- docker-compose pull base-e2e
-- docker-compose pull base-frontend
+- docker-compose pull base base-e2e base-frontend
 script:
 - docker-compose run --rm frontend npm run build
-- docker-compose run --rm backend npm run lint -s
+- docker-compose run --rm test-server npm run lint -s
 - docker-compose up karma-server karma-runner
 - docker-compose run --rm test-runner
 env:

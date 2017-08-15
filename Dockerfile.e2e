@@ -1,4 +1,4 @@
-FROM passwordkeeper/base-e2e:0.1
+FROM passwordkeeper/base-e2e:0.2
 
 # Create app directory
 WORKDIR /usr/src/passwordkeeper/e2e
@@ -8,6 +8,5 @@ COPY e2e/package.json .
 RUN npm install
 
 COPY e2e .
-COPY wait-for-it.sh ../
 ENTRYPOINT ["bash", "../wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
 CMD ["npm", "run", "test"]

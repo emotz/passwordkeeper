@@ -74,9 +74,7 @@ Then `cd` into project root directory.
 And then
 
 ```bat
-docker-compose pull base
-docker-compose pull base-e2e
-docker-compose pull base-frontend
+docker-compose pull base base-e2e base-frontend
 docker-compose up backend frontend
 ```
 
