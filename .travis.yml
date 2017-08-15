@@ -8,6 +8,7 @@ install:
 - docker-compose pull base-frontend
 script:
 - docker-compose run --rm frontend npm run build
+- docker-compose run --rm backend npm run lint -s
 - docker-compose up karma-server karma-runner
 - docker-compose run --rm test-runner
 env:

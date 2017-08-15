@@ -1,7 +1,8 @@
 /*eslint-env node */
 const webpack = require('webpack');
 const path = require('path');
-const BabiliPlugin = require("babili-webpack-plugin");
+// TODO: https://github.com/emotz/passwordkeeper/issues/81
+// const BabiliPlugin = require("babili-webpack-plugin");
 
 const isDev = process.env.NODE_ENV !== 'production';
 const plugins = [
