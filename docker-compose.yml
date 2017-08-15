@@ -103,6 +103,8 @@ services:
       context: .
       dockerfile: Dockerfile.e2e
     image: passwordkeeper/test-runner
+    entrypoint: ["bash", "../wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
+    command: [ "npm", "run", "test" ]
     volumes:
      - .:/usr/src/passwordkeeper
       - /usr/src/passwordkeeper/e2e/node_modules
