@@ -27,6 +27,10 @@
                         @click="exportToCSV">
                         Exports password to CSV file
                     </button>
+                    <button class="btn btn-primary pk-btn-refresh-all-pass"
+                        @click="exportToXML">
+                        Exports password to XML file
+                    </button>
                 </div>
             </div>
         </div>

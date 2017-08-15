@@ -163,10 +163,26 @@ app.delete('/api/entries/:id', async function(req, res, next) {
     })(req, res, next);
 });
 
-app.get('/api/export', function(req, res, next) {
+app.get('/api/export/csv', function(req, res, next) {
     return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
         try {
             let filestr = await exportfile.ExportToCSV(user);
+            if (filestr == '') throw new Error('Cannot export passentry');
+            res.statusCode = 200;
+            return res.download(filestr);
+        }
+        catch (err) {
+            res.statusCode = 500;
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
+            return res.send({ error: 'Server error' });
+        }
+    })(req, res, next);
+});
+
+app.get('/api/export/xml', function(req, res, next) {
+    return passport.authenticate('jwt', { session: 'false' }, async function(err, user, info) {
+        try {
+            let filestr = await exportfile.ExportToXML(user);
             if (filestr == '') throw new Error('Cannot export passentry');
             res.statusCode = 200;
             return res.download(filestr);

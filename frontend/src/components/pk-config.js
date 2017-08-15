@@ -20,9 +20,9 @@ export default {
     methods: {
         exportToCSV() {
             //try {
-                let response = http.get('api/export',
+                let response = http.get('api/export/csv',
                     {},
-                    //{responseType: 'arraybuffer'}
+                    {responseType: 'arraybuffer'}
                 ).then(function (response) {
                     var headers = response.headers;
                     var blob = new Blob([response.data],{type:response.headers.get('content-type')});
@@ -48,6 +48,23 @@ export default {
                 console.log(err);
                 return;
             }*/
+        },
+        exportToXML() {
+        //try {
+            let response = http.get('api/export/xml',
+                {},
+                {responseType: 'arraybuffer'}
+            ).then(function (response) {
+                console.log(response);
+                var headers = response.headers;
+                var blob = new Blob([response.data],{type:response.headers.get('content-type')});
+                var link = document.createElement('a');
+                var filename = response.headers.get('content-disposition').split('filename=')[1].replace('-', '');
+                console.log(filename);
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                return link.click();
+            });
         }
     },
 };
