@@ -2,7 +2,7 @@ export default {
     home: {
         greeting: "Welcome to Password Keeper",
         description: {
-            nopasswords: "Start filling out fields below to store some passwords! YEAH!",
+            nopasswords: "Start filling out fields below to store some passwords",
             fewpasswords: "You are doing great! Keep going! Store some more passwords!",
             manypasswords: "Well you should slow down, you have too many password :(",
             toomanypasswords: "OMG you are passwordniac with so many passwords!"

@@ -5,8 +5,6 @@ import { http } from 'src/plugins/http.js';
 import { EntryCommand } from 'src/entry-command.js';
 import * as utls from 'src/utility.js';
 import * as i18n from 'src/plugins/i18n.js';
-import { is_authenticated } from 'src/services/auth.js';
-import ClientStore from 'src/client-store.js';
 
 import * as notify from 'src/services/notify.js';
 
@@ -37,10 +35,8 @@ export const pull_cmd = new (class PullCommand extends Command {
     @execute
     async execute() {
         let response;
-        let entries = [];
         try {
             response = await http.get(API_ENTRIES_URL);
-            entries = response.body;
         } catch (response) {
             const msg = response.status === 408 ?
                 i18n.t('notify.itemsfetched_timeout') :
@@ -51,6 +47,7 @@ export const pull_cmd = new (class PullCommand extends Command {
         notify.success(i18n.t('notify.itemsfetched'));
         // TODO move that notification stuff somewhere
 
+        let entries = response.body;
         // TODO: validate response
         // TODO: handle errors
 
