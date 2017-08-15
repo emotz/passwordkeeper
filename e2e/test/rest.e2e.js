@@ -7,7 +7,7 @@ const API = {
     ENTRIES: 'http://test-server:1337/api/entries',
     TOKENS: 'http://test-server:1337/api/token',
     USERS: 'http://test-server:1337/api/users'
-}
+};
 
 // const generateUniqueId = (function() {
 //     let id = 0;

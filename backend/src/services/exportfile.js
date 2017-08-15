@@ -3,7 +3,7 @@ const passEntry = require('../models/passentry').PassEntry;
 const json2csv = require('json2csv');
 const log = require('../libs/log.js')(module);
 const path = require('path');
-const fs = require('fs');
+const fse = require('fs-extra');
 const PUBLICFS_PATH = path.resolve('./public');
 const xmlbuilder = require('xmlbuilder');
 
@@ -15,15 +15,13 @@ async function ExportToCSV(user) {
     try {
         passEntryList = await passEntry.findAll({ attributes: fields, where: { userID: user.id } });
     } catch (err) {
-        log.error('Error on getting passentries list: %s', res.statusCode, err.message);
+        log.error('Error on getting passentries list: %s', err.message);
         return filestr;
     }
     let csv = json2csv({ data: passEntryList, fields: fields, del: ';' });
     filestr = path.join(PUBLICFS_PATH, user.username + '.csv');
-    console.log(csv);
-    fs.writeFile(filestr, csv, function(err) {
-        if (err) throw err;
-    });
+    log.debug(filestr);
+    await fse.writeFile(filestr, csv);
     return filestr;
 }
 
@@ -40,16 +38,15 @@ async function ExportToXML(user) {
     }
     filestr = path.join(PUBLICFS_PATH, user.username + '.xml');
     let root = xmlbuilder.create('root');
-    for (let passentry of passEntryList){
-        console.log(passentry.user);
+    for (let passentry of passEntryList) {
+        log.debug(passentry.user);
         let item = root.ele('passentry');
         item.att('user', passentry.user);
         item.att('title', passentry.title);
         item.att('password', passentry.password);
     }
-    fs.writeFile(filestr, root.end(), function(err) {
-        if (err) throw err;
-    });
+    log.debug(filestr);
+    await fse.writeFile(filestr, root.end());
     return filestr;
 }
 
