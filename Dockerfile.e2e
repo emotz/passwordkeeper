@@ -1,4 +1,4 @@
-FROM passwordkeeper/base-e2e:0.l
+FROM passwordkeeper/base-e2e:0.1
 
 # Create app directory
 WORKDIR /usr/src/passwordkeeper/e2e
