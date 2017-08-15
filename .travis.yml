@@ -22,6 +22,7 @@ notifications:
 branches:
   only:
     - master
+    - /^v\d+\.\d+$/
 deploy:
   provider: script
   script: scripts/deploy.sh
