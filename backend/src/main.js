@@ -24,7 +24,7 @@ app.get('/api/entries', function(req, res, next) {
             res.statusCode = 401;
             return res.send({ error: 'Server error: ' + err });
         }
-        console.log(user);
+        log.debug(user);
         try {
             const passEntryList = await passEntry.findAll({ where: { userID: user.id } });
             res.statusCode = 201;
@@ -169,7 +169,9 @@ app.get('/api/export/csv', function(req, res, next) {
             let filestr = await exportfile.ExportToCSV(user);
             if (filestr == '') throw new Error('Cannot export passentry');
             res.statusCode = 200;
-            return res.download(filestr);
+            res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filestr));
+            res.sendFile(filestr);
+            return;
         }
         catch (err) {
             res.statusCode = 500;
