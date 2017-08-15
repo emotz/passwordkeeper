@@ -9,4 +9,4 @@ RUN wget -q -O - https://deb.nodesource.com/setup_7.x | bash -
 RUN apt-get update
 RUN apt-get install -y nodejs
 
-COPY wait-for-it.sh /usr/src/passwordkeeper
+COPY wait-for-it.sh /usr/src/passwordkeeper/

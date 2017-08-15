@@ -1,4 +1,4 @@
-FROM passwordkeeper/base-frontend:0.2
+FROM passwordkeeper/base-frontend:0.3
 
 WORKDIR /usr/src/passwordkeeper/frontend
 

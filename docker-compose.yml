@@ -6,17 +6,17 @@ services:
     build:
      context: .
      dockerfile: Dockerfile.base
-    image: passwordkeeper/base:0.2
+    image: passwordkeeper/base:0.3
   base-e2e:
     build:
      context: .
      dockerfile: Dockerfile.base-e2e
-    image: passwordkeeper/base-e2e:0.2
+    image: passwordkeeper/base-e2e:0.3
   base-frontend:
     build:
      context: .
      dockerfile: Dockerfile.base-frontend
-    image: passwordkeeper/base-frontend:0.2
+    image: passwordkeeper/base-frontend:0.3
   postgres:
     image: postgres:latest
     environment:

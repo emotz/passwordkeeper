@@ -1,12 +1,14 @@
 sudo: required
 language: node_js
+git:
+  depth: 1
 services:
 - docker
 install:
 - docker-compose pull base base-e2e base-frontend
-script:
 - docker-compose run --rm frontend npm run build
 - docker-compose run --rm test-server npm run lint -s
+script:
 - docker-compose up karma-server karma-runner
 - docker-compose run --rm test-runner
 env:

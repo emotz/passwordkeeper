@@ -130,6 +130,13 @@ docker-compose exec frontend bash
 While you are in ssh, you can do other commands - do `npm run` for available
 commands.
 
+### Build base images
+
+```bat
+docker-compose build base && docker-compose build base-e2e base-frontend
+docker-compose push base base-e2e base-frontend
+```
+
 ### Run unit tests
 
 ```bat
