@@ -187,7 +187,9 @@ app.get('/api/export/xml', function(req, res, next) {
             let filestr = await exportfile.ExportToXML(user);
             if (filestr == '') throw new Error('Cannot export passentry');
             res.statusCode = 200;
-            return res.download(filestr);
+            res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filestr));
+            res.sendFile(filestr);
+            return;
         }
         catch (err) {
             res.statusCode = 500;
