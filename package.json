@@ -29,7 +29,8 @@
     "vue-resource": "^1.2.1",
     "vue-router": "^2.3.0",
     "vuex": "^2.2.1",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "xmlbuilder": "^9.0.2"
   },
   "optionalDependencies": {
     "@types/jasmine": "^2.5.47",
