@@ -1,7 +1,7 @@
 # HACK: I would use multistage build, but travis has old version of docker
 # FROM passwordkeeper/frontend as frontend
 
-FROM passwordkeeper/base:0.3
+FROM passwordkeeper/base:0.4
 
 ARG NODE_ENV
 ENV NODE_ENV "$NODE_ENV"

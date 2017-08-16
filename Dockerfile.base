@@ -10,3 +10,4 @@ RUN apt-get update
 RUN apt-get install -y nodejs
 
 COPY wait-for-it.sh /usr/src/passwordkeeper/
+RUN chmod +x /usr/src/passwordkeeper/wait-for-it.sh
