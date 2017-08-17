@@ -11,8 +11,8 @@ const data = make_reactive({
 
 class AuthCommand extends Command {
     @execute
-    async login(user, password) {
-        let response = await http.post(API_TOKEN_URL, { user, password });
+    async login(username, password) {
+        let response = await http.post(API_TOKEN_URL, { username, password });
         // TODO handle errors
         set_token(response.data.access_token);
         return response;
