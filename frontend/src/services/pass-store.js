@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Command, execute } from 'command-decorator';
+import { Command, execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { make_reactive } from './watch.js';
 import { http } from 'src/plugins/http.js';
 import { EntryCommand } from 'src/entry-command.js';

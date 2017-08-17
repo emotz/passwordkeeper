@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Command, execute, can_execute } from 'command-decorator';
+import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { http, parse_location } from 'src/plugins/http.js';
 
 // TODO: move it somewhere
