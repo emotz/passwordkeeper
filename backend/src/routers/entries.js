@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('../libs/passport.js');
 const log = require('../libs/log.js')(module); // eslint-disable-line no-unused-vars
-const url = require('url');
+const urljoin = require('url-join');
 const error = require('../libs/error.js');
 
 const PassEntry = require('../models/passentry').PassEntry;
@@ -32,7 +32,7 @@ router.route('/')
         });
 
         res.status(201);
-        res.location(url.resolve(req.originalUrl, newentry.id.toString()));
+        res.location(urljoin(req.originalUrl, newentry.id.toString()));
         res.send();
     })
     .delete(async function(req, res) {
