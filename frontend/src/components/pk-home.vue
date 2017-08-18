@@ -9,7 +9,7 @@
                 <span v-else-if="num_of_entries < 10">{{ $t('home.description.manypasswords') }}</span>
                 <span v-else>{{ $t('home.description.toomanypasswords') }}</span>
                 <button class="btn btn-primary pk-btn-refresh-all-pass"
-                        :disabled="pull_cmd.is_executing()"
+                        :disabled="!can_pull()"
                         @click="pull">
                     {{ $t('home.fetch_all_passwords') }}
                 </button>
