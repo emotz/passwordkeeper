@@ -37,12 +37,9 @@ export const pull_cmd = new (class PullCommand extends Command {
         let response;
         try {
             response = await http.get(API_ENTRIES_URL);
-        } catch (response) {
-            const msg = response.status === 408 ?
-                i18n.t('notify.itemsfetched_timeout') :
-                (`api_error[${i18n.t(response.body)}]` || i18n.t('notify.itemsfetched_unknown'));
-            notify.error(msg);
-            throw response;
+        } catch (err) {
+            notify.error(i18n.terror(err));
+            throw err;
         }
         notify.success(i18n.t('notify.itemsfetched'));
         // TODO move that notification stuff somewhere

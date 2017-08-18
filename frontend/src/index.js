@@ -3,7 +3,11 @@ import App from 'src/components/pk-app.vue';
 
 // import all files from `plugins` directory
 const req = require.context('./plugins/', true, /\.js$/);
-req.keys().forEach(req);
+// HACK: vue-resource does not provide chaining of error handlers,
+//  so we must include error plugin last so that other
+//  http response handlers are finished correctly
+req.keys().filter(key => key !== './error.js').forEach(req);
+req('./error.js');
 
 $(function() {
     new Vue(App).$mount("#app");

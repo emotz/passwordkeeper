@@ -3,6 +3,7 @@ import error from 'src/error.js';
 
 http.interceptors.push(function(request, next) {
     next(function(response) {
+        console.log("error interceptor", response);
         if (response.status < 400) return;
         try {
             const err = response.data;
@@ -13,6 +14,7 @@ http.interceptors.push(function(request, next) {
                         type: error.Other.NotFound
                     };
                 case 401:
+                    if (err !== undefined && err.code) throw err;
                     throw {
                         code: error.ErrorCode.Auth
                     };
