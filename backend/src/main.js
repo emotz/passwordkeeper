@@ -78,6 +78,8 @@ function errorPreparer(err, req, res, next) {
 }
 
 function errorSender(err, req, res, next) {
+    // when you add something here, you should add corresponding handler
+    //  to frontend/src/plugins/error.js
     applyContext(err);
     // TODO: winston skips a lot of info for large errors
     if (config.isDev) log.info(err); // if dev env, log all errors
