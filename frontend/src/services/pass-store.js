@@ -5,7 +5,7 @@ import { http } from 'src/plugins/http.js';
 import { EntryCommand } from 'src/entry-command.js';
 import * as utls from 'src/utility.js';
 import * as i18n from 'src/plugins/i18n.js';
-import { loader } from 'src/services/loader.js';
+import { notifier } from 'src/services/loader.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
@@ -31,7 +31,7 @@ export function get_entry_cmd(_id) {
 }
 
 export const pull_cmd = new (class PullCommand extends Command {
-    @loader(i18n.t('notify.itemsfetched'))
+    @notifier(i18n.t('notify.itemsfetched'), i18n.terror)
     @execute
     async execute() {
         const response = await http.get(API_ENTRIES_URL);

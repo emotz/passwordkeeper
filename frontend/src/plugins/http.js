@@ -1,4 +1,3 @@
-import * as i18n from 'src/plugins/i18n.js';
 
 import Vue from 'vue';
 import VueResource from 'vue-resource';
