@@ -10,8 +10,11 @@ http.interceptors.push(function(request, next) {
     if (request.headers['Authorization'] === undefined && auth.is_authenticated()) {
         request.headers.set('Authorization', `Bearer ${auth.get_token()}`);
     }
-    next();
-    // TODO: should have interceptor for Unauthorized response whatever to remove auth token
+    next(function(response) {
+        if (response.status === 401) {
+            auth.logout();
+        }
+    });
 });
 
 let client_store = new ClientStore('token');
