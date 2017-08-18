@@ -3,7 +3,6 @@ import error from 'src/error.js';
 
 http.interceptors.push(function(request, next) {
     next(function(response) {
-        console.log("error interceptor", response);
         if (response.status < 400) return;
         try {
             const err = response.data;

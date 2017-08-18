@@ -6,7 +6,6 @@ import { EntryCommand } from 'src/entry-command.js';
 import * as utls from 'src/utility.js';
 import * as i18n from 'src/plugins/i18n.js';
 import { loader } from 'src/services/loader.js';
-import * as notify from 'src/services/notify.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
