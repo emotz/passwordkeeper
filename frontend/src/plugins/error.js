@@ -23,6 +23,7 @@ http.interceptors.push(function(request, next) {
                                 throw err;
                         }
                     }
+                    break;
             }
             const message = (err === undefined ? undefined : err.message) || '';
             throw {
