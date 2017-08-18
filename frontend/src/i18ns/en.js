@@ -64,14 +64,17 @@ export default {
         Other: {
             BadRequest: "Error with request",
             NotFound: "Resource not found",
-            'default': "{msg}"
+            'default': "{message}"
         },
         Auth: {
             WrongPasswordOrUsername: "No user with matching password",
-            'default': "Authorization error %{msg}"
+            'default': "Authorization error {message}"
         },
         Validation: {
-            'default': "Validation error {msg}"
+            'default': "{message}"
+        },
+        Verification: {
+            NotUnique: "{property} already exists"
         }
     }
 };

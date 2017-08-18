@@ -52,9 +52,12 @@ app.listen(config.port, function() {
 
 function errorPreparer(err, req, res, next) {
     if (err.name === 'SequelizeValidationError') {
+        const errors = err.errors.map((e) => ({
+            message: e.message
+        }));
         throw {
             code: error.ErrorCode.Validation,
-            errors: err.errors
+            errors: errors
         };
     }
     if (err.name === 'SequelizeDatabaseError') {
@@ -68,6 +71,16 @@ function errorPreparer(err, req, res, next) {
         throw {
             code: error.ErrorCode.Db,
             orig: err
+        };
+    }
+    if (err.name === "SequelizeUniqueConstraintError") {
+        const errors = err.errors.map((e) => ({
+            type: error.Verification.NotUnique,
+            property: e.path
+        }));
+        throw {
+            code: error.ErrorCode.Verification,
+            errors: errors
         };
     }
     if (err.code) throw err; // means it is "our" error
@@ -120,6 +133,10 @@ function errorSender(err, req, res, next) {
             break;
         case error.ErrorCode.Validation:
             res.status(400);
+            res.send(err);
+            return;
+        case error.ErrorCode.Verification:
+            res.status(409);
             res.send(err);
             return;
     }

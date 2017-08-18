@@ -5,7 +5,8 @@ module.exports = {
         // Aggregation: "Aggregation",
         Db: "Db",
         Auth: "Auth",
-        Validation: "Validation"
+        Validation: "Validation",
+        Verification: "Verification"
     },
     Other: {
         BadRequest: "BadRequest",
@@ -17,5 +18,8 @@ module.exports = {
     },
     Db: {
         NotFound: "NotFound"
+    },
+    Verification: {
+        NotUnique: "NotUnique"
     }
 };

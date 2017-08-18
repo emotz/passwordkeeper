@@ -36,10 +36,10 @@ passport.use(new LocalStrategy({
             return done(err);
         }
         if (!userOne) {
-            return done(null, false, make_error(error.Auth.NoUser));
+            return done(make_error(error.Auth.NoUser));
         }
         if (!userOne.checkPassword(password)) {
-            return done(null, false, make_error(error.Auth.WrongPassword));
+            return done(make_error(error.Auth.WrongPassword));
         }
         log.debug("verification passed");
         return done(null, userOne);
@@ -81,7 +81,7 @@ passport.use(new JwtStrategy(jwtOptions, async function(payload, done) {
         return done(err);
     }
     if (!userOne) {
-        return done(null, false, {
+        return done({
             code: error.ErrorCode.Auth,
             type: error.Auth.NoUser,
             context: {

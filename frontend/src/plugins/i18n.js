@@ -80,9 +80,14 @@ export const t = Vue.t.bind(Vue);
  * This is "Translation Error", not "Terror"
  */
 export function terror(err) {
+    if (err.errors) {
+        return err.errors.map((e) => {
+            const trans_id = `error.${err.code}.${e.type || 'default'}`;
+            console.log('e trans_id', trans_id);
+            return t(trans_id, e);
+        }).join('\n');
+    }
     const trans_id = `error.${err.code}.${err.type || 'default'}`;
     console.log('trans_id', trans_id);
-    console.log('msg', err.message);
-
-    return t(trans_id, { msg: (err.message || '') });
+    return t(trans_id, err);
 }

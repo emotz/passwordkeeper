@@ -1,6 +1,26 @@
 import * as progressbar from './progressbar.js';
 import * as notify from './notify.js';
+import * as i18n from 'src/plugins/i18n.js';
 import _ from 'lodash';
+
+/**
+ * Proper JS Decorator to show error messages if function fails.
+ */
+export function loader(map_success_text, map_error_text) {
+    // TODO rename it to something with "notify"
+    return function(target, property_key, descriptor) {
+        const old_method = descriptor.value;
+        descriptor.value = decorate(old_method, map_success_text, map_error_text);
+    };
+}
+
+/**
+ * Proper JS Decorator to show error messages if function fails.
+ */
+export function notify_error(target, property_key, descriptor) {
+    const old_method = descriptor.value;
+    descriptor.value = decorate_without_success_notify(old_method);
+}
 
 /**
  * Decorates function to show progressbar during execution and show notification when finished.
@@ -46,7 +66,7 @@ export function import_async(fn) {
  */
 export function perform(fn, map_success_text, map_error_text, context, ...args) {
     map_success_text = map_success_text === undefined ? _.identity : map_success_text;
-    map_error_text = map_error_text === undefined ? _.identity : map_error_text;
+    map_error_text = map_error_text === undefined ? i18n.terror : map_error_text;
     const res = progressbar.wrap(fn, context, ...args);
     return res
         .then(val => {

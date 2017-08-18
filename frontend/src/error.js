@@ -3,7 +3,8 @@ module.exports = {
     ErrorCode: {
         Other: "Other",
         Auth: "Auth",
-        Validation: "Validation"
+        Validation: "Validation",
+        Verification: "Verification"
     },
     Other: {
         BadRequest: "BadRequest",
@@ -11,5 +12,8 @@ module.exports = {
     },
     Auth: {
         WrongPasswordOrUsername: "WrongPasswordOrUsername"
+    },
+    Verification: {
+        NotUnique: "NotUnique"
     }
 };

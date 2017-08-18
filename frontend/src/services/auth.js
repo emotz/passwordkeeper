@@ -1,6 +1,7 @@
 import { http } from 'src/plugins/http.js';
 import { Command, execute } from 'command-decorator';
 import { make_reactive } from './watch.js';
+import { notify_error } from 'src/services/loader.js';
 
 const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
@@ -10,6 +11,7 @@ const data = make_reactive({
 });
 
 class AuthCommand extends Command {
+    @notify_error
     @execute
     async login(username, password) {
         let response = await http.post(API_TOKEN_URL, { username, password });
@@ -18,6 +20,7 @@ class AuthCommand extends Command {
         return response;
     }
 
+    @notify_error
     @execute
     async logout() {
         try {
@@ -26,6 +29,8 @@ class AuthCommand extends Command {
             remove_token();
         }
     }
+
+    @notify_error
     @execute
     async signup(input) {
         // TODO finish this signup
