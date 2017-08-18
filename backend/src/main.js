@@ -31,6 +31,13 @@ app.use('/api/entries', routerEntries);
 app.use('/api/token', routerToken);
 app.use('/api/users', routerUsers);
 
+app.use('/api/*', function(req, res) {
+    throw {
+        code: error.ErrorCode.Other,
+        type: error.Other.NotFound
+    };
+});
+
 app.get('*', function(req, res) {
     res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
@@ -80,6 +87,10 @@ function errorSender(err, req, res, next) {
             switch (err.type) {
                 case error.Other.BadRequest:
                     res.status(400);
+                    res.send();
+                    return;
+                case error.Other.NotFound:
+                    res.status(404);
                     res.send();
                     return;
             }

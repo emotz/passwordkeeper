@@ -8,7 +8,8 @@ module.exports = {
         Validation: "Validation"
     },
     Other: {
-        BadRequest: "BadRequest"
+        BadRequest: "BadRequest",
+        NotFound: "NotFound"
     },
     Auth: {
         NoUser: "NoUser",
