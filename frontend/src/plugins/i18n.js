@@ -73,9 +73,7 @@ export function get_locales() {
 /**
  * Reactive
  */
-export function t(msg) {
-    return Vue.t(msg);
-}
+export const t = Vue.t.bind(Vue);
 
 /**
  * WARNING Not reactive
@@ -86,5 +84,5 @@ export function terror(err) {
     console.log('trans_id', trans_id);
     console.log('msg', err.message);
 
-    return t(trans_id, { msg: err.message });
+    return t(trans_id, { msg: (err.message || '') });
 }

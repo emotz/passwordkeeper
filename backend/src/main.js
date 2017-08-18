@@ -110,7 +110,11 @@ function errorSender(err, req, res, next) {
                 case error.Auth.NoUser:
                 case error.Auth.WrongPassword:
                     res.status(401);
-                    res.send();
+                    res.send({
+                        code: error.ErrorCode.Auth,
+                        // TODO: fix magic string
+                        type: "WrongPasswordOrUsername"
+                    });
                     return;
             }
             break;

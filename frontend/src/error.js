@@ -8,5 +8,8 @@ module.exports = {
     Other: {
         BadRequest: "BadRequest",
         NotFound: "NotFound"
+    },
+    Auth: {
+        WrongPasswordOrUsername: "WrongPasswordOrUsername"
     }
 };

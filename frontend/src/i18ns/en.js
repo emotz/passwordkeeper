@@ -67,7 +67,8 @@ export default {
             'default': "{msg}"
         },
         Auth: {
-            'default': "No user with matching password"
+            WrongPasswordOrUsername: "No user with matching password",
+            'default': "Authorization error %{msg}"
         },
         Validation: {
             'default': "Validation error {msg}"
