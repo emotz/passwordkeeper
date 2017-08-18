@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { http, parse_location } from 'src/plugins/http.js';
+import { notify_error } from 'src/services/loader.js';
 
 // TODO: move it somewhere
 const API_ENTRIES_URL = 'api/entries';
@@ -18,6 +19,7 @@ export class EntryCommand extends Command {
         assert(this.entry._id);
     }
 
+    @notify_error
     @execute
     async save(newitem) {
         newitem = newitem || this.entry;
@@ -53,6 +55,7 @@ export class EntryCommand extends Command {
         };
     }
 
+    @notify_error
     @execute
     async delete() {
         if (this.entry.id !== undefined) {
