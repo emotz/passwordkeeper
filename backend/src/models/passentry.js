@@ -24,8 +24,6 @@ const PassEntry = sequelize.define('passentry', {
     },
 });
 
-
-
 PassEntry.sync();
 
 module.exports.PassEntry = PassEntry;

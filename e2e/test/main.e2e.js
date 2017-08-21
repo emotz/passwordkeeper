@@ -17,12 +17,31 @@ describe('main', function() {
             page.login('nonexistent user', 'nonexistent password');
             page.waitForFailedLogin();
         });
-        it('should signup', function() {
+        it('should fail signup with email without @', function() {
+            page.signup(USER, PASS, 'notreally_an_email');
+            page.waitForFailedSignup();
+            page.hideModal();
+        });
+        it('should fail signup with username with @', function() {
+            page.signup(USER + '@gmail.com', PASS, EMAIL);
+            page.waitForFailedSignup();
+            page.hideModal();
+        });
+        it('should signup, autologin and then logout', function() {
             page.signup(USER, PASS, EMAIL);
             page.waitForSuccessSignup();
+            page.waitForSuccessLogin();
+            page.logout();
+            page.waitForSuccessLogout();
         });
         it('should login and logout', function() {
             page.login(USER, PASS);
+            page.waitForSuccessLogin();
+            page.logout();
+            page.waitForSuccessLogout();
+        });
+        it('should login with email and logout', function() {
+            page.login(EMAIL, PASS);
             page.waitForSuccessLogin();
             page.logout();
             page.waitForSuccessLogout();

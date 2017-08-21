@@ -5,6 +5,7 @@ import * as loader from 'src/services/loader.js';
 import { watch } from 'src/services/watch.js';
 import ClientStore from 'src/client-store.js';
 
+
 const locales = {
     'ru': loader.import_async((resolve, reject) => require(['src/i18ns/ru.js'], resolve.default, reject)),
     'en': require('src/i18ns/en.js').default
@@ -71,6 +72,19 @@ export function get_locales() {
 /**
  * Reactive
  */
-export function t(msg) {
-    return Vue.t(msg);
+export const t = Vue.t.bind(Vue);
+
+/**
+ * WARNING Not reactive
+ * This is "Translation Error", not "Terror"
+ */
+export function terror(err) {
+    if (err.errors) {
+        return err.errors.map((e) => {
+            const trans_id = `error.${err.code}.${e.type || 'default'}`;
+            return t(trans_id, e);
+        }).join('\n');
+    }
+    const trans_id = `error.${err.code}.${err.type || 'default'}`;
+    return t(trans_id, err);
 }

@@ -146,7 +146,11 @@ docker-compose up karma-server karma-runner
 ### Run e2e tests
 
 ```bat
-docker-compose run --rm test-runner & docker-compose stop test-postgres test-server && docker-compose rm -f test-postgres
+docker-compose run --rm test-runner & docker-compose stop test-postgres test-server & docker-compose rm -f test-postgres
+```
+
+```bash
+docker-compose run --rm test-runner ; docker-compose stop test-postgres test-server ; docker-compose rm -f test-postgres
 ```
 
 <!-- ### Production build -->

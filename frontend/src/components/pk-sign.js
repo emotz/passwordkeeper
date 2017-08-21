@@ -9,8 +9,9 @@ export default {
         signin() {
             modal.open(PkSignIn);
         },
-        signup() {
-            modal.open(PkSignUp);
+        async signup() {
+            const user = await modal.open(PkSignUp);
+            await auth.login(user.username, user.password);
         },
         signout() {
             return auth.logout();

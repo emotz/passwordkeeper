@@ -1,12 +1,12 @@
 import assert from 'assert';
-import { Command, execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
+import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { make_reactive } from './watch.js';
 import { http } from 'src/plugins/http.js';
 import { EntryCommand } from 'src/entry-command.js';
 import * as utls from 'src/utility.js';
 import * as i18n from 'src/plugins/i18n.js';
-
-import * as notify from 'src/services/notify.js';
+import { notifier } from 'src/services/loader.js';
+import * as auth from 'src/services/auth.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
@@ -32,24 +32,11 @@ export function get_entry_cmd(_id) {
 }
 
 export const pull_cmd = new (class PullCommand extends Command {
+    @notifier(i18n.t('notify.itemsfetched'), i18n.terror)
     @execute
     async execute() {
-        let response;
-        try {
-            response = await http.get(API_ENTRIES_URL);
-        } catch (response) {
-            const msg = response.status === 408 ?
-                i18n.t('notify.itemsfetched_timeout') :
-                (`api_error[${i18n.t(response.body)}]` || i18n.t('notify.itemsfetched_unknown'));
-            notify.error(msg);
-            throw response;
-        }
-        notify.success(i18n.t('notify.itemsfetched'));
-        // TODO move that notification stuff somewhere
-
-        let entries = response.body;
-        // TODO: validate response
-        // TODO: handle errors
+        const response = await http.get(API_ENTRIES_URL);
+        const entries = response.body;
 
         // getting rid of deleted entries
         data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
@@ -63,6 +50,20 @@ export const pull_cmd = new (class PullCommand extends Command {
             // TODO refactor_entry - entry_cmd and entry unsynced possibly
             return entry;
         });
+    }
+
+    @can_execute
+    can_execute() {
+        if (auth.is_authenticated()) {
+            return {
+                canExecute: true
+            };
+        } else {
+            return {
+                canExecute: false,
+                reason: "not authenticated"
+            };
+        }
     }
 })();
 
@@ -100,99 +101,3 @@ function ctor_entry(obj = {}) {
         synced: obj.synced || false
     };
 }
-
-// function ctor_cmds(_id) {
-//     let save_cmd = new BasicCommand(async (entry_to_send) => {
-//         assert(entry_cmd.find(a => a._id === _id) !== undefined);
-//         assert(data.entries.find(e => e._id === _id) !== undefined);
-//         let entry_cmd = entry_cmd.find(a => a._id === _id);
-//         let history_entry = {
-//             status: 'inprogress'
-//         };
-//         entry_cmd.history.push(history_entry);
-//         let entry = data.entries.find(e => e._id === _id);
-
-//         if (entry_to_send === undefined) {
-//             entry_to_send = {
-//                 user: entry.user,
-//                 title: entry.title,
-//                 password: entry.password
-//             };
-//         } else {
-//             entry.user = entry_to_send.user;
-//             entry.title = entry_to_send.title;
-//             entry.password = entry_to_send.password;
-//         }
-
-//         if (entry.id !== undefined) {
-//             // it means we are doing PUT
-//             try {
-//                 await http.put(`${API_ENTRIES_URL}/${entry.id}`, entry_to_send);
-//             } catch (response) {
-//                 history_entry.status = 'failure';
-
-//                 throw response.status === 408 ?
-//                     i18n.t('notify.itemupdated_timeout') :
-//                     (i18n.t(response.body) || i18n.t('notify.itemupdated_unknown'));
-//             }
-//             entry.synced = true;
-//             history_entry.status = 'success';
-
-//             return i18n.t('notify.itemupdated');
-//         } else {
-//             // it means we are doing POST
-//             let response;
-//             try {
-//                 response = await http.post(API_ENTRIES_URL, entry_to_send);
-//             } catch (response) {
-//                 history_entry.status = 'failure';
-
-//                 throw response.status === 408 ?
-//                     i18n.t('notify.itemstored_timeout') :
-//                     (i18n.t(response.body) || i18n.t('notify.itemstored_unknown'));
-//             }
-//             assert(entry.id === undefined);
-//             let id = parse_location(response);
-//             // TODO: validate id
-//             entry.id = id;
-//             entry.synced = true;
-//             history_entry.status = 'success';
-
-//             return i18n.t('notify.itemstored');
-//         }
-//     });
-//     let remove_cmd = new BasicCommand(async () => {
-//         assert(entry_cmd.find(a => a._id === _id) !== undefined);
-//         assert(data.entries.find(e => e._id === _id) !== undefined);
-
-//         let entry_cmd = entry_cmd.find(a => a._id === _id);
-//         let history_entry = {
-//             status: 'inprogress'
-//         };
-//         entry_cmd.history.push(history_entry);
-//         let entry = data.entries.find(e => e._id === _id);
-
-//         //
-//         let response;
-//         try {
-//             response = await http.delete(`${API_ENTRIES_URL}/${entry.id}`);
-//         } catch (err) {
-//             history_entry.status = 'failure';
-
-//             throw response.status === 408 ?
-//                 i18n.t('notify.itemremoved_timeout') :
-//                 (i18n.t(response.body) || i18n.t('notify.itemremoved_unknown'));
-//         }
-//         entry_cmd.splice(entry_cmd.findIndex(a => a._id === _id), 1);
-//         data.entries.splice(data.entries.findIndex(a => a._id === _id), 1);
-//         history_entry.status = 'success';
-
-//         return i18n.t('notify.itemremoved');
-//         //
-//     });
-//     let group = new CommandGroup();
-//     group.add_command(save_cmd);
-//     group.add_command(remove_cmd);
-
-//     return { save_cmd, remove_cmd };
-// }

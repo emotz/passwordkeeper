@@ -1,6 +1,8 @@
 import { http } from 'src/plugins/http.js';
 import { Command, execute } from 'command-decorator';
 import { make_reactive } from './watch.js';
+import { notifier_error } from 'src/services/loader.js';
+import * as i18n from 'src/plugins/i18n.js';
 
 const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
@@ -9,15 +11,17 @@ const data = make_reactive({
     token: undefined
 });
 
+// TODO change login and signup to the same signature?
 class AuthCommand extends Command {
+    @notifier_error(i18n.terror)
     @execute
-    async login(user, password) {
-        let response = await http.post(API_TOKEN_URL, { user, password });
-        // TODO handle errors
+    async login(login, password) {
+        let response = await http.post(API_TOKEN_URL, { login, password });
         set_token(response.data.access_token);
         return response;
     }
 
+    @notifier_error(i18n.terror)
     @execute
     async logout() {
         try {
@@ -26,12 +30,11 @@ class AuthCommand extends Command {
             remove_token();
         }
     }
+
+    @notifier_error(i18n.terror)
     @execute
     async signup(input) {
-        // TODO finish this signup
-        let response = await http.post(API_USERS_URL, input);
-        // TODO: validate token
-        set_token(response.data.access_token);
+        const response = await http.post(API_USERS_URL, input);
         return response;
     }
 }

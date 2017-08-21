@@ -21,6 +21,9 @@ export default {
                 return;
             }
             this.pull_cmd.execute();
+        },
+        can_pull() {
+            return this.pull_cmd.can_execute().canExecute;
         }
     }
 };

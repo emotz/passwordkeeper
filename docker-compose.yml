@@ -109,7 +109,7 @@ services:
     command: ["npm", "run", "test"]
     volumes:
      - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/e2e/node_modules
+     - /usr/src/passwordkeeper/e2e/node_modules
     depends_on:
       - test-server 
       - selenium

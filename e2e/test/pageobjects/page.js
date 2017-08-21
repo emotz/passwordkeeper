@@ -22,14 +22,14 @@ class Page {
         this.waitForSignupReady();
         browser.$('.pk-btn-signup').click();
         browser.$('.pk-signup-username-input').setValue(user);
-        browser.$('.pk-signup-email-input').setValue(user);
+        browser.$('.pk-signup-email-input').setValue(email);
         browser.$('.pk-signup-pass-input').setValue(password);
         browser.$('.btn-modal-ok').click();
     }
-    login(user, password) {
+    login(login, password) {
         this.waitForLoginReady();
         browser.$('.pk-btn-signin').click();
-        browser.$('.pk-signin-user-input').setValue(user);
+        browser.$('.pk-signin-login-input').setValue(login);
         browser.$('.pk-signin-pass-input').setValue(password);
         browser.$('.btn-modal-ok').click();
     }
@@ -51,8 +51,14 @@ class Page {
     waitForSuccessLogin() {
         browser.$('.pk-signin').waitForVisible(undefined, true);
     }
+    waitForFailedSignup() {
+        browser.$('.pk-signup').waitForVisible();
+    }
     waitForSuccessSignup() {
         browser.$('.pk-signup').waitForVisible(undefined, true);
+    }
+    hideModal() {
+        browser.$('.btn-modal-cancel').click();
     }
 }
 module.exports = Page;

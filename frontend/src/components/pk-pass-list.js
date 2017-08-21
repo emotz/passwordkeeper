@@ -34,7 +34,9 @@ export default {
     },
     created() {
         if (this.items.length <= 0) {
-            pass_store.pull_cmd.execute();
+            if (pass_store.pull_cmd.can_execute().canExecute) {
+                pass_store.pull_cmd.execute();
+            }
         }
         this.$watch(pass_store.get_entries, (new_entries) => {
             // FIX: performance issue - too many operations for even slightest change
