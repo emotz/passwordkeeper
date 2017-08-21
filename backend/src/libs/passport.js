@@ -13,21 +13,21 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.use(new LocalStrategy({
-    // TODO: use email as login
-    usernameField: 'username',
+    usernameField: 'login',
     passwordField: 'password',
     session: false
 },
-    async function(username, password, done) {
+    async function(login, password, done) {
         log.debug("verify local strategy");
         let userOne;
         try {
-            userOne = await User.findOne({ where: { username: username } });
+
+            userOne = await User.findByLogin(login);
         } catch (orig_err) {
             const err = {
                 code: error.ErrorCode.Other,
                 context: {
-                    username,
+                    login,
                     password
                 },
                 orig: orig_err
@@ -49,7 +49,7 @@ passport.use(new LocalStrategy({
                 code: error.ErrorCode.Auth,
                 type: error_type,
                 context: {
-                    username,
+                    login,
                     password
                 }
             };

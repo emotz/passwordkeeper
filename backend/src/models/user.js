@@ -72,6 +72,15 @@ User.prototype.checkPassword = function(password) {
     if (!this.passwordHash) return false;
     return crypto.pbkdf2Sync(password, this.salt, 1, 128, 'sha1').toString('hex') == this.passwordHash;
 };
+User.findByLogin = async function(login) {
+    let userOne;
+    if (~login.indexOf('@')) {
+        userOne = await User.findOne({ where: { email: login } });
+    } else {
+        userOne = await User.findOne({ where: { username: login } });
+    }
+    return userOne;
+};
 
 User.sync();
 
