@@ -3,6 +3,23 @@ import * as notify from './notify.js';
 import _ from 'lodash';
 
 /**
+ * Proper JS Decorator to show error messages if function fails.
+ */
+export function notifier(map_success_text, map_error_text) {
+    return function(target, property_key, descriptor) {
+        const old_method = descriptor.value;
+        descriptor.value = decorate(old_method, map_success_text, map_error_text);
+    };
+}
+
+/**
+ * Proper JS Decorator to show error messages if function fails.
+ */
+export function notifier_error(map_error_text) {
+    return notifier(() => { }, map_error_text);
+}
+
+/**
  * Decorates function to show progressbar during execution and show notification when finished.
  * @see perform
  * @param {function} fn Function or Promise to execute

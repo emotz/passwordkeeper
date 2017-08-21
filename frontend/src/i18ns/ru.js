@@ -59,9 +59,5 @@ export default {
     signup_title: "Создать свой персональный аккаунт",
     signin_user_placeholder: "Электронный адрес",
     signin_pass_placeholder: "Пароль",
-    signout: "Выйти",
-    api_error: {
-        'no user with matched password': "Пользователь с таким паролем не найден.",
-        'access token is not valid': "Токен доступа не валиден."
-    }
+    signout: "Выйти"
 };

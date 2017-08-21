@@ -10,12 +10,28 @@ const User = sequelize.define('user', {
     email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        // HACK: For some reason it doesnt work therefore custom validator
+        // notEmpty: true 
+        validate: {
+            isNotEmpty: function(val) {
+                // TODO: make proper error
+                if (val.length <= 0) throw new Error("Email must not be empty");
+            }
+        }
     },
     username: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        // HACK: For some reason it doesnt work therefore custom validator
+        // notEmpty: true
+        validate: {
+            isNotEmpty: function(val) {
+                // TODO: make proper error
+                if (val.length <= 0) throw new Error("Username must not be empty");
+            }
+        }
     },
     passwordHash: {
         type: Sequelize.TEXT,
@@ -35,6 +51,7 @@ const User = sequelize.define('user', {
         validate: {
             isLongEnough: function(val) {
                 if (val.length < 7) {
+                    // TODO: make proper error
                     throw new Error("Please choose a longer password");
                 }
             }

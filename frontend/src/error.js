@@ -1,9 +1,7 @@
-
+// TODO copy-paste from backend/libs/error.js
 module.exports = {
     ErrorCode: {
         Other: "Other",
-        // Aggregation: "Aggregation",
-        Db: "Db",
         Auth: "Auth",
         Validation: "Validation",
         Verification: "Verification"
@@ -13,11 +11,7 @@ module.exports = {
         NotFound: "NotFound"
     },
     Auth: {
-        NoUser: "NoUser",
-        WrongPassword: "WrongPassword"
-    },
-    Db: {
-        NotFound: "NotFound"
+        WrongPasswordOrUsername: "WrongPasswordOrUsername"
     },
     Verification: {
         NotUnique: "NotUnique"

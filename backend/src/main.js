@@ -31,6 +31,13 @@ app.use('/api/entries', routerEntries);
 app.use('/api/token', routerToken);
 app.use('/api/users', routerUsers);
 
+app.use('/api/*', function(req, res) {
+    throw {
+        code: error.ErrorCode.Other,
+        type: error.Other.NotFound
+    };
+});
+
 app.get('*', function(req, res) {
     res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
@@ -45,9 +52,12 @@ app.listen(config.port, function() {
 
 function errorPreparer(err, req, res, next) {
     if (err.name === 'SequelizeValidationError') {
+        const errors = err.errors.map((e) => ({
+            message: e.message
+        }));
         throw {
             code: error.ErrorCode.Validation,
-            errors: err.errors
+            errors: errors
         };
     }
     if (err.name === 'SequelizeDatabaseError') {
@@ -63,6 +73,16 @@ function errorPreparer(err, req, res, next) {
             orig: err
         };
     }
+    if (err.name === "SequelizeUniqueConstraintError") {
+        const errors = err.errors.map((e) => ({
+            type: error.Verification.NotUnique,
+            property: e.path
+        }));
+        throw {
+            code: error.ErrorCode.Verification,
+            errors: errors
+        };
+    }
     if (err.code) throw err; // means it is "our" error
     throw {
         code: error.ErrorCode.Other,
@@ -71,6 +91,8 @@ function errorPreparer(err, req, res, next) {
 }
 
 function errorSender(err, req, res, next) {
+    // when you add something here, you should add corresponding handler
+    //  to frontend/src/plugins/error.js
     applyContext(err);
     // TODO: winston skips a lot of info for large errors
     if (config.isDev) log.info(err); // if dev env, log all errors
@@ -80,6 +102,10 @@ function errorSender(err, req, res, next) {
             switch (err.type) {
                 case error.Other.BadRequest:
                     res.status(400);
+                    res.send();
+                    return;
+                case error.Other.NotFound:
+                    res.status(404);
                     res.send();
                     return;
             }
@@ -97,12 +123,20 @@ function errorSender(err, req, res, next) {
                 case error.Auth.NoUser:
                 case error.Auth.WrongPassword:
                     res.status(401);
-                    res.send();
+                    res.send({
+                        code: error.ErrorCode.Auth,
+                        // TODO: fix magic string
+                        type: "WrongPasswordOrUsername"
+                    });
                     return;
             }
             break;
         case error.ErrorCode.Validation:
             res.status(400);
+            res.send(err);
+            return;
+        case error.ErrorCode.Verification:
+            res.status(409);
             res.send(err);
             return;
     }
