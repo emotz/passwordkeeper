@@ -1,7 +1,6 @@
 /*eslint-env node */
 
 exports.config = {
-
     host: 'selenium',
     port: 4444,
     //
@@ -14,7 +13,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './test/*.e2e.js'
+        './test/karma.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -81,7 +80,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: 'http://test-server:1337',
+    baseUrl: 'http://karma-server:9876',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 2000,

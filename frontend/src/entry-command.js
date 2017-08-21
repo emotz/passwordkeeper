@@ -1,8 +1,6 @@
 import assert from 'assert';
-import { Command, execute, can_execute } from 'command-decorator';
+import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { http, parse_location } from 'src/plugins/http.js';
-import ClientStore from 'src/client-store.js';
-import { is_authenticated } from 'src/services/auth.js';
 
 // TODO: move it somewhere
 const API_ENTRIES_URL = 'api/entries';
@@ -28,6 +26,7 @@ export class EntryCommand extends Command {
             user: newitem.user,
             password: newitem.password
         };
+
         let response;
         if (this.entry.id !== undefined) {
             response = await http.put(`${API_ENTRIES_URL}/${this.entry.id}`, dto);
