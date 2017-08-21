@@ -19,7 +19,7 @@ export default {
                 password: this.password
             };
             await auth.signup(user_to_add);
-            this.$emit("ok");
+            this.$emit("ok", user_to_add);
         },
         cancel() {
             this.$emit("cancel");

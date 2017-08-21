@@ -11,6 +11,7 @@ const data = make_reactive({
     token: undefined
 });
 
+// TODO change login and signup to the same signature?
 class AuthCommand extends Command {
     @notifier_error(i18n.terror)
     @execute
@@ -33,10 +34,7 @@ class AuthCommand extends Command {
     @notifier_error(i18n.terror)
     @execute
     async signup(input) {
-        // TODO finish this signup
-        let response = await http.post(API_USERS_URL, input);
-        // TODO: validate token
-        set_token(response.data.access_token);
+        const response = await http.post(API_USERS_URL, input);
         return response;
     }
 }

@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('../libs/passport.js');
 const log = require('../libs/log.js')(module); // eslint-disable-line no-unused-vars
-const jwt = require('jsonwebtoken');
+const auth = require('../auth.js');
 
 const router = express.Router();
 
@@ -12,14 +12,7 @@ router.route('/')
     passport.authenticate('local'),
     async function(req, res) {
         const user = req.user; // set by passport
-        // TODO: rename payload fields for consistency
-        const payload = {
-            _id: user.id,
-            displayName: user.username,
-            email: user.email
-        };
-        // TODO secret key
-        const token = jwt.sign(payload, "mysecretkey");
+        const token = auth.generateToken(user);
         res.json({ access_token: token });
     })
     .delete(async function(req, res) {
