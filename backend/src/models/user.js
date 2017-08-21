@@ -17,6 +17,10 @@ const User = sequelize.define('user', {
             isNotEmpty: function(val) {
                 // TODO: make proper error
                 if (val.length <= 0) throw new Error("Email must not be empty");
+            },
+            mustContainAt: function(val) {
+                // TODO: make proper error
+                if (!~val.indexOf('@')) throw new Error("Email must contain \"@\"");
             }
         }
     },
@@ -30,6 +34,10 @@ const User = sequelize.define('user', {
             isNotEmpty: function(val) {
                 // TODO: make proper error
                 if (val.length <= 0) throw new Error("Username must not be empty");
+            },
+            mustNotContainAt: function(val) {
+                // TODO: make proper error
+                if (~val.indexOf('@')) throw new Error("Username must not contain \"@\"");
             }
         }
     },
