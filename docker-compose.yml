@@ -1,0 +1,121 @@
+version: '2'
+
+services:
+  # main
+  base:
+    build:
+     context: .
+     dockerfile: Dockerfile.base
+    image: passwordkeeper/base:0.4
+  base-e2e:
+    build:
+     context: .
+     dockerfile: Dockerfile.base-e2e
+    image: passwordkeeper/base-e2e:0.4
+  base-frontend:
+    build:
+     context: .
+     dockerfile: Dockerfile.base-frontend
+    image: passwordkeeper/base-frontend:0.4
+  postgres:
+    image: postgres:latest
+    environment:
+     POSTGRES_USER: 'vagrant'
+     POSTGRES_PASSWORD: 'vagrant'
+     POSTGRES_DB: 'pkeeper'
+  frontend:
+    build:
+     context: .
+     dockerfile: Dockerfile.frontend
+    image: passwordkeeper/frontend
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/frontend/node_modules
+    ports:
+     - 35729:35729 # livereload
+  backend:
+    build:
+     context: .
+     dockerfile: Dockerfile.backend
+     args:
+      - NODE_ENV
+    image: passwordkeeper/backend
+    entrypoint: ["./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
+    command: ["bash", "./launch.backend.sh"]
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/node_modules
+    ports:
+     - 1337:1337 # main app port
+     - 9229:9229 # node debug
+    depends_on:
+     - postgres
+     - frontend
+  # karma tests
+  karma-server:
+    build:
+     context: .
+     dockerfile: Dockerfile.frontend
+    image: passwordkeeper/frontend
+    command: npm run test
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/frontend/node_modules
+    ports:
+     - 9876:9876
+  karma-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    image: passwordkeeper/test-runner
+    # TODO: fix wait-for-it for several services - selenium+karma-server
+    entrypoint: ["../wait-for-it.sh", "-t", "60", "karma-server:9876", "--"]
+    command: ["npm", "run", "karma"]
+    volumes:
+      - .:/usr/src/passwordkeeper
+      - /usr/src/passwordkeeper/e2e/node_modules
+    depends_on:
+      - selenium
+      - karma-server
+  # e2e tests
+  test-postgres:
+    image: labianchin/docker-postgres-for-testing:latest
+    environment:
+     POSTGRES_USER: 'vagrant'
+     POSTGRES_PASSWORD: 'vagrant'
+     POSTGRES_DB: 'pkeeper'
+  test-server:
+    build:
+     context: .
+     dockerfile: Dockerfile.backend
+    image: passwordkeeper/backend
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/node_modules
+    entrypoint: ["./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
+    command: ["bash", "./launch.backend.sh"]
+    expose:
+     - 1337 # port for testing app
+    links:
+     - test-postgres:postgres
+    depends_on:
+     - frontend
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    image: passwordkeeper/test-runner
+    entrypoint: ["../wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
+    command: ["npm", "run", "test"]
+    volumes:
+     - .:/usr/src/passwordkeeper
+     - /usr/src/passwordkeeper/e2e/node_modules
+    depends_on:
+      - test-server 
+      - selenium
+  selenium:
+    image: selenium/standalone-chrome
+    expose:
+     - 4444
+    ports:
+     - 5900:5900

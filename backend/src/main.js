@@ -1,132 +1,164 @@
-//console.log("Nothing here yet!");
-const express = require('express');
+const config = require('./config');
 const path = require('path');
+const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const entries = require('./entries.json');
 const log = require('./libs/log.js')(module);
-const mongoose = require('./libs/mongoose');
-const passEntry = require('./models/passentry');
-const createDB = require('./createDB');
+const passport = require('./libs/passport');
+const error = require('./libs/error');
 
-mongoose.initConnect();
-createDB.createTestDB();
-let PasswordModel = passEntry.PassEntry;
+const routerEntries = require('./routers/entries');
+const routerToken = require('./routers/token');
+const routerUsers = require('./routers/users');
+const routerExport = require('./routers/export');
 
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-}
+const DIST_PATH = path.resolve('./frontend/dist');
 
-app.use(express.static('fe/dist'));
+require('express-async-errors');
+
+app.use(express.static(DIST_PATH));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
-app.get('/api/entries', function (req, res, next) {
-    return PasswordModel.find(function(err, passEntryList){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
-        }
-        return res.send(passEntryList);
+if (config.isDev) {
+    app.use(function(req, res, next) {
+        log.debug("got request", req.originalUrl);
+        next();
     });
+}
+
+app.use('/api/entries', routerEntries);
+app.use('/api/token', routerToken);
+app.use('/api/users', routerUsers);
+app.use('/api/export', routerExport);
+
+app.use('/api/*', function(req, res) {
+    throw {
+        code: error.ErrorCode.Other,
+        type: error.Other.NotFound
+    };
 });
 
-app.get('/api/entries/:id', function (req, res, next) {
-    PasswordModel.find({'id': res.params[0]}, function(err, passentry){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
-        }
-        return res.send(passentry)
-    });
+app.get('*', function(req, res) {
+    res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
 
-app.post('/api/entries', function (req, res, next) {
-    console.log(req.body);
-    const newEntry = new PasswordModel({
-        id: guid(),
-        title: req.body.title,
-        user: req.body.user,
-        password: req.body.password
-    });
-    newEntry.save(function (err) {
-        if (!err) {
-            log.info("new password entry created");
-            res.status = 201;
-            res.location(`/api/entries/${newEntry.id}`);
-            res.send();
-        } else {
-            console.log(err);
-            if(err.name == 'ValidationError') {
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
+app.use(errorPreparer);
+app.use(errorSender);
+
+app.listen(config.port, function() {
+    log.info(`Express server listening on port ${config.port}`);
+    return;
+});
+
+function errorPreparer(err, req, res, next) {
+    if (err.name === 'SequelizeValidationError') {
+        const errors = err.errors.map((e) => ({
+            message: e.message
+        }));
+        throw {
+            code: error.ErrorCode.Validation,
+            errors: errors
+        };
+    }
+    if (err.name === 'SequelizeDatabaseError') {
+        if (err.original.code === '22P02') {
+            // invalid input syntax for integer
+            throw {
+                code: error.ErrorCode.Other,
+                type: error.Other.BadRequest
+            };
+        }
+        throw {
+            code: error.ErrorCode.Db,
+            orig: err
+        };
+    }
+    if (err.name === "SequelizeUniqueConstraintError") {
+        const errors = err.errors.map((e) => ({
+            type: error.Verification.NotUnique,
+            property: e.path
+        }));
+        throw {
+            code: error.ErrorCode.Verification,
+            errors: errors
+        };
+    }
+    if (err.code) throw err; // means it is "our" error
+    throw {
+        code: error.ErrorCode.Other,
+        orig: err
+    };
+}
+
+function errorSender(err, req, res, next) {
+    // when you add something here, you should add corresponding handler
+    //  to frontend/src/plugins/error.js
+    applyContext(err);
+    // TODO: winston skips a lot of info for large errors
+    if (config.isDev) log.info(err); // if dev env, log all errors
+
+    switch (err.code) {
+        case error.ErrorCode.Other:
+            switch (err.type) {
+                case error.Other.BadRequest:
+                    res.status(400);
+                    res.send();
+                    return;
+                case error.Other.NotFound:
+                    res.status(404);
+                    res.send();
+                    return;
             }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-        }
-    });
-});
-
-app.put('/api/entries/:id', function (req, res) {
-    const updatedEntry = req.body;
-    updatedEntry.id = req.params[0];
-    if (updatedEntry.title === undefined || updatedEntry.title === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty title" };
-        return;
-    }
-    if (updatedEntry.user === undefined || updatedEntry.user === "") {
-        res.status = 400;
-        res.body = { reason: "request must specify non-empty user" };
-        return;
-    }
-    PasswordModel.findOneAndUpdate({'id': req.params[0]}, {$set:{title: req.body.title, user: req.body.user, password: req.body.password}}, function(err, passentry){
-        if (err){
-            res.status = 404;
-            res.body = { reason: "requested id wasn't found" };
+            break;
+        case error.ErrorCode.Db:
+            switch (err.type) {
+                case error.Db.NotFound:
+                    res.status(404);
+                    res.send();
+                    return;
+            }
+            break;
+        case error.ErrorCode.Auth:
+            switch (err.type) {
+                case error.Auth.NoUser:
+                case error.Auth.WrongPassword:
+                    res.status(401);
+                    res.send({
+                        code: error.ErrorCode.Auth,
+                        // TODO: fix magic string
+                        type: "WrongPasswordOrUsername"
+                    });
+                    return;
+            }
+            break;
+        case error.ErrorCode.Validation:
+            res.status(400);
+            res.send(err);
             return;
-        }
-        res.status = 200;
-        res.send('OK');
+        case error.ErrorCode.Verification:
+            res.status(409);
+            res.send(err);
+            return;
+    }
+    if (!config.isDev) log.error(err); // if prod env, log only unhandled errors
+
+    res.status(500);
+    res.send({
+        code: error.ErrorCode.Other,
+        // possible security hole - unknown error can provide sensitive info
+        message: error.orig ? error.orig.toString() : undefined
     });
-});
+    return;
 
-app.delete('/api/entries/:id', function (req, res) {
-    PasswordModel.deleteOne(req.params[0], function(err){
-        if (err){
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-            return res.send({ error: 'Server error' });
+    function applyContext(err) {
+        if (err.context === undefined) {
+            err.context = {
+                params: req.params,
+                url: req.originalUrl,
+                body: req.body
+            };
         }
-        res.status = 204;
-        res.send('OK');
-    });
-});
-
-app.use(function(req, res, next){
-    res.status(404);
-    log.debug('Not found URL: %s',req.url);
-    res.send({ error: 'Not found' });
-    return;
-});
-
-app.use(function(err, req, res, next){
-    res.status(err.status || 500);
-    log.error('Internal error(%d): %s',res.statusCode,err.message);
-    res.send({ error: err.message });
-    return;
-});
-
-app.listen(1337, function(){
-    console.log('Express server listening on port 1337');
-});
+    }
+}

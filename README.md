@@ -1,11 +1,16 @@
+[![Build Status](https://travis-ci.org/emotz/passwordkeeper.svg?branch=master)](https://travis-ci.org/emotz/passwordkeeper)
+
 # PasswordKeeper
 
 Simple storage for passwords. Uses VueJS for front-end.
 
 ## Tech description
 
-`Vagrantfile` is a configuration file for `Vagrant`. It is used to provide
-conservative environment amongst developers machines.
+`Dockerfile.*` are configuration files for `Docker`. They are used to build docker
+image and provide conservative environment amongst developers machines.
+
+`docker-compose.yml` is a configuration file for `docker-compose`. It is used to connect
+containers between themselves and attach them to each other.
 
 `jsconfig.json` is a Visual Studio Code file for project definition. There are
 number of those files amongst the project to separate execution context.
@@ -32,94 +37,69 @@ There is also `frontend/test.webpack.config.js`. This is for building unit
 tests. They are first built into bundle `frontend/dist/test.bundle.js` and then
 this bundle is monitored by `karma` to run unit tests.
 
-Development server is `local-web-server`. It is simple http server, designed to
-be easily mockable and configurable for easy startup. Its config file along with
-registered routes is `frontend/server-mocks/.local-web-server.json`.
-Route-handlers are located at `frontend/server-mocks/src`.
-
 `WebDriverIO` is used to run end-to-end tests (full-stack tests). It uses
 Selenium as engine.
 
-## Vagrant setup (for Windows host)
+## Docker setup (for Windows host)
 
-If you already have *VirtualBox* (required version > 5.1.20 because of bug in that version), *Vagrant* and *OpenSSH* installed, you can
+If you already have *Docker* installed, you can
 skip this section and move to `Build & Run`.
 
-*Optional*: Install [choco](https://chocolatey.org/) - package manager for
-Windows to simplify installation process by executing following command:
+If your operation system is `Windows 10 Pro` and your processor supports `Hyper-V` technology,
+you can install `Docker for Windows` from [here](https://docs.docker.com/docker-for-windows/install/).
+It is recommended to install `stable` version.
+
+Else, you must install `Docker Toolbox` from [here](https://docs.docker.com/toolbox/toolbox_install_windows/).
+After install for checking docker workability you can enter windows command line and then
 
 ```bat
-:: elevated CMD (with Administrator rights):
-
-@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-refreshenv
+docker info
 ```
 
-Install [Vagrant](https://www.vagrantup.com/),
-[VirtualBox](https://www.virtualbox.org/), and *OpenSSH*:
+You must have Hyper-V technology enabled or docker enables it in installing process.
+If you want to enable `Hyper-V` technology before installing, how to do it you can read [here](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v).
 
-*Notice*: If you have *PUTTY* ssh installed, you might need to move *OpenSSH*
-before *PUTTY* in **PATH**
+You might need to reboot after installing docker.
 
-```bat
-:: elevated CMD (with Administrator rights):
-
-choco install vagrant
-choco install virtualbox
-choco install openssh
-```
-
-You might need to reboot after installing virtualbox.
-
-Since virtual machines are taking a lot of disk space, you probably want to move
-them out of system drive.
-
-To do that with *VirtualBox*, open up `Oracle VM VirtualBox` manager and press
-`Settings` button. There select `General` and adjust vm location.
-
-To move *Vagrant* files to another drive, you need to change **VAGRANT_HOME**
-env variable:
-
-![Changing VAGRANT_HOME](/doc/vagrant_home.png?raw=true "Changing VAGRANT_HOME")
-
-Set up *Vagrant*:
-
-```bat
-:: ordinal CMD (without Administrator rights):
-
-vagrant plugin install vagrant-vbguest
-```
+Docker has a virtual hard disk where it stores its containers.
+It takes a lot of space. If you want to move it open up Docker `Settings`, then select
+`Advanced` and adjust VHD location by setting `Images and volumes VHD location` parameter.
 
 ## Build & Run
 
-Firstly finish `Vagrant setup` section.
+Firstly finish `Docker setup` section.
 
 Then `cd` into project root directory.
 
 And then
 
 ```bat
-vagrant up
+docker-compose pull base base-e2e base-frontend
+docker-compose up backend frontend
 ```
 
 This will take ~25-30 min to finish.
 
-All future start-ups should be like following, without `vagrant provision` (and much
-faster than first one):
+Future start-ups should be just
 
 ```bat
-vagrant up
+docker-compose up backend frontend
 ```
 
-(wait about 15 secs after `vagrant up` is finished for build to complete)
+They will be much faster than first one.
 
-`vagrant up` command makes Vagrant to launch virtual machine, set up all builds,
-watches and dev servers. You are ready to go! Open `http://localhost:8000` in
-your browser.
+`docker-compose up frontend` command makes Docker to start container for the
+frontend, build it and set up watches on file changes to rebuild the UI and
+starts livereload server.
+
+`docker-compose up backend` command starts up the web
+server and other required services.
+
+You are ready to go! Open `http://localhost:1337` in your browser and enjoy!
 
 ## Debug
 
-To debug with *VSCode*:
+### VSCode
 
 Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
 
@@ -134,85 +114,59 @@ editor access to the tools like `eslint`. After that (or if you installed
 
 ## Advanced: Build & Run
 
-For more precise control, after `vagrant up` you can ssh into virtual machine by
-using
+For more precise control, after `docker-compose up backend frontend` you can ssh
+into Docker by using
 
 ```bat
-vagrant ssh
+docker-compose exec backend bash
 ```
 
-While you are in ssh, you can do other commands, listed below (or simply do `npm
-run` to get list of available scripts to run).
-
-### Build
-
-*Warn*: Don't forget to `vagrant ssh`
+and
 
 ```bat
-NODE_ENV=development
-npm run build
+docker-compose exec frontend bash
 ```
 
-### Start dev server
+While you are in ssh, you can do other commands - do `npm run` for available
+commands.
 
-*Warn*: Don't forget to `vagrant ssh`
+### Build base images
 
 ```bat
-npm run dev
+docker-compose build base && docker-compose build base-e2e base-frontend
+docker-compose push base base-e2e base-frontend
 ```
 
 ### Run unit tests
 
-*Warn*: Don't forget to `vagrant ssh`
-
 ```bat
-npm run test-unit
-```
-
-*Notice*: It doesn't build the project, it builds only tests.
-
-To watch on the unit-test:
-
-```bat
-npm run test-unit:watch
+docker-compose up karma-server karma-runner
 ```
 
 ### Run e2e tests
 
-*Warn*: Don't forget to `vagrant ssh`
-
-*Notice*: First start will take quite a bit of time because it downloads selenium and chrome driver.
-
 ```bat
-npm run test-e2e
+docker-compose run --rm test-runner & docker-compose stop test-postgres test-server & docker-compose rm -f test-postgres
 ```
 
-*Notice*: It doesn't build the project
-
-### Run all tests
-
-*Warn*: Don't forget to `vagrant ssh`
-
-```bat
-npm run test
+```bash
+docker-compose run --rm test-runner ; docker-compose stop test-postgres test-server ; docker-compose rm -f test-postgres
 ```
 
-*Notice*: It doesn't build the project
+<!-- ### Production build -->
 
-### Production build
+<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
 
-*Warn*: Don't forget to `vagrant ssh`
+<!-- ```bat -->
+<!-- NODE_ENV=production -->
+<!-- npm run build -->
+<!-- ``` -->
 
-```bat
-NODE_ENV=production
-npm run build
-```
+<!-- ### Clean -->
 
-### Clean
+<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
 
-*Warn*: Don't forget to `vagrant ssh`
-
-```bat
-npm run clean
-```
+<!-- ```bat -->
+<!-- npm run clean -->
+<!-- ``` -->
 

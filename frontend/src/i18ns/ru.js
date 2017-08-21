@@ -43,6 +43,8 @@ export default {
     },
     confirm_text: "Вы уверены?",
     confirm_title: "Подтвердить",
+    label_username: "Имя пользователя",
+    label_email: "Электронная почта",
     label_title: "Название",
     label_user: "Имя пользователя",
     label_password: "Пароль",
@@ -52,11 +54,10 @@ export default {
     search_placeholder: "Поиск",
     no_passwords_found: "Совпадений не найдено.",
     signin: "Войти",
+    signup: "Зарегистрироваться",
+    signin_title: "Войти",
+    signup_title: "Создать свой персональный аккаунт",
     signin_user_placeholder: "Электронный адрес",
     signin_pass_placeholder: "Пароль",
-    signout: "Выйти",
-    api_error: {
-        'no user with matched password': "Пользователь с таким паролем не найден.",
-        'access token is not valid': "Токен доступа не валиден."
-    }
+    signout: "Выйти"
 };

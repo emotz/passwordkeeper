@@ -17,7 +17,7 @@
                              tag="li"
                              to="/about"><a>{{ $t('link.about') }}</a></router-link>
             </ul>
-            <pk-signin></pk-signin>
+            <pk-sign></pk-sign>
         </div>
         <!--/.container-fluid -->
     </nav>

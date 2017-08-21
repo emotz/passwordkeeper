@@ -35,16 +35,11 @@ export default {
         }
     },
     watch: {
-        'item.title'(val) {
+        title(val) {
             this.title_error = false;
-            this.title = val;
         },
-        'item.user'(val) {
+        user(val) {
             this.user_error = false;
-            this.user = val;
-        },
-        'item.password'(val) {
-            this.password = val;
         }
     }
 };

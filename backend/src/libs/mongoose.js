@@ -1,6 +1,6 @@
-const mongoose    = require('mongoose');
+/*const mongoose    = require('mongoose');
 const log         = require('./log')(module);
-const url =  'mongodb://localhost:27017/testdb';
+const url =  'mongodb://localhost:27017/passwordkeeper';
 
 function initConnect()
 {
@@ -16,5 +16,5 @@ function initConnect()
     });
 }
 
-module.exports = mongoose; 
-module.exports.initConnect = initConnect;
+module.exports = mongoose;
+module.exports.initConnect = initConnect;*/

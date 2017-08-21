@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "axios": "^0.16.2",
+    "chai": "^4.1.1",
+    "wdio-jasmine-framework": "^0.3.0",
+    "webdriverio": "^4.6.2"
+  },
+  "scripts": {
+    "test": "wdio",
+    "karma": "wdio karma.wdio.conf.js"
+  }
+}

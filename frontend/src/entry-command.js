@@ -1,6 +1,9 @@
 import assert from 'assert';
-import { Command, execute, can_execute } from 'command-decorator';
+import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { http, parse_location } from 'src/plugins/http.js';
+import { notifier_error } from 'src/services/loader.js';
+import * as i18n from 'src/plugins/i18n.js';
+import * as auth from 'src/services/auth.js';
 
 // TODO: move it somewhere
 const API_ENTRIES_URL = 'api/entries';
@@ -18,6 +21,7 @@ export class EntryCommand extends Command {
         assert(this.entry._id);
     }
 
+    @notifier_error(i18n.terror)
     @execute
     async save(newitem) {
         newitem = newitem || this.entry;
@@ -28,11 +32,13 @@ export class EntryCommand extends Command {
         };
 
         let response;
-        if (this.entry.id !== undefined) {
-            response = await http.put(`${API_ENTRIES_URL}/${this.entry.id}`, dto);
-        } else {
-            response = await http.post(API_ENTRIES_URL, dto);
-            this.entry.id = parse_location(response);
+        if (auth.is_authenticated()) {
+            if (this.entry.id !== undefined) {
+                response = await http.put(`${API_ENTRIES_URL}/${this.entry.id}`, dto);
+            } else {
+                response = await http.post(API_ENTRIES_URL, dto);
+                this.entry.id = parseInt(parse_location(response));
+            }
         }
         this.entry.user = dto.user;
         this.entry.title = dto.title;
@@ -53,10 +59,13 @@ export class EntryCommand extends Command {
         };
     }
 
+    @notifier_error(i18n.terror)
     @execute
     async delete() {
-        if (this.entry.id !== undefined) {
-            await http.delete(`${API_ENTRIES_URL}/${this.entry.id}`);
+        if (auth.is_authenticated()) {
+            if (this.entry.id !== undefined) {
+                await http.delete(`${API_ENTRIES_URL}/${this.entry.id}`);
+            }
         }
         (this.ondelete || function() { })();
     }

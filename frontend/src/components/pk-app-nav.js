@@ -1,5 +1,5 @@
-import PkSignin from './pk-signin.vue';
+import PkSign from './pk-sign.vue';
 
 export default {
-    components: { PkSignin }
+    components: { PkSign }
 };

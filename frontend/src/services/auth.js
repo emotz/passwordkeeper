@@ -1,6 +1,8 @@
 import { http } from 'src/plugins/http.js';
 import { Command, execute } from 'command-decorator';
 import { make_reactive } from './watch.js';
+import { notifier_error } from 'src/services/loader.js';
+import * as i18n from 'src/plugins/i18n.js';
 
 const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
@@ -9,32 +11,39 @@ const data = make_reactive({
     token: undefined
 });
 
-class LoginCommand extends Command {
+// TODO change login and signup to the same signature?
+class AuthCommand extends Command {
+    @notifier_error(i18n.terror)
     @execute
-    async execute(user, password) {
-        let response = await http.post(API_TOKEN_URL, { user, password });
-        // TODO handle errors
+    async login(login, password) {
+        let response = await http.post(API_TOKEN_URL, { login, password });
         set_token(response.data.access_token);
+        return response;
+    }
+
+    @notifier_error(i18n.terror)
+    @execute
+    async logout() {
+        try {
+            return await http.delete(API_TOKEN_URL);
+        } finally {
+            remove_token();
+        }
+    }
+
+    @notifier_error(i18n.terror)
+    @execute
+    async signup(input) {
+        const response = await http.post(API_USERS_URL, input);
         return response;
     }
 }
 
-export const login_cmd = new LoginCommand();
+export const auth_cmd = new AuthCommand();
 
-export async function register(input) {
-    let response = await http.post(API_USERS_URL, input);
-    // TODO: validate token
-    set_token(response.data.access_token);
-    return response;
-}
-
-export async function logout() {
-    try {
-        return await http.delete(API_TOKEN_URL);
-    } finally {
-        remove_token();
-    }
-}
+export const login = auth_cmd.login.bind(auth_cmd);
+export const logout = auth_cmd.logout.bind(auth_cmd);
+export const signup = auth_cmd.signup.bind(auth_cmd);
 
 /**
  * Reactive

@@ -1,6 +1,10 @@
 describe('main', function() {
     browser.windowHandleSize({ width: 1920, height: 1080 });
 
+    const USER = 'myuseruser';
+    const PASS = 'mypassmypass';
+    const EMAIL = 'myemail@myemail.ru';
+
     describe('login', function() {
         const Page = require('./pageobjects/page.js');
         const page = new Page();
@@ -13,11 +17,34 @@ describe('main', function() {
             page.login('nonexistent user', 'nonexistent password');
             page.waitForFailedLogin();
         });
-        it('should not fail login with correct user/password and logout', function() {
-            page.login('myuser', 'mypassword');
-            page.waitForLogoutReady();
+        it('should fail signup with email without @', function() {
+            page.signup(USER, PASS, 'notreally_an_email');
+            page.waitForFailedSignup();
+            page.hideModal();
+        });
+        it('should fail signup with username with @', function() {
+            page.signup(USER + '@gmail.com', PASS, EMAIL);
+            page.waitForFailedSignup();
+            page.hideModal();
+        });
+        it('should signup, autologin and then logout', function() {
+            page.signup(USER, PASS, EMAIL);
+            page.waitForSuccessSignup();
+            page.waitForSuccessLogin();
             page.logout();
-            page.waitForLoginReady();
+            page.waitForSuccessLogout();
+        });
+        it('should login and logout', function() {
+            page.login(USER, PASS);
+            page.waitForSuccessLogin();
+            page.logout();
+            page.waitForSuccessLogout();
+        });
+        it('should login with email and logout', function() {
+            page.login(EMAIL, PASS);
+            page.waitForSuccessLogin();
+            page.logout();
+            page.waitForSuccessLogout();
         });
     });
     describe('about', function() {
@@ -49,12 +76,16 @@ describe('main', function() {
 
         beforeEach(function() {
             page.open();
+            page.login(USER, PASS);
+            page.waitForSuccessLogin();
             page.removeAllPasses();
             page.waitForNoPasses();
         });
 
         afterEach(function() {
             page.waitForNoPasses();
+            page.logout();
+            page.waitForSuccessLogout();
         });
 
         it('can add and remove pass', function() {
@@ -67,6 +98,21 @@ describe('main', function() {
             page.addPass(pass);
             page.waitForPass(pass);
             page.removeLastPass();
+            page.waitForPass(pass, undefined, true);
+        });
+        it('can add and remove pass with refresh', function() {
+            let pass = {
+                title: 'test title',
+                user: 'test user',
+                password: 'test password'
+            };
+
+            page.addPass(pass);
+            page.waitForPass(pass);
+            page.removeLastPass();
+            page.waitForPass(pass, undefined, true);
+
+            page.refreshAllPasses();
             page.waitForPass(pass, undefined, true);
         });
         it('bug with delete', function() {

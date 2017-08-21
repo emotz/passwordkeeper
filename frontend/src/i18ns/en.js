@@ -44,6 +44,8 @@ export default {
     confirm_text: "Are you sure?",
     confirm_title: "Confirm",
     label_title: "Title",
+    label_username: "Username",
+    label_email: "Email Address",
     label_user: "User",
     label_password: "Password",
     button_ok: "Ok",
@@ -52,11 +54,27 @@ export default {
     search_placeholder: "Search",
     no_passwords_found: "No matched passwords.",
     signin: "Sign In",
+    signup: "Sign Up",
+    signin_title: "Sign In",
+    signup_title: "Create your personal account",
     signin_user_placeholder: "Email",
     signin_pass_placeholder: "Password",
     signout: "Sign Out",
-    api_error: {
-        'no user with matched password': "No user with matched password.",
-        'access token is not valid': "Access token is not valid"
+    error: {
+        Other: {
+            BadRequest: "Error with request",
+            NotFound: "Resource not found",
+            'default': "{message}"
+        },
+        Auth: {
+            WrongPasswordOrUsername: "No user with matching password",
+            'default': "Authorization error {message}"
+        },
+        Validation: {
+            'default': "{message}"
+        },
+        Verification: {
+            NotUnique: "{property} already exists"
+        }
     }
 };

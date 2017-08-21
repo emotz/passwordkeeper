@@ -37,6 +37,7 @@ jspm_packages
 .node_repl_history
 
 # build files
+public
 dist
 bin
 selenium-debug.log
@@ -44,4 +45,3 @@ errorShots
 typings
 .vscode/chrome
 .vagrant
-.git

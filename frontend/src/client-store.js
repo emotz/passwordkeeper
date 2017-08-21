@@ -16,7 +16,7 @@ class ClientStore {
     }
 
     set(val) {
-        if (val === undefined) this.remove_item(this.key);
+        if (val === undefined) this.remove(this.key);
         else window.localStorage.setItem(this.key, val);
     }
 

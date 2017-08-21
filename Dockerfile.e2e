@@ -1,0 +1,10 @@
+FROM passwordkeeper/base-e2e:0.4
+
+# Create app directory
+WORKDIR /usr/src/passwordkeeper/e2e
+
+# Install app dependencies
+COPY e2e/package.json .
+RUN npm install
+
+COPY e2e .
