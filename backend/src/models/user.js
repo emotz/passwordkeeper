@@ -12,7 +12,7 @@ const User = sequelize.define('user', {
         allowNull: false,
         unique: true,
         // HACK: For some reason it doesnt work therefore custom validator
-        // notEmpty: true 
+        // notEmpty: true
         validate: {
             isNotEmpty: function(val) {
                 // TODO: make proper error
