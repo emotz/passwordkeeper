@@ -17,6 +17,16 @@ describe('main', function() {
             page.login('nonexistent user', 'nonexistent password');
             page.waitForFailedLogin();
         });
+        it('should fail signup with email without @', function() {
+            page.signup(USER, PASS, 'notreally_an_email');
+            page.waitForFailedSignup();
+            page.hideModal();
+        });
+        it('should fail signup with username with @', function() {
+            page.signup(USER + '@gmail.com', PASS, EMAIL);
+            page.waitForFailedSignup();
+            page.hideModal();
+        });
         it('should signup', function() {
             page.signup(USER, PASS, EMAIL);
             page.waitForSuccessSignup();
