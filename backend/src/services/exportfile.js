@@ -13,6 +13,7 @@ async function ExportToCSV(user) {
     const csv = json2csv({ data: passEntryList, fields: fields, del: ';' });
     const filestr = path.join(PUBLICFS_PATH, user.username + '.csv');
     log.debug(filestr);
+    await ensureDirectoryExistence(filestr);
     await fse.writeFile(filestr, csv);
     return filestr;
 }
@@ -30,8 +31,22 @@ async function ExportToXML(user) {
         item.att('password', passentry.password);
     }
     log.debug(filestr);
+    await ensureDirectoryExistence(filestr);
     await fse.writeFile(filestr, root.end());
     return filestr;
+}
+
+async function ensureDirectoryExistence(filePath) {
+    log.debug("here we are");
+    const dirname = path.dirname(filePath);
+    let res = await fse.exists(dirname);
+    log.debug('res', res, dirname);
+    if (res) {
+        return true;
+    }
+    await ensureDirectoryExistence(dirname);
+    log.debug("creating dir", dirname);
+    return fse.mkdir(dirname);
 }
 
 module.exports.ExportToCSV = ExportToCSV;
