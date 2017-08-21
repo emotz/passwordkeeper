@@ -10,12 +10,12 @@
 
             <div class="form-group">
                 <label class="control-label"
-                       :for="`pk-signin-user-input-${_uid}`">{{ $t('label_user') }}</label>
+                       :for="`pk-signin-login-input-${_uid}`">{{ $t('label_login') }}</label>
                 <input type="text"
-                       class="pk-signin-user-input form-control"
-                       :id="`pk-signin-user-input-${_uid}`"
+                       class="pk-signin-login-input form-control"
+                       :id="`pk-signin-login-input-${_uid}`"
                        placeholder="User or e-mail"
-                       v-model="username">
+                       v-model="login">
             </div>
             <div class="form-group">
                 <label :for="`pk-signin-pass-input-${_uid}`">{{ $t('label_password') }}</label>

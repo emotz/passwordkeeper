@@ -16,7 +16,7 @@ function generateUserDto() {
     return {
         username: generateUniqueString(),
         password: generateUniqueString(),
-        email: generateUniqueString(),
+        email: generateUniqueString() + '@whatever.com',
     };
 }
 function parseEntryIdFromLocationHeader(location) {

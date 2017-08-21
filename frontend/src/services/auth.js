@@ -14,9 +14,8 @@ const data = make_reactive({
 class AuthCommand extends Command {
     @notifier_error(i18n.terror)
     @execute
-    async login(username, password) {
-        let response = await http.post(API_TOKEN_URL, { username, password });
-        // TODO handle errors
+    async login(login, password) {
+        let response = await http.post(API_TOKEN_URL, { login, password });
         set_token(response.data.access_token);
         return response;
     }

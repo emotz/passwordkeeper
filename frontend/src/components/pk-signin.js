@@ -5,7 +5,7 @@ export default {
     components: { Modal },
     data() {
         return {
-            username: "",
+            login: "",
             password: "",
             show_password: false
         };
@@ -13,7 +13,7 @@ export default {
     methods: {
         async ok() {
             try {
-                await auth.login(this.username, this.password);
+                await auth.login(this.login, this.password);
             } catch (err) {
                 throw err;
             }
