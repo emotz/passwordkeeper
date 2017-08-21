@@ -72,7 +72,6 @@ describe(`REST ${API_PATH} `, function() {
                 });
             } catch (err) {
                 assert(err.response.status === 400);
-                assert(err.response.data.errors[0].path === 'user');
                 return;
             }
             assert(false);
