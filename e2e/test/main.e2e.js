@@ -27,9 +27,12 @@ describe('main', function() {
             page.waitForFailedSignup();
             page.hideModal();
         });
-        it('should signup', function() {
+        it('should signup, autologin and then logout', function() {
             page.signup(USER, PASS, EMAIL);
             page.waitForSuccessSignup();
+            page.waitForSuccessLogin();
+            page.logout();
+            page.waitForSuccessLogout();
         });
         it('should login and logout', function() {
             page.login(USER, PASS);
