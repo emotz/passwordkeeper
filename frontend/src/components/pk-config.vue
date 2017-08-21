@@ -24,11 +24,13 @@
                         </div>
                     </div>
                     <button class="btn btn-primary pk-btn-export-csv"
-                        @click="exportToCSV">
+                        @click="exportToCSV"
+                        :disabled="!can_export()">
                         Exports password to CSV file
                     </button>
                     <button class="btn btn-primary pk-btn-export-xml"
-                        @click="exportToXML">
+                        @click="exportToXML"
+                        :disabled="!can_export()">
                         Exports password to XML file
                     </button>
                 </div>

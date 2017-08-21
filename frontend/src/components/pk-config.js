@@ -1,5 +1,6 @@
 import * as i18n from 'src/plugins/i18n.js';
 import { http } from 'src/plugins/http.js';
+import * as auth from 'src/services/auth.js';
 
 export default {
     data() {
@@ -39,6 +40,9 @@ export default {
             link.href = window.URL.createObjectURL(blob);
             link.download = filename;
             return link.click();
+        },
+        can_export() {
+            return auth.is_authenticated();
         }
     }
 };
