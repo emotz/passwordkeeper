@@ -1,11 +1,12 @@
 import assert from 'assert';
-import { Command, execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
+import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { make_reactive } from './watch.js';
 import { http } from 'src/plugins/http.js';
 import { EntryCommand } from 'src/entry-command.js';
 import * as utls from 'src/utility.js';
 import * as i18n from 'src/plugins/i18n.js';
 import { notifier } from 'src/services/loader.js';
+import * as auth from 'src/services/auth.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
@@ -49,6 +50,20 @@ export const pull_cmd = new (class PullCommand extends Command {
             // TODO refactor_entry - entry_cmd and entry unsynced possibly
             return entry;
         });
+    }
+
+    @can_execute
+    can_execute() {
+        if (auth.is_authenticated()) {
+            return {
+                canExecute: true
+            };
+        } else {
+            return {
+                canExecute: false,
+                reason: "not authenticated"
+            };
+        }
     }
 })();
 
