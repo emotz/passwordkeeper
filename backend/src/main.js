@@ -10,6 +10,7 @@ const error = require('./libs/error');
 const routerEntries = require('./routers/entries');
 const routerToken = require('./routers/token');
 const routerUsers = require('./routers/users');
+const routerExport = require('./routers/export');
 
 const DIST_PATH = path.resolve('./frontend/dist');
 
@@ -30,6 +31,7 @@ if (config.isDev) {
 app.use('/api/entries', routerEntries);
 app.use('/api/token', routerToken);
 app.use('/api/users', routerUsers);
+app.use('/api/export', routerExport);
 
 app.use('/api/*', function(req, res) {
     throw {

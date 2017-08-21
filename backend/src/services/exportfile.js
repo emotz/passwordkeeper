@@ -8,39 +8,23 @@ const PUBLICFS_PATH = path.resolve('./public');
 const xmlbuilder = require('xmlbuilder');
 
 async function ExportToCSV(user) {
-    let filestr = '';
-    let fields = ['user', 'title', 'password'];
-    let passEntryList;
-    if (user.id === undefined) return filestr;
-    try {
-        passEntryList = await passEntry.findAll({ attributes: fields, where: { userID: user.id } });
-    } catch (err) {
-        log.error('Error on getting passentries list: %s', err.message);
-        return filestr;
-    }
-    let csv = json2csv({ data: passEntryList, fields: fields, del: ';' });
-    filestr = path.join(PUBLICFS_PATH, user.username + '.csv');
+    const fields = ['user', 'title', 'password'];
+    const passEntryList = await passEntry.findAll({ attributes: fields, where: { userID: user.id } });
+    const csv = json2csv({ data: passEntryList, fields: fields, del: ';' });
+    const filestr = path.join(PUBLICFS_PATH, user.username + '.csv');
     log.debug(filestr);
     await fse.writeFile(filestr, csv);
     return filestr;
 }
 
 async function ExportToXML(user) {
-    let filestr = '';
-    let fields = ['user', 'title', 'password'];
-    let passEntryList;
-    if (user.id === undefined) return filestr;
-    try {
-        passEntryList = await passEntry.findAll({ attributes: fields, where: { userID: user.id } });
-    } catch (err) {
-        log.error('Error on getting passentries list: %s', res.statusCode, err.message);
-        return filestr;
-    }
-    filestr = path.join(PUBLICFS_PATH, user.username + '.xml');
-    let root = xmlbuilder.create('root');
-    for (let passentry of passEntryList) {
+    const fields = ['user', 'title', 'password'];
+    const passEntryList = await passEntry.findAll({ attributes: fields, where: { userID: user.id } });
+    const filestr = path.join(PUBLICFS_PATH, user.username + '.xml');
+    const root = xmlbuilder.create('root');
+    for (const passentry of passEntryList) {
         log.debug(passentry.user);
-        let item = root.ele('passentry');
+        const item = root.ele('passentry');
         item.att('user', passentry.user);
         item.att('title', passentry.title);
         item.att('password', passentry.password);
