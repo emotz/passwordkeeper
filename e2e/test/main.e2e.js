@@ -37,6 +37,12 @@ describe('main', function() {
             page.logout();
             page.waitForSuccessLogout();
         });
+        it('should login with email and logout', function() {
+            page.login(EMAIL, PASS);
+            page.waitForSuccessLogin();
+            page.logout();
+            page.waitForSuccessLogout();
+        });
     });
     describe('about', function() {
         const page = require('./pageobjects/about.js');

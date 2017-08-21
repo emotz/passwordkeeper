@@ -26,10 +26,10 @@ class Page {
         browser.$('.pk-signup-pass-input').setValue(password);
         browser.$('.btn-modal-ok').click();
     }
-    login(user, password) {
+    login(login, password) {
         this.waitForLoginReady();
         browser.$('.pk-btn-signin').click();
-        browser.$('.pk-signin-user-input').setValue(user);
+        browser.$('.pk-signin-login-input').setValue(login);
         browser.$('.pk-signin-pass-input').setValue(password);
         browser.$('.btn-modal-ok').click();
     }

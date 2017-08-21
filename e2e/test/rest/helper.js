@@ -12,7 +12,7 @@ async function signinWithSignup(user) {
     let apiToken = url.resolve(config.baseUrl, '/api/token');
     await axios.post(api, user);
     let response = await axios.post(apiToken, {
-        username: user.username,
+        login: user.username,
         password: user.password
     });
     return response.data.access_token;

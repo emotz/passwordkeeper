@@ -24,7 +24,7 @@ describe(`REST ${API_PATH} `, function() {
     describe('post ', function() {
         it('should post', async function() {
             const response = await axios.post('/', {
-                username: user.username,
+                login: user.username,
                 password: user.password
             });
 
@@ -35,7 +35,7 @@ describe(`REST ${API_PATH} `, function() {
         it('should not post for nonexistent user', async function() {
             try {
                 await axios.post('/', {
-                    username: "nonexistent",
+                    login: "nonexistent",
                     password: user.password
                 });
             } catch (err) {
