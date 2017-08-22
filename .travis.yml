@@ -5,7 +5,6 @@ git:
 services:
 - docker
 install:
-- docker-compose pull base base-e2e base-frontend
 - docker-compose run --rm frontend npm run build
 - docker-compose run --rm test-server npm run lint -- --max-warnings 0
 script:
