@@ -142,6 +142,14 @@ docker-compose exec frontend bash
 While you are in ssh, you can do other commands - do `npm run` for available
 commands.
 
+### After pulling new changes
+
+Just to make sure that your images are up-to-date
+
+```bat
+docker-compose stop && docker-compose rm -f && docker-compose build
+```
+
 ### Build base images
 
 ```bat
