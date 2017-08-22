@@ -21,14 +21,20 @@ export class EntryCommand extends Command {
         assert(this.entry._id);
     }
 
+    update(newitem) {
+        this.entry.synced = false;
+        this.entry.title = newitem.title;
+        this.entry.user = newitem.user;
+        this.entry.password = newitem.password;
+    }
+
     @notifier_error(i18n.terror)
     @execute
-    async save(newitem) {
-        newitem = newitem || this.entry;
+    async save() {
         const dto = {
-            title: newitem.title,
-            user: newitem.user,
-            password: newitem.password
+            title: this.entry.title,
+            user: this.entry.user,
+            password: this.entry.password
         };
 
         let response;
@@ -40,17 +46,13 @@ export class EntryCommand extends Command {
                 this.entry.id = parseInt(parse_location(response));
             }
         }
-        this.entry.user = dto.user;
-        this.entry.title = dto.title;
-        this.entry.password = dto.password;
         this.entry.synced = true;
         return response;
     }
 
     @can_execute
-    can_save(newitem) {
-        newitem = newitem || this.entry;
-        if (!newitem.synced) {
+    can_save() {
+        if (!this.entry.synced) {
             return { canExecute: true };
         }
         return {
