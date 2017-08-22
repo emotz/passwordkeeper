@@ -65,6 +65,18 @@ Docker has a virtual hard disk where it stores its containers.
 It takes a lot of space. If you want to move it open up Docker `Settings`, then select
 `Advanced` and adjust VHD location by setting `Images and volumes VHD location` parameter.
 
+### Docker Toolbox (for Windows host)
+
+In order to make volume mounting work within Docker Toolbox, few steps are required.
+
+First, add shared folder from VirtualBox Manager - `<path_to_folder_with_repository> -> /var/pk`, enable autoconnect.
+
+Second, add NAT port forwarding for port 1337 from VirtualBox Manager.
+
+Then, for future commands instead of `docker-compose` write `docker-compose -f docker-compose.yml -f docker-compose.toolbox.yml`
+
+E.g. instead of `docker-compose up frontend backend` do `docker-compose -f docker-compose.yml -f docker-compose.toolbox.yml up frontend backend`
+
 ## Build & Run
 
 Firstly finish `Docker setup` section.
