@@ -1,6 +1,6 @@
 {
   "name": "passwordkeeper",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple storage for passwords",
   "dependencies": {
     "body-parser": "^1.17.2",
