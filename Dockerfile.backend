@@ -1,5 +1,4 @@
-# HACK: I would use multistage build, but travis has old version of docker
-# FROM passwordkeeper/frontend as frontend
+FROM passwordkeeper/frontend as frontend
 
 FROM passwordkeeper/base:0.4
 
@@ -12,9 +11,7 @@ COPY package.json .
 RUN npm install
 
 COPY backend backend
-# HACK: I would use multistage build, but travis has old version of docker
-# COPY --from=frontend /usr/src/passwordkeeper/frontend/dist frontend/dist
-COPY frontend/dist frontend/dist
+COPY --from=frontend /usr/src/passwordkeeper/frontend/dist frontend/dist
 
 COPY launch.backend.sh ./
 CMD ["bash", "./launch.backend.sh"]

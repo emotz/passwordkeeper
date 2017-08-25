@@ -86,7 +86,7 @@ Then `cd` into project root directory.
 And then
 
 ```bat
-docker-compose pull base base-e2e base-frontend
+docker-compose pull
 docker-compose up backend frontend
 ```
 
@@ -147,14 +147,8 @@ commands.
 Just to make sure that your images are up-to-date
 
 ```bat
+docker-compose pull
 docker-compose stop && docker-compose rm -f && docker-compose build
-```
-
-### Build base images
-
-```bat
-docker-compose build base && docker-compose build base-e2e base-frontend
-docker-compose push base base-e2e base-frontend
 ```
 
 ### Run unit tests

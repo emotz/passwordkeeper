@@ -4,12 +4,23 @@ git:
   depth: 1
 services:
 - docker
+before_install:
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+
+- docker --version
+- docker-compose --version
+
+- docker-compose pull frontend
+- docker-compose build frontend
+- docker-compose pull backend test-runner
+- docker-compose build backend test-runner
 install:
-- docker-compose run --rm frontend npm run build
-- docker-compose run --rm test-server npm run lint -- --max-warnings 0
+- docker-compose up -d test-server
 script:
+- docker-compose exec test-server npm run lint -- --max-warnings 0
 - docker-compose up karma-server karma-runner
-- docker-compose run --rm test-runner
+- docker-compose up test-runner
 env:
   global:
   - secure: COiArMZvGwbz+MHM0jM3vNlyaJWGv9STLxJZhX39NiYHMOI6GfvpIxKgGSdQHxCbOHzNBxn+EnX6AdNkFyLQTUIphiW3T4/rnN0jy/MDSjStiHLhmKfLyQtS17JXFYtUAHVoKBnmA82R9lNOhGY3cO7gqO0pOxwQjJqIrCN/nwyGwfaQ1Gg4e34VV0s1AUdSp+eSVnv0RUmvHQ7aeUbzcgs7IEcXBdkz1vbDCq3EJgc3xpNy/AXXod3jkPKtkkFtZ7s/oJogD0v3N6vvGDocBuEGe2cKof9E3Oteub0Ugg+wUrOrerWG9yXENIuwaRbB+egRivI62efTVh1Fp/YB2eSLzxyRK1K0BitpDG9G8/efTophHiMV6r2hgXMv4W9wDWndVaQdP9abusSzyDoz3ta+JqUOYx5hnjVb0cXSO1QgOff751qJWdL1VimBvK9mHj09dQEETJgAggR9lsUPoPN0pof3XI00+Rngc6L1PqhTheUQl4J/FOt4tcllICjgs1BOMNlgJaYYmuKRdNvi9+OaWUiJWqALagtLVjZexP+vBhbVGdvUbhxHzWFJgS6NvyJIjonGyV9mUuhl0M1i65ZdIrD4momNlYwFHMArgAy8X5Whps+Z5zSZhgJVbsK8lHFHSbAYfRxpHEJSHUIjMzpLHW24NZ/IY1MRJkFI+Lk=
@@ -20,7 +31,7 @@ notifications:
     secure: q1kSyhC0oGvuae0PnMMC48T3XxUUi1QNnpwoCNF13KFAJGy1ZzR/k27EbrG4WsUTnZ9mPqDN8RuDEWJKk1+P1eN01KaSiPS963bbfAZV6fjPUehNayUoslBuahxOXrZ8uJm3rIfpCtr3/HzaVYG+JdHhW2cK3oZyLGksJp3llfdvej4StxSuGpA3lK8d7vmn/t01Q35L4pjRbBzxTCtfAqp0luI7NMVZadszXmTH5qEoHkZNL8ZEi37lS266lW7+kzc/L8CDQM9LCDIv/nnUUZZeaJOar2WqJtt/1mxzkruybWtbhznHVyCu7Xb4dpQEmoDJSvc8jTts7MDixOIFQyq2syqiOeZZm5vD+vI7DvnGQTDxnuLKyGMCPzFxTKKk3okbzlBwbD1jHbDRaFmNpkNbUjHjq/YG430VRT2Fp4pqdNkPbdY/aJi7fHsiuCpNKRREXnAnTcZ3ANGNN5XlcHkZ9VhkOtkF69mH7b6vDyj0BL17ZQ3b0DhAtvLSalyXmIMPy0gW8vboV/n10G9gpYeBzm1pYCCwOc/XOn25YCuIHLqytPraIRxJUDkSlqDQ8aVYSq1NrBm7w+uKQq7TWsxEhT47PNCktW8IMMVPXAuR3i906gXFWGyYNCgvOdVSqN4EF/Y2GhFmSuFn6VTxhTs/mCXES65S08vqt1FUCbI=
 branches:
   only:
-    - master
+  - master
 deploy:
   skip_cleanup: true
   provider: script
