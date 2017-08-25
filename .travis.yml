@@ -11,16 +11,17 @@ before_install:
 - docker --version
 - docker-compose --version
 
+- docker-compose pull base
 - docker-compose pull frontend
 - docker-compose build frontend
 - docker-compose pull backend test-runner
 - docker-compose build backend test-runner
 install:
-- docker-compose up -d test-server
+- docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml up -d test-server
 script:
-- docker-compose exec test-server npm run lint -- --max-warnings 0
-- docker-compose up --exit-code-from karma-server karma-server karma-runner
-- docker-compose run --rm test-runner
+- docker-compose run --rm test-server npm run lint -- --max-warnings 0
+- docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml up --exit-code-from karma-server karma-server karma-runner
+- docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml run --rm test-runner
 after_success:
 - docker login -u="$DOCKER_HUB_USER" -p="$DOCKER_HUB_PASSWORD"
 - docker-compose push frontend backend test-runner
