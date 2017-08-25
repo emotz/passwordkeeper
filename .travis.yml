@@ -19,8 +19,8 @@ install:
 - docker-compose up -d test-server
 script:
 - docker-compose exec test-server npm run lint -- --max-warnings 0
-- docker-compose up karma-server karma-runner
-- docker-compose up test-runner
+- docker-compose up --exit-code-from karma-server karma-server karma-runner
+- docker-compose run --rm test-runner
 after_success:
 - docker login -u="$DOCKER_HUB_USER" -p="$DOCKER_HUB_PASSWORD"
 - docker-compose push frontend backend test-runner
