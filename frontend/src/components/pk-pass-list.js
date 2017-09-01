@@ -92,7 +92,7 @@ export default {
             return cmd.is_executing() && last_op.cmd === 'delete' && last_op.status === CommandStatus.Pending;
         },
         can_save(item) {
-            return get_entry_cmd(item).can_save(item).canExecute;
+            return get_entry_cmd(item).can_save().canExecute;
         },
         is_saving(item) {
             let cmd = get_entry_cmd(item);
@@ -121,14 +121,13 @@ export default {
             } catch (err) {
                 return;
             }
-            item.title = newitem.title;
-            item.password = newitem.password;
-            item.user = newitem.user;
-            item.synced = false;
-            this.save(item);
+            const cmd = get_entry_cmd(item);
+            cmd.update(newitem);
+            cmd.save();
         },
         save(item) {
-            get_entry_cmd(item).save(item);
+            const cmd = get_entry_cmd(item);
+            cmd.save();
         },
         remove(item) {
             get_entry_cmd(item).delete();

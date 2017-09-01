@@ -1,3 +1,0 @@
-FROM passwordkeeper/base:0.4
-
-RUN apt-get install -y git
