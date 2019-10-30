@@ -14,9 +14,11 @@ class Page {
     }
     waitForSignupReady() {
         browser.$('.pk-btn-signup').waitForVisible();
+        this.waitForToastToHide();
     }
     waitForLoginReady() {
         browser.$('.pk-btn-signin').waitForVisible();
+        this.waitForToastToHide();
     }
     signup(user, password, email) {
         this.waitForSignupReady();
@@ -35,6 +37,7 @@ class Page {
     }
     waitForLogoutReady() {
         browser.$('.pk-btn-signout').waitForVisible();
+        this.waitForToastToHide();
     }
     logout() {
         browser.$('.pk-btn-signout').waitForVisible();
@@ -56,6 +59,9 @@ class Page {
     }
     waitForSuccessSignup() {
         browser.$('.pk-signup').waitForVisible(undefined, true);
+    }
+    waitForToastToHide() {
+        browser.$('.toast').waitForVisible(10000, true);
     }
     hideModal() {
         browser.$('.btn-modal-cancel').click();
