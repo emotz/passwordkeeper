@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/emotz/passwordkeeper.svg?branch=master)](https://travis-ci.org/emotz/passwordkeeper)
 
+[![pipeline status](https://gitlab.com/emotz/passwordkeeper/badges/master/pipeline.svg)](https://gitlab.com/emotz/passwordkeeper/commits/master)
+
 # PasswordKeeper
 
 Simple storage for passwords. Uses VueJS for front-end.
@@ -184,3 +186,36 @@ docker-compose run --rm test-runner ; docker-compose stop test-postgres test-ser
 <!-- npm run clean -->
 <!-- ``` -->
 
+## Deploy
+
+### Build runner image
+
+```sh
+docker-compose build runner
+docker login registry.gitlab.com # it will ask for your gitlab credentials
+docker-compose push runner
+```
+
+### First !
+
+Only once:
+
+```sh
+docker-machine create --driver generic --generic-ip-address=emotz.info emotz
+```
+
+Always:
+
+```sh
+eval $(docker-machine env emotz)
+```
+
+### Deploy
+
+Manual deploy is not supported. Deploy by pushing to github (which gets mirrored to gitlab and triggers deploy pipeline).
+
+### Logs
+
+```sh
+docker-compose -f docker-compose-production.yml -p passwordkeeper logs backend
+```

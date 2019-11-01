@@ -7,8 +7,7 @@ function generateToken(user) {
         displayName: user.username,
         email: user.email
     };
-    // TODO secret key
-    const token = jwt.sign(payload, "mysecretkey");
+    const token = jwt.sign(payload, process.env.JWT_SECRET || "mysecretkey");
     return token;
 }
 

@@ -1,6 +1,11 @@
 version: '3.2'
 
 services:
+  runner:
+    image: registry.gitlab.com/emotz/passwordkeeper/runner
+    build:
+      context: ./
+      dockerfile: Dockerfile.runner
   # main
   base:
     build:
@@ -10,6 +15,7 @@ services:
       - passwordkeeper/base:0.4
     image: passwordkeeper/base:0.4
   postgres:
+    restart: always
     image: postgres:latest
     environment:
      POSTGRES_USER: 'vagrant'
@@ -38,6 +44,8 @@ services:
     image: passwordkeeper/backend
     entrypoint: ["./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
     command: ["bash", "./launch.backend.sh"]
+    environment:
+     - JWT_SECRET
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
@@ -46,6 +54,7 @@ services:
      - 9229:9229 # node debug
     depends_on:
      - postgres
+    restart: always
   # karma tests
   karma-server:
     build:

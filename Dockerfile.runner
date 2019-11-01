@@ -1,0 +1,11 @@
+FROM docker:stable
+
+RUN apk update --no-cache
+
+RUN which ssh-agent || ( apk add openssh-client )
+
+RUN apk add py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+
+RUN which docker-compose || pip install docker-compose
+
+CMD [ "bash" ]

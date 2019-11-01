@@ -1,0 +1,72 @@
+image: registry.gitlab.com/emotz/passwordkeeper/runner
+
+stages:
+  - deploy
+
+variables:
+  &variables # certificates are not there yet, they will be set up during before_script
+  DOCKER_CERT_PATH: 'certs'
+  DOCKER_TLS_VERIFY: '1'
+  DOCKER_HOST: 'tcp://emotz.info:2376'
+
+before_script:
+  - DEPLOY_IP=$(getent hosts emotz.info | awk '{ print $1; exit }')
+
+  # setting up ssh access for later web deploy
+  - which ssh-agent || ( apk --update add openssh-client )
+  - mkdir -p ~/.ssh
+  - echo "$DEPLOY_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+  - chmod 700 ~/.ssh/id_rsa
+  - eval $(ssh-agent -s)
+  - ssh-add ~/.ssh/id_rsa
+  - ssh-keyscan -H "$DEPLOY_IP" >> ~/.ssh/known_hosts
+
+  # installing docker-compose
+  - which docker-compose || apk add --update py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+  - which docker-compose || pip install docker-compose
+
+  # setting certificates
+  - mkdir "$DOCKER_CERT_PATH"
+  - echo "$DEPLOY_DOCKER_CA" > $DOCKER_CERT_PATH/ca.pem
+  - echo "$DEPLOY_DOCKER_CERT" > $DOCKER_CERT_PATH/cert.pem
+  - echo "$DEPLOY_DOCKER_KEY" > $DOCKER_CERT_PATH/key.pem
+
+  # testing all good
+  - docker-compose --version
+  - docker info
+
+after_script:
+  - docker rm -f "$CONTAINER_TMP_NAME" || echo Docker container already removed?
+  - rm -rf "$DOCKER_CERT_PATH"
+  - rm -rf ~/.ssh
+
+production:
+  stage: deploy
+  environment:
+    name: production
+    url: https://passwordkeeper.emotz.info
+  tags:
+    - docker
+  only:
+    - master
+  variables:
+    <<: *variables
+    DEPLOY_DIRECTORY: $PRODUCTION_DEPLOY_DIRECTORY
+    JWT_SECRET: $PRODUCTION_JWT_SECRET
+    PROJECT_NAME: 'passwordkeeper'
+  script:
+    - SERVICE_NAME=backend
+    - alias custom-docker-compose="docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml -p "$PROJECT_NAME""
+    # creating base docker image
+    - custom-docker-compose build --build-arg NODE_ENV=production frontend
+    - custom-docker-compose build --build-arg NODE_ENV=production backend
+
+    # restarting $SERVICE_NAME docker container
+    - custom-docker-compose down
+    - custom-docker-compose up --force-recreate -d backend
+
+    - CONTAINER_ID=$(custom-docker-compose ps -q "$SERVICE_NAME")
+
+    # checking it is running
+    - docker ps
+    - custom-docker-compose logs "$SERVICE_NAME"
