@@ -57,7 +57,7 @@ production:
   script:
     - SERVICE_NAME=backend
     - alias custom-docker-compose="docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml -p "$PROJECT_NAME""
-    - docker-compose pull
+    - docker-compose pull base postgres frontend backend
     # creating base docker image
     - custom-docker-compose build --build-arg NODE_ENV=production frontend
     - custom-docker-compose build --build-arg NODE_ENV=production backend
