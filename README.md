@@ -217,5 +217,5 @@ Manual deploy is not supported. Deploy by pushing to github (which gets mirrored
 ### Logs
 
 ```sh
-docker-compose -f docker-compose-production.yml -p passwordkeeper logs backend
+docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml -p passwordkeeper logs backend
 ```

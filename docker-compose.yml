@@ -25,6 +25,8 @@ services:
     build:
      context: .
      dockerfile: Dockerfile.frontend
+     args:
+      - NODE_ENV
      cache_from:
       - passwordkeeper/frontend:latest
     image: passwordkeeper/frontend
@@ -37,15 +39,17 @@ services:
     build:
      context: .
      dockerfile: Dockerfile.backend
-     cache_from:
-      - passwordkeeper/backend:latest
      args:
       - NODE_ENV
+     cache_from:
+      - passwordkeeper/backend:latest
     image: passwordkeeper/backend
     entrypoint: ["./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
     command: ["bash", "./launch.backend.sh"]
     environment:
+     - NODE_ENV
      - JWT_SECRET
+     - IS_GITLAB
     volumes:
      - .:/usr/src/passwordkeeper
      - /usr/src/passwordkeeper/node_modules
