@@ -1,3 +1,4 @@
+const config = require('../config');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const error = require('./error');
@@ -5,8 +6,6 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const log = require('./log')(module);
 const JwtStrategy = require('passport-jwt').Strategy;
 const User = require('../models/user').user;
-// TODO: change to proper secret key
-const jwtsecret = "mysecretkey";
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -59,7 +58,7 @@ passport.use(new LocalStrategy({
 
 const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
-    secretOrKey: jwtsecret,
+    secretOrKey: config.jwtSecret,
     session: false
 };
 
