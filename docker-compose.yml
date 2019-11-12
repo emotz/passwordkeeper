@@ -7,8 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile.base
       cache_from:
-        - passwordkeeper/base:0.4
-    image: passwordkeeper/base:0.4
+        - passwordkeeper/base:0.5
+    image: passwordkeeper/base:0.5
   postgres:
     restart: always
     image: postgres:latest
@@ -39,8 +39,8 @@ services:
       cache_from:
         - passwordkeeper/backend:latest
     image: passwordkeeper/backend
-    entrypoint: ["./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
-    command: ["bash", "./launch.backend.sh"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
+    command: ["bash", "./scripts/launch.backend.sh"]
     environment:
       - NODE_ENV
       - JWT_SECRET
@@ -76,7 +76,7 @@ services:
         - passwordkeeper/e2e:latest
     image: passwordkeeper/e2e
     # TODO: fix wait-for-it for several services - selenium+karma-server
-    entrypoint: ["../wait-for-it.sh", "-t", "60", "karma-server:9876", "--"]
+    entrypoint: ["../scripts/wait-for-it.sh", "-t", "60", "karma-server:9876", "--"]
     command: ["npm", "run", "karma"]
     volumes:
       - .:/usr/src/passwordkeeper
@@ -101,8 +101,8 @@ services:
     volumes:
       - .:/usr/src/passwordkeeper
       - /usr/src/passwordkeeper/node_modules
-    entrypoint: ["./wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
-    command: ["bash", "./launch.backend.sh"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
+    command: ["bash", "./scripts/launch.backend.sh"]
     expose:
       - 1337 # port for testing app
     links:
@@ -114,7 +114,7 @@ services:
       cache_from:
         - passwordkeeper/e2e:latest
     image: passwordkeeper/e2e
-    entrypoint: ["../wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
+    entrypoint: ["../scripts/wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
     command: ["npm", "run", "test"]
     volumes:
       - .:/usr/src/passwordkeeper

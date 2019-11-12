@@ -1,6 +1,6 @@
 FROM passwordkeeper/frontend as frontend
 
-FROM passwordkeeper/base:0.4
+FROM passwordkeeper/base:0.5
 
 ARG NODE_ENV
 ENV NODE_ENV "$NODE_ENV"
@@ -13,5 +13,5 @@ RUN npm install
 COPY backend backend
 COPY --from=frontend /usr/src/passwordkeeper/frontend/dist frontend/dist
 
-COPY launch.backend.sh ./
-CMD ["bash", "./launch.backend.sh"]
+COPY scripts/launch.backend.sh ./scripts/launch.backend.sh
+CMD ["bash", "./scripts/launch.backend.sh"]
