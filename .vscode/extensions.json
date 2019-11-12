@@ -1,10 +1,11 @@
 {
-	"recommendations": [
-		"ms-vscode-remote.remote-ssh",
-		"msjsdiag.debugger-for-chrome",
-		"ms-azuretools.vscode-docker",
-		"dbaeumer.vscode-eslint",
-		"bbenoist.vagrant",
-		"octref.vetur"
-	]
+  "recommendations": [
+    "ms-vscode-remote.remote-ssh",
+    "msjsdiag.debugger-for-chrome",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "bbenoist.vagrant",
+    "octref.vetur",
+    "editorconfig.editorconfig"
+  ]
 }

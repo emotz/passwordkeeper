@@ -1,6 +1,6 @@
 <template>
     <div class="pk-pass-list panel panel-primary"
-         :id="`pk-pass-list-${_uid}`">
+        :id="`pk-pass-list-${_uid}`">
         <div class="panel-heading">
             <h3 class="panel-title">{{ $t('passlist.panel_title') }}</h3>
         </div>
@@ -11,7 +11,7 @@
                     <transition name="fade"
                                 mode="out-in">
                         <table class="table"
-                               v-if="show_passlist">
+                              v-if="show_passlist">
                             <thead>
                                 <tr>
                                     <th>{{ $t('label_title') }}</th>
@@ -65,7 +65,7 @@
                     </transition>
                 </div>
             </transition>
-    
+
             <pk-pass-adder @added="add"></pk-pass-adder>
         </div>
     </div>

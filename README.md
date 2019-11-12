@@ -85,6 +85,8 @@ E.g. instead of `docker-compose up frontend backend` do `docker-compose -f docke
 If you don't want to "pollute" your system with _Docker_, you can use _Vagrant_ instead to set up development
 environment for you in the virtual machine.
 
+(with administrator rights):
+
 ```bat
 vagrant up
 ```
@@ -93,7 +95,6 @@ Log in to the vagrant
 
 ```bat
 vagrant ssh
-cd /vagrant
 ```
 
 Then see the `Build & Run` section.

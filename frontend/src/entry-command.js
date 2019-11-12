@@ -10,8 +10,8 @@ const API_ENTRIES_URL = 'api/entries';
 
 export class EntryCommand extends Command {
     /**
-     * @param options.entry Must be reactive
-     */
+    * @param options.entry Must be reactive
+    */
     constructor(options) {
         super();
 
