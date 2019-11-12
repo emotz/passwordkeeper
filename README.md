@@ -42,8 +42,11 @@ Selenium as engine.
 
 ## Docker setup (for Windows host)
 
-If you already have *Docker* installed, you can
+If you already have _Docker_ installed, you can
 skip this section and move to `Build & Run`.
+
+If you don't want to "pollute" your system with _Docker_, you can skip this section
+and move to `Vagrant setup`.
 
 If your operation system is `Windows 10 Pro` and your processor supports `Hyper-V` technology,
 you can install `Docker for Windows` from [here](https://docs.docker.com/docker-for-windows/install/).
@@ -76,6 +79,45 @@ Second, add NAT port forwarding for port 1337 from VirtualBox Manager.
 Then, for future commands instead of `docker-compose` write `docker-compose -f docker-compose.yml -f docker-compose.toolbox.yml`
 
 E.g. instead of `docker-compose up frontend backend` do `docker-compose -f docker-compose.yml -f docker-compose.toolbox.yml up frontend backend`
+
+## Vagrant setup
+
+If you don't want to "pollute" your system with _Docker_, you can use _Vagrant_ instead to set up development
+environment for you in the virtual machine.
+
+```bat
+vagrant up
+```
+
+Log in to the vagrant
+
+```bat
+vagrant ssh
+cd /vagrant
+```
+
+Then see the `Build & Run` section.
+
+### VSCode Remote SSH Over Vagrant
+
+Set up vscode to have vagrant ssh host:
+
+`F1 -> Remote-SSH: Open configuration File...`
+
+Put there result of `vagrant ssh-config` with replaced hostname `default` to `passwordkeeper` (or the name to your likings):
+
+```
+Host default
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile <yourpath>/.vagrant/machines/default/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+```
 
 ## Build & Run
 
@@ -115,7 +157,7 @@ You are ready to go! Open `http://localhost:1337` in your browser and enjoy!
 
 Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
 
-Open project in *VSCode*, press `ctrl-shift-d`, select `Both` for launch
+Open project in _VSCode_, press `ctrl-shift-d`, select `Both` for launch
 configuration and press `f5`.
 
 ## Linting
@@ -172,9 +214,9 @@ docker-compose run --rm test-runner ; docker-compose stop test-postgres test-ser
 ### Build runner image
 
 ```sh
-docker-compose build runner
+docker-compose -f docker-compose.yml -f docker-compose.gitlab.yml build runner
 docker login registry.gitlab.com # it will ask for your gitlab credentials
-docker-compose push runner
+docker-compose -f docker-compose.yml -f docker-compose.gitlab.yml push runner
 ```
 
 ### First !
