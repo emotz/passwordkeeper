@@ -167,23 +167,6 @@ docker-compose run --rm test-runner & docker-compose stop test-postgres test-ser
 docker-compose run --rm test-runner ; docker-compose stop test-postgres test-server ; docker-compose rm -f test-postgres
 ```
 
-<!-- ### Production build -->
-
-<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
-
-<!-- ```bat -->
-<!-- NODE_ENV=production -->
-<!-- npm run build -->
-<!-- ``` -->
-
-<!-- ### Clean -->
-
-<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
-
-<!-- ```bat -->
-<!-- npm run clean -->
-<!-- ``` -->
-
 ## Deploy
 
 ### Build runner image
