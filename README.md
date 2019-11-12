@@ -119,6 +119,8 @@ Host default
   LogLevel FATAL
 ```
 
+Open `/vagrant` directory.
+
 ## Build & Run
 
 Firstly finish `Docker setup` section.
