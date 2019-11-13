@@ -1,3 +1,3 @@
 import 'bootstrap';
 import 'bootstrap.css';
-import 'font-awesome-webpack';
+// import 'font-awesome-webpack';

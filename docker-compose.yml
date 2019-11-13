@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.base
       cache_from:
-        - passwordkeeper/base:0.5
+        - passwordkeeper/base
     image: passwordkeeper/base:0.5
   postgres:
     restart: always
@@ -23,7 +23,7 @@ services:
       args:
         - NODE_ENV
       cache_from:
-        - passwordkeeper/frontend:latest
+        - passwordkeeper/frontend
     image: passwordkeeper/frontend
     volumes:
       - .:/usr/src/passwordkeeper
@@ -37,7 +37,7 @@ services:
       args:
         - NODE_ENV
       cache_from:
-        - passwordkeeper/backend:latest
+        - passwordkeeper/backend
     image: passwordkeeper/backend
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
     command: ["bash", "./scripts/launch.backend.sh"]
@@ -60,7 +60,7 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
       cache_from:
-        - passwordkeeper/frontend:latest
+        - passwordkeeper/frontend
     image: passwordkeeper/frontend
     command: npm run test
     volumes:
@@ -73,10 +73,11 @@ services:
       context: .
       dockerfile: Dockerfile.e2e
       cache_from:
-        - passwordkeeper/e2e:latest
+        - passwordkeeper/e2e
     image: passwordkeeper/e2e
     # TODO: fix wait-for-it for several services - selenium+karma-server
-    entrypoint: ["../scripts/wait-for-it.sh", "-t", "60", "karma-server:9876", "--"]
+    entrypoint:
+      ["../scripts/wait-for-it.sh", "-t", "60", "karma-server:9876", "--"]
     command: ["npm", "run", "karma"]
     volumes:
       - .:/usr/src/passwordkeeper
@@ -96,7 +97,7 @@ services:
       context: .
       dockerfile: Dockerfile.backend
       cache_from:
-        - passwordkeeper/backend:latest
+        - passwordkeeper/backend
     image: passwordkeeper/backend
     volumes:
       - .:/usr/src/passwordkeeper
@@ -112,9 +113,10 @@ services:
       context: .
       dockerfile: Dockerfile.e2e
       cache_from:
-        - passwordkeeper/e2e:latest
+        - passwordkeeper/e2e
     image: passwordkeeper/e2e
-    entrypoint: ["../scripts/wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
+    entrypoint:
+      ["../scripts/wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
     command: ["npm", "run", "test"]
     volumes:
       - .:/usr/src/passwordkeeper
