@@ -59,7 +59,16 @@ module.exports = {
   plugins,
   module: {
     rules: [
-      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url-loader' }, // for font-awesome
+      {
+        test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        // Limiting the size of the woff fonts breaks font-awesome ONLY for the extract text plugin
+        // loader: "url?limit=10000"
+        loader: "url-loader"
+      },
+      {
+        test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
+        loader: 'file-loader'
+      },
       { test: /\.vue$/, loader: 'vue-loader' },
       { test: /\.css$/, use: ['style-loader', 'css-loader'] }
     ]

@@ -1,13 +1,16 @@
 version: "3.2"
 
+volumes:
+  node_modules:
+  frontend_node_modules:
+  e2e_node_modules:
+
 services:
   # main
   base:
     build:
       context: .
       dockerfile: Dockerfile.base
-      cache_from:
-        - passwordkeeper/base
     image: passwordkeeper/base:0.5
   postgres:
     restart: always
@@ -22,12 +25,10 @@ services:
       dockerfile: Dockerfile.frontend
       args:
         - NODE_ENV
-      cache_from:
-        - passwordkeeper/frontend
     image: passwordkeeper/frontend
     volumes:
       - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/frontend/node_modules
+      - frontend_node_modules:/usr/src/passwordkeeper/frontend/node_modules
     ports:
       - 35729:35729 # livereload
   backend:
@@ -36,8 +37,6 @@ services:
       dockerfile: Dockerfile.backend
       args:
         - NODE_ENV
-      cache_from:
-        - passwordkeeper/backend
     image: passwordkeeper/backend
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
     command: ["bash", "./scripts/launch.backend.sh"]
@@ -47,7 +46,7 @@ services:
       - IS_GITLAB
     volumes:
       - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/node_modules
+      - node_modules:/usr/src/passwordkeeper/node_modules
     ports:
       - 1337:1337 # main app port
       - 9229:9229 # node debug
@@ -59,21 +58,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-      cache_from:
-        - passwordkeeper/frontend
     image: passwordkeeper/frontend
     command: npm run test
     volumes:
       - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/frontend/node_modules
+      - frontend_node_modules:/usr/src/passwordkeeper/frontend/node_modules
     ports:
       - 9876:9876
   karma-runner:
     build:
       context: .
       dockerfile: Dockerfile.e2e
-      cache_from:
-        - passwordkeeper/e2e
     image: passwordkeeper/e2e
     # TODO: fix wait-for-it for several services - selenium+karma-server
     entrypoint:
@@ -81,7 +76,7 @@ services:
     command: ["npm", "run", "karma"]
     volumes:
       - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/e2e/node_modules
+      - e2e_node_modules:/usr/src/passwordkeeper/e2e/node_modules
     depends_on:
       - selenium
       - karma-server
@@ -96,12 +91,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-      cache_from:
-        - passwordkeeper/backend
     image: passwordkeeper/backend
     volumes:
       - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/node_modules
+      - node_modules:/usr/src/passwordkeeper/node_modules
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "30", "postgres:5432", "--"]
     command: ["bash", "./scripts/launch.backend.sh"]
     expose:
@@ -112,15 +105,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.e2e
-      cache_from:
-        - passwordkeeper/e2e
     image: passwordkeeper/e2e
     entrypoint:
       ["../scripts/wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
     command: ["npm", "run", "test"]
     volumes:
       - .:/usr/src/passwordkeeper
-      - /usr/src/passwordkeeper/e2e/node_modules
+      - e2e_node_modules:/usr/src/passwordkeeper/e2e/node_modules
     depends_on:
       - test-server
       - selenium

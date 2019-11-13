@@ -14,9 +14,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision "npm-install", type: "shell", inline: "apt install -y npm"
   config.vm.provision "pip-install", type: "shell", inline: "apt install -y python-pip"
   config.vm.provision "docker-compose-install", type: "shell", inline: "pip install docker-compose"
-  config.vm.provision "docker-compose-pull", type: "shell", inline: "docker-compose -f /vagrant/docker-compose.yml pull || echo error but whatever", run: "always"
-  config.vm.provision "docker-compose-build-base", type: "shell", inline: "docker-compose -f /vagrant/docker-compose.yml build base", run: "always"
-  config.vm.provision "docker-compose-build", type: "shell", inline: "docker-compose -f /vagrant/docker-compose.yml build", run: "always"
+  config.vm.provision "docker-compose-pull", type: "shell", inline: "docker-compose -f /vagrant/docker-compose.yml pull || echo error but whatever"
+  config.vm.provision "docker-compose-build-base", type: "shell", inline: "docker-compose -f /vagrant/docker-compose.yml build base"
+  config.vm.provision "docker-compose-build", type: "shell", inline: "docker-compose -f /vagrant/docker-compose.yml build"
 
   config.vm.network :forwarded_port, guest: 35729, host: 35729 # live reload
   config.vm.network :forwarded_port, guest: 1337, host: 1337 # main app port
