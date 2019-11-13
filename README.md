@@ -24,13 +24,11 @@ End-to-end tests specifications are located at `e2e`.
 End-to-end test Page Objects are located at `e2e/pageobjects`. These objects are
 helpers for the e2e-tests.
 
-`Webpack` is used to precompile js scripts and bundle them into single giant js
-at `frontend/dist/bundle.js`. This directory also contains a bunch of
-precompiled fonts required for `bootstrap` and `index.html` which is an entry
-point for our SPA app. Webpack config file is `frontend/webpack.config.js`.
+`Webpack` is used to precompile js scripts and bundle them into `frontend/dist`.
+This directory also contains a bunch of precompiled fonts required for `bootstrap`
+and `index.html` which is an entry point for our SPA app. Webpack config file is `frontend/webpack.config.js`.
 "Vendor" libraries are separated into its own bundle
-`frontend/dist/vendor.bundle.js` by using `frontend/vendor.webpack.config.js` as
-a config. This is done so that building times for our app is smaller and so that
+`frontend/dist/vendor.[hash].js`. This is done so that building times for our app is smaller and so that
 caching of infrequently changing lib files is possible for the future.
 
 There is also `frontend/test.webpack.config.js`. This is for building unit
@@ -205,9 +203,13 @@ docker-compose up karma-server karma-runner
 
 ### Run e2e tests
 
+windows:
+
 ```bat
 docker-compose run --rm test-runner & docker-compose stop test-postgres test-server & docker-compose rm -f test-postgres
 ```
+
+linux:
 
 ```bash
 docker-compose run --rm test-runner ; docker-compose stop test-postgres test-server ; docker-compose rm -f test-postgres

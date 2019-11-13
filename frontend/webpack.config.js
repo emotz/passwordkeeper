@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 // const BabiliPlugin = require("babili-webpack-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDev = process.env.NODE_ENV !== 'production';
 const plugins = [
@@ -19,16 +20,14 @@ const plugins = [
     NODE_ENV: process.env.NODE_ENV || 'development'
   }),
   new CopyWebpackPlugin([
-    { from: 'src/index.html' },
     { from: 'src/style.css' }
   ]),
+  new HtmlWebpackPlugin({
+    template: 'src/index.html'
+  }),
   new LiveReloadPlugin({
     port: 35729
   }),
-  new webpack.DllReferencePlugin({
-    context: '.',
-    manifest: require('./dist/vendor-manifest.json')
-  })
 ];
 // if (!isDev) {
 //   plugins.push(new BabiliPlugin());
@@ -38,7 +37,7 @@ module.exports = {
   mode: isDev ? 'development' : 'production',
   entry: ['babel-polyfill', './src/index.js'],
   output: {
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist')
   },
   resolve: {
@@ -74,5 +73,16 @@ module.exports = {
       { test: /\.vue$/, loader: 'vue-loader' },
       { test: /\.css$/, use: ['style-loader', 'css-loader'] }
     ]
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
   }
 };
