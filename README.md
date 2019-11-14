@@ -86,7 +86,6 @@ environment for you in the virtual machine.
 (with administrator rights - it is needed for the symbolic links to work properly):
 
 ```bat
-vagrant plugin install vagrant-disksize
 vagrant up
 ```
 

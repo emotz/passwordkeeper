@@ -1,4 +1,6 @@
 Vagrant.configure(2) do |config|
+  config.vagrant.plugins = ["vagrant-disksize"]
+
   config.vm.box = "ubuntu/bionic64"
   config.disksize.size = '30GB'
 
@@ -21,4 +23,4 @@ Vagrant.configure(2) do |config|
   config.vm.network :forwarded_port, guest: 35729, host: 35729 # live reload
   config.vm.network :forwarded_port, guest: 1337, host: 1337 # main app port
   config.vm.network :forwarded_port, guest: 9229, host: 9229 # node debug
-  end
+end
