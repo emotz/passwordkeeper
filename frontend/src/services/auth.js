@@ -8,35 +8,35 @@ const API_TOKEN_URL = "/api/token";
 const API_USERS_URL = "/api/users";
 
 const data = make_reactive({
-    token: undefined
+  token: undefined
 });
 
 // TODO change login and signup to the same signature?
 class AuthCommand extends Command {
     @notifier_error(i18n.terror)
     @execute
-    async login(login, password) {
-        let response = await http.post(API_TOKEN_URL, { login, password });
-        set_token(response.data.access_token);
-        return response;
-    }
+  async login(login, password) {
+    let response = await http.post(API_TOKEN_URL, { login, password });
+    set_token(response.data.access_token);
+    return response;
+  }
 
     @notifier_error(i18n.terror)
     @execute
-    async logout() {
-        try {
-            return await http.delete(API_TOKEN_URL);
-        } finally {
-            remove_token();
-        }
+  async logout() {
+    try {
+      return await http.delete(API_TOKEN_URL);
+    } finally {
+      remove_token();
     }
+  }
 
     @notifier_error(i18n.terror)
     @execute
-    async signup(input) {
-        const response = await http.post(API_USERS_URL, input);
-        return response;
-    }
+  async signup(input) {
+    const response = await http.post(API_USERS_URL, input);
+    return response;
+  }
 }
 
 export const auth_cmd = new AuthCommand();
@@ -49,27 +49,27 @@ export const signup = auth_cmd.signup.bind(auth_cmd);
  * Reactive
  */
 export function is_authenticated() {
-    return is_valid_token(data.token);
+  return is_valid_token(data.token);
 }
 
 export function set_token(token) {
-    data.token = token;
+  data.token = token;
 }
 
 export function remove_token() {
-    data.token = undefined;
+  data.token = undefined;
 }
 
 /**
  * Reactive
  */
 export function get_token() {
-    return data.token;
+  return data.token;
 }
 
 function is_valid_token(token) {
-    if (token !== undefined && token !== null) {
-        return true;
-    }
-    return false;
+  if (token !== undefined && token !== null) {
+    return true;
+  }
+  return false;
 }

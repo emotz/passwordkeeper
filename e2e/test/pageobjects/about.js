@@ -1,10 +1,10 @@
 const Page = require('./page.js');
 
 class AboutPage extends Page {
-    get body() { return browser.element('body'); }
+  get body() { return browser.element('body'); }
 
-    open() {
-        super.open('/about');
-    }
+  open() {
+    super.open('/about');
+  }
 }
 module.exports = new AboutPage();

@@ -11,13 +11,13 @@ router.route('/')
     .post(
     passport.authenticate('local'),
     async function(req, res) {
-        const user = req.user; // set by passport
-        const token = auth.generateToken(user);
-        res.json({ access_token: token });
+      const user = req.user; // set by passport
+      const token = auth.generateToken(user);
+      res.json({ access_token: token });
     })
     .delete(async function(req, res) {
-        res.status(204);
-        res.send();
+      res.status(204);
+      res.send();
     });
 
 module.exports = router;

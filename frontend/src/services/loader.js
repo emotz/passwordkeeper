@@ -6,17 +6,17 @@ import _ from 'lodash';
  * Proper JS Decorator to show error messages if function fails.
  */
 export function notifier(map_success_text, map_error_text) {
-    return function(target, property_key, descriptor) {
-        const old_method = descriptor.value;
-        descriptor.value = decorate(old_method, map_success_text, map_error_text);
-    };
+  return function(target, property_key, descriptor) {
+    const old_method = descriptor.value;
+    descriptor.value = decorate(old_method, map_success_text, map_error_text);
+  };
 }
 
 /**
  * Proper JS Decorator to show error messages if function fails.
  */
 export function notifier_error(map_error_text) {
-    return notifier(() => { }, map_error_text);
+  return notifier(() => { }, map_error_text);
 }
 
 /**
@@ -28,16 +28,16 @@ export function notifier_error(map_error_text) {
  * @returns {function} Decorated function
  */
 export function decorate(fn, map_success_text, map_error_text) {
-    return function(...args) {
-        return perform(fn, map_success_text, map_error_text, this, ...args);
-    };
+  return function(...args) {
+    return perform(fn, map_success_text, map_error_text, this, ...args);
+  };
 }
 
 /**
  * @see decorate
  */
 export function decorate_without_success_notify(fn, ...args) {
-    return decorate(fn, () => undefined, ...args);
+  return decorate(fn, () => undefined, ...args);
 }
 
 /**
@@ -45,11 +45,11 @@ export function decorate_without_success_notify(fn, ...args) {
  * @param {Function} fn Function to call async import
  */
 export function import_async(fn) {
-    return decorate_without_success_notify(() => new Promise((resolve, reject) => {
-        let wrapped = val => resolve(val);
-        wrapped.default = val => wrapped(val.default);
-        fn(wrapped, reject);
-    }));
+  return decorate_without_success_notify(() => new Promise((resolve, reject) => {
+    let wrapped = val => resolve(val);
+    wrapped.default = val => wrapped(val.default);
+    fn(wrapped, reject);
+  }));
 }
 
 /**
@@ -62,21 +62,21 @@ export function import_async(fn) {
  * @returns {*} Whatever value that was returned by fn
  */
 export function perform(fn, map_success_text, map_error_text, context, ...args) {
-    map_success_text = map_success_text === undefined ? _.identity : map_success_text;
-    map_error_text = map_error_text === undefined ? _.identity : map_error_text;
-    const res = progressbar.wrap(fn, context, ...args);
-    return res
+  map_success_text = map_success_text === undefined ? _.identity : map_success_text;
+  map_error_text = map_error_text === undefined ? _.identity : map_error_text;
+  const res = progressbar.wrap(fn, context, ...args);
+  return res
         .then(val => {
-            const val2show = map_success_text instanceof Function ? map_success_text(val) : map_success_text;
-            if (val2show !== undefined) {
-                notify.success(val2show);
-            }
-            return val;
+          const val2show = map_success_text instanceof Function ? map_success_text(val) : map_success_text;
+          if (val2show !== undefined) {
+            notify.success(val2show);
+          }
+          return val;
         }, err => {
-            const val2show = map_error_text instanceof Function ? map_error_text(err) : map_error_text;
-            if (val2show !== undefined) {
-                notify.error(val2show);
-            }
-            throw err;
+          const val2show = map_error_text instanceof Function ? map_error_text(err) : map_error_text;
+          if (val2show !== undefined) {
+            notify.error(val2show);
+          }
+          throw err;
         });
 }

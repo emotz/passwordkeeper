@@ -1,5 +1,5 @@
 import PkSign from './pk-sign.vue';
 
 export default {
-    components: { PkSign }
+  components: { PkSign }
 };

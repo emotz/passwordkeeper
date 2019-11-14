@@ -11,8 +11,8 @@ const routes = [
     { path: '/config', component: loader.import_async((resolve, reject) => require(['src/components/pk-config.vue'], resolve, reject)) }
 ];
 const router = new VueRouter({
-    mode: 'history',
-    routes
+  mode: 'history',
+  routes
 });
 
 export default router;
