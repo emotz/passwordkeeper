@@ -152,6 +152,15 @@ server and other required services.
 
 You are ready to go! Open `http://localhost:1337` in your browser and enjoy!
 
+## Production mode build & run
+
+To check production build, do
+
+```bat
+docker-compose run --rm -e NODE_ENV=production backend
+docker-compose run --rm -e NODE_ENV=production frontend
+```
+
 ## Debug
 
 ### VSCode
