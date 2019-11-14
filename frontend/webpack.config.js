@@ -3,11 +3,11 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
-// const BabiliPlugin = require("babili-webpack-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const isDev = process.env.NODE_ENV !== 'production';
+const NODE_ENV = process.env.NODE_ENV || 'development'
+const isDev = NODE_ENV !== 'production';
 const plugins = [
   new VueLoaderPlugin(),
   // for proper bootstrap loading (and vue)
@@ -16,22 +16,19 @@ const plugins = [
     jQuery: "jquery"
   }),
 
-  new webpack.EnvironmentPlugin({
-    NODE_ENV: process.env.NODE_ENV || 'development'
-  }),
+  new webpack.EnvironmentPlugin({ NODE_ENV }),
   new CopyWebpackPlugin([
     { from: 'src/style.css' }
   ]),
   new HtmlWebpackPlugin({
     template: 'src/index.html'
-  }),
-  new LiveReloadPlugin({
-    port: 35729
-  }),
+  })
 ];
-// if (!isDev) {
-//   plugins.push(new BabiliPlugin());
-// }
+if (isDev) {
+  plugins.push(new LiveReloadPlugin({
+    port: 35729
+  }));
+}
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
