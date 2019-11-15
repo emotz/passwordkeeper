@@ -46,6 +46,7 @@ export default {
   label_title: "Title",
   label_username: "Username",
   label_email: "Email Address",
+  label_login: "Username or Email Address",
   label_user: "User",
   label_password: "Password",
   button_ok: "Ok",

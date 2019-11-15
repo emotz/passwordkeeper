@@ -45,6 +45,7 @@ export default {
   confirm_title: "Подтвердить",
   label_username: "Имя пользователя",
   label_email: "Электронная почта",
+  label_login: "Имя пользователя или электронная почта",
   label_title: "Название",
   label_user: "Имя пользователя",
   label_password: "Пароль",
@@ -59,5 +60,22 @@ export default {
   signup_title: "Создать свой персональный аккаунт",
   signin_user_placeholder: "Электронный адрес",
   signin_pass_placeholder: "Пароль",
-  signout: "Выйти"
+  signout: "Выйти",
+  error: {
+    Other: {
+      BadRequest: "Ошибка запроса",
+      NotFound: "Запрашиваемый ресурс не найден",
+      'default': "{message}"
+    },
+    Auth: {
+      WrongPasswordOrUsername: "Ошибка имени пользователя или пароля",
+      'default': "Ошибка авторизации {message}"
+    },
+    Validation: {
+      'default': "{message}"
+    },
+    Verification: {
+      NotUnique: "{property} уже существует"
+    }
+  }
 };
