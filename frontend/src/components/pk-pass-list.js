@@ -39,7 +39,7 @@ export default {
       }
     }
     this.$watch(pass_store.get_entries, (new_entries) => {
-            // FIX: performance issue - too many operations for even slightest change
+      // FIX: performance issue - too many operations for even slightest change
       this.items = this.items.filter(item => ~new_entries.findIndex(e => e._id === item._id));
       utls.merge_arrays_of_objects(this.items, new_entries, "_id", ctor_entry);
     }, { deep: true });
@@ -119,7 +119,13 @@ export default {
       try {
         newitem = await modal.open(PkPassEditor, props);
       } catch (err) {
-        return;
+        if (typeof err === 'undefined') {
+          // normal cancel
+          return;
+        } else {
+          // something unexpected
+          throw err;
+        }
       }
       const cmd = get_entry_cmd(item);
       cmd.update(newitem);

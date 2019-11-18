@@ -6,11 +6,31 @@ import * as modal from 'src/services/modal.js';
 
 export default {
   methods: {
-    signin() {
-      modal.open(PkSignIn);
+    async signin() {
+      try {
+        await modal.open(PkSignIn);
+      } catch (err) {
+        if (typeof err === 'undefined') {
+          // normal cancel
+        } else {
+          // something unexpected
+          throw err;
+        }
+      }
     },
     async signup() {
-      const user = await modal.open(PkSignUp);
+      let user;
+      try {
+        user = await modal.open(PkSignUp);
+      } catch (err) {
+        if (typeof err === 'undefined') {
+          // normal cancel
+          return;
+        } else {
+          // something unexpected
+          throw err;
+        }
+      }
       await auth.login(user.username, user.password);
     },
     signout() {
