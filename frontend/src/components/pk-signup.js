@@ -1,3 +1,4 @@
+import * as logger from 'src/services/logger.js';
 import * as auth from 'src/services/auth.js';
 import { Modal } from 'vue-bootstrap-modal';
 
@@ -18,7 +19,12 @@ export default {
         email: this.email,
         password: this.password
       };
-      await auth.signup(user_to_add);
+      try {
+        await auth.signup(user_to_add);
+      } catch (err) {
+        logger.error(err);
+        return;
+      }
       this.$emit("ok", user_to_add);
     },
     cancel() {

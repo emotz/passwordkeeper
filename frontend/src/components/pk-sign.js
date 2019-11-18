@@ -1,3 +1,4 @@
+import * as logger from 'src/services/logger.js';
 import * as auth from 'src/services/auth.js';
 import PkSignUp from './pk-signup.vue';
 import PkSignIn from './pk-signin.vue';
@@ -14,7 +15,8 @@ export default {
           // normal cancel
         } else {
           // something unexpected
-          throw err;
+          logger.error(err);
+          return;
         }
       }
     },
@@ -28,7 +30,8 @@ export default {
           return;
         } else {
           // something unexpected
-          throw err;
+          logger.error(err);
+          return;
         }
       }
       await auth.login(user.username, user.password);

@@ -13,16 +13,16 @@ const data = make_reactive({
 
 // TODO change login and signup to the same signature?
 class AuthCommand extends Command {
-    @notifier_error(i18n.terror)
-    @execute
+  @notifier_error(i18n.terror)
+  @execute
   async login(login, password) {
-    let response = await http.post(API_TOKEN_URL, { login, password });
+    const response = await http.post(API_TOKEN_URL, { login, password });
     set_token(response.data.access_token);
     return response;
   }
 
-    @notifier_error(i18n.terror)
-    @execute
+  @notifier_error(i18n.terror)
+  @execute
   async logout() {
     try {
       return await http.delete(API_TOKEN_URL);
@@ -31,8 +31,8 @@ class AuthCommand extends Command {
     }
   }
 
-    @notifier_error(i18n.terror)
-    @execute
+  @notifier_error(i18n.terror)
+  @execute
   async signup(input) {
     const response = await http.post(API_USERS_URL, input);
     return response;

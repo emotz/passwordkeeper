@@ -1,3 +1,4 @@
+import * as logger from 'src/services/logger.js';
 import * as auth from 'src/services/auth.js';
 import { Modal } from 'vue-bootstrap-modal';
 
@@ -15,7 +16,8 @@ export default {
       try {
         await auth.login(this.login, this.password);
       } catch (err) {
-        throw err;
+        logger.error(err);
+        return;
       }
       this.$emit("ok");
     },

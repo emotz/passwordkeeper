@@ -1,9 +1,12 @@
 {
-    "extends": "../jsconfig",
-    "paths": {
-        "src": "./src"
-    },
-    "include": [
-        "src/**/*.js"
-    ]
+  "compilerOptions": {
+    "experimentalDecorators": true
+  },
+  "extends": "../jsconfig",
+  "paths": {
+    "src": "./src"
+  },
+  "include": [
+    "src/**/*.js"
+  ]
 }
