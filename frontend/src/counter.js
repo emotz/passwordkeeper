@@ -1,18 +1,21 @@
+import assert from 'assert';
 import * as logger from 'src/services/logger';
 
 export class Counter {
-  _counter = 0;
-
   constructor({ onEnable, onDisable }) {
     assert(onEnable);
+    this.counter = 0;
     this.onEnable = onEnable;
     this.onDisable = onDisable;
+
+    this.enable = this.enable.bind(this);
+    this.disable = this.disable.bind(this);
   }
 
-  enable = () => {
-    assert(counter >= 0);
-    if (counter <= 0) {
-      counter = 1;
+  enable() {
+    assert(this.counter >= 0);
+    if (this.counter <= 0) {
+      this.counter = 1;
 
       const res = this.onEnable();
       if (res) {
@@ -29,21 +32,21 @@ export class Counter {
         }
       }
     } else {
-      counter += 1;
+      this.counter += 1;
     }
 
     return this.disable;
   }
 
-  disable = () => {
-    assert(counter > 0);
-    if (counter > 1) {
-      counter -= 1;
-    } else if (counter < 1) {
+  disable() {
+    assert(this.counter > 0);
+    if (this.counter > 1) {
+      this.counter -= 1;
+    } else if (this.counter < 1) {
       logger.warn(new Error('trying to disable already disabled counter'));
-      counter = 0;
+      this.counter = 0;
     } else {
-      counter = 0;
+      this.counter = 0;
 
       if (this.onDisable) {
         this.onDisable();

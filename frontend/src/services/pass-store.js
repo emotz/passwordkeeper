@@ -1,11 +1,14 @@
 import assert from 'assert';
-import { Command } from 'command-decorator'; // eslint-disable-line no-unused-vars
+import { can_execute, Command, execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
+import { Counter } from 'src/counter';
 import { EntryCommand } from 'src/entry-command.js';
 // TODO: remove "circular" dependency - it would be better if control flow goes from plugins to services, not vice versa
 import { http } from 'src/plugins/http.js';
+import * as i18n from 'src/plugins/i18n.js';
 import * as auth from 'src/services/auth.js';
+import { notifier } from 'src/services/loader';
 import * as utls from 'src/utility.js';
-import { make_reactive } from './watch.js';
+import { make_reactive, watch } from './watch.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
@@ -22,6 +25,29 @@ make_reactive(data);
  */
 export function get_entries() {
   return data.entries;
+}
+
+export const { enable_login_update, disable_login_update } = (function() {
+  const counter = new Counter({
+    onEnable() {
+      return watch(auth.get_token, () => {
+        reset_entries();
+        if (pull_cmd.can_execute().canExecute) {
+          pull_cmd.execute();
+        }
+      }, { immediate: true });
+    }
+  });
+
+  return {
+    enable_login_update: counter.enable,
+    disable_login_update: counter.disable
+  };
+})();
+
+export function reset_entries() {
+  entry_cmds = [];
+  data.entries = [];
 }
 
 export function get_entry_cmd(_id) {

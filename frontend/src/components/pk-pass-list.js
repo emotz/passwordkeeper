@@ -33,16 +33,16 @@ export default {
     };
   },
   created() {
-    if (this.items.length <= 0) {
-      if (pass_store.pull_cmd.can_execute().canExecute) {
-        pass_store.pull_cmd.execute();
-      }
-    }
+    pass_store.enable_login_update();
+
     this.$watch(pass_store.get_entries, (new_entries) => {
       // FIX: performance issue - too many operations for even slightest change
       this.items = this.items.filter(item => ~new_entries.findIndex(e => e._id === item._id));
       utls.merge_arrays_of_objects(this.items, new_entries, "_id", ctor_entry);
     }, { deep: true });
+  },
+  unmounted() {
+    pass_store.disable_login_update();
   },
   computed: {
     show_filter() {
