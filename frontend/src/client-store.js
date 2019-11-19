@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-class ClientStore {
-    /**
-    *
-    * @param {string} key
-    */
+export class ClientStore {
+  /**
+  *
+  * @param {string} key
+  */
   constructor(key) {
     this.key = _.camelCase('pk-' + key);
   }
@@ -24,5 +24,3 @@ class ClientStore {
     window.localStorage.removeItem(this.key);
   }
 }
-
-export default ClientStore;

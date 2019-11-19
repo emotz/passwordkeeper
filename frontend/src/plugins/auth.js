@@ -1,6 +1,6 @@
 import * as auth from 'src/services/auth.js';
 import { http } from './http.js';
-import ClientStore from 'src/client-store.js';
+import { ClientStore } from 'src/client-store.js';
 import { watch } from 'src/services/watch.js';
 import * as loader from 'src/services/loader.js';
 import * as i18n from 'src/plugins/i18n.js';

@@ -3,7 +3,7 @@ import VueI18n from 'vue-i18n';
 
 import * as loader from 'src/services/loader.js';
 import { watch } from 'src/services/watch.js';
-import ClientStore from 'src/client-store.js';
+import { ClientStore } from 'src/client-store.js';
 
 
 const locales = {
@@ -15,7 +15,7 @@ let last_locale;
 Vue.use(VueI18n);
 
 for (let lang in locales) {
-    // Vue.locale starts download immediately even if it is function, so we dont assign anything here
+  // Vue.locale starts download immediately even if it is function, so we dont assign anything here
   if (locales[lang] instanceof Function) continue;
   Vue.locale(lang, locales[lang]);
 }
@@ -39,10 +39,10 @@ export function set_locale(new_locale) {
   last_locale = new_locale;
   if (locales[new_locale] instanceof Function) {
     if (!Vue.locale(new_locale)) {
-            // if we call set_locale for same locale before last one finishes, it goes here again
-            // but no second network request because webpack is smart so its okay
+      // if we call set_locale for same locale before last one finishes, it goes here again
+      // but no second network request because webpack is smart so its okay
       Vue.locale(new_locale, locales[new_locale], function() {
-                // If we change locale while loading another one, we dont actually want to switch
+        // If we change locale while loading another one, we dont actually want to switch
         if (new_locale === last_locale) {
           Vue.config.lang = last_locale;
         }
