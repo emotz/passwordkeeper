@@ -1,12 +1,11 @@
 import assert from 'assert';
-import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
-import { make_reactive } from './watch.js';
-import { http } from 'src/plugins/http.js';
+import { Command } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { EntryCommand } from 'src/entry-command.js';
-import * as utls from 'src/utility.js';
-import * as i18n from 'src/plugins/i18n.js';
-import { notifier } from 'src/services/loader.js';
+// TODO: remove "circular" dependency - it would be better if control flow goes from plugins to services, not vice versa
+import { http } from 'src/plugins/http.js';
 import * as auth from 'src/services/auth.js';
+import * as utls from 'src/utility.js';
+import { make_reactive } from './watch.js';
 
 const API_ENTRIES_URL = 'api/entries';
 
@@ -32,27 +31,27 @@ export function get_entry_cmd(_id) {
 }
 
 export const pull_cmd = new (class PullCommand extends Command {
-    @notifier(i18n.t('notify.itemsfetched'), i18n.terror)
-    @execute
+  @notifier(i18n.t('notify.itemsfetched'), i18n.terror)
+  @execute
   async execute() {
     const response = await http.get(API_ENTRIES_URL);
     const entries = response.body;
 
-        // getting rid of deleted entries
+    // getting rid of deleted entries
     data.entries = data.entries.filter(item => ~entries.findIndex(e => e.id === item.id));
     entry_cmds = entry_cmds.filter(cmd => ~data.entries.findIndex(e => e._id === cmd.entry._id));
 
-        // updating existing entries
+    // updating existing entries
     utls.merge_arrays_of_objects(data.entries, entries, "id", () => {
       let entry = ctor_entry();
       entry.synced = true;
       entry_cmds.push(ctor_entry_cmd(entry));
-            // TODO refactor_entry - entry_cmd and entry unsynced possibly
+      // TODO refactor_entry - entry_cmd and entry unsynced possibly
       return entry;
     });
   }
 
-    @can_execute
+  @can_execute
   can_execute() {
     if (auth.is_authenticated()) {
       return {
@@ -84,7 +83,7 @@ function ctor_entry_cmd(entry) {
   return new EntryCommand({
     entry,
     ondelete: function() {
-            // HACK ohhh this is so dirty
+      // HACK ohhh this is so dirty
       const idx = data.entries.indexOf(entry);
       data.entries.splice(idx, 1);
     }
