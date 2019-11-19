@@ -1,25 +1,27 @@
+import { Counter } from 'src/counter.js';
 import NProgress from 'nprogress';
 import 'nprogress.css';
 import './progressbar.css';
 
-let counter = 0;
+const counter = new Counter({
+  onEnable() {
+    NProgress.start();
+  },
+  onDisable() {
+    NProgress.done();
+  }
+});
 
 /**
  * You probably want to use {@link Loader} instead of this.
  */
-export function start() {
-  if (counter++ === 0) {
-    NProgress.start();
-  }
-}
+export const start = counter.enable;
+
 /**
  * You probably want to use {@link Loader} instead of this.
  */
-export function stop() {
-  if (--counter === 0) {
-    NProgress.done();
-  }
-}
+export const stop = counter.disable;
+
 /**
  * You probably want to use {@link Loader} instead of this.
  */
