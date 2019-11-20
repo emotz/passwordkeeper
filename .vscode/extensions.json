@@ -6,6 +6,7 @@
     "dbaeumer.vscode-eslint",
     "bbenoist.vagrant",
     "octref.vetur",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+    "davidanson.vscode-markdownlint"
   ]
 }

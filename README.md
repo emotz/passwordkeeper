@@ -105,7 +105,7 @@ Set up vscode to have vagrant ssh host:
 
 Put there result of `vagrant ssh-config` with replaced hostname `default` to `passwordkeeper` (or the name to your likings):
 
-```
+```ssh
 Host default
   HostName 127.0.0.1
   User vagrant
@@ -233,7 +233,7 @@ docker login registry.gitlab.com # it will ask for your gitlab credentials
 docker-compose -f docker-compose.yml -f docker-compose.gitlab.yml push runner
 ```
 
-### First !
+### First
 
 Only once:
 
@@ -247,7 +247,7 @@ Always:
 eval $(docker-machine env emotz)
 ```
 
-### Deploy
+### Manual Deploy
 
 Manual deploy is not supported. Deploy by pushing to github (which gets mirrored to gitlab and triggers deploy pipeline).
 
