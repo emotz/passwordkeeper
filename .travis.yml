@@ -11,10 +11,9 @@ before_install:
 - docker --version
 - docker-compose --version
 
-- docker-compose pull frontend
-- docker-compose build frontend
-- docker-compose pull backend test-runner
-- docker-compose build backend test-runner
+- docker-compose pull base ; docker-compose build base
+- docker-compose pull frontend ; docker-compose build frontend
+- docker-compose pull backend test-runner ; docker-compose build backend test-runner
 install:
 - docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml up -d test-server
 script:
@@ -23,7 +22,7 @@ script:
 - docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml run --rm test-runner
 after_success:
 - docker login -u="$DOCKER_HUB_USER" -p="$DOCKER_HUB_PASSWORD"
-- docker-compose push frontend backend test-runner
+- docker-compose push base frontend backend test-runner
 env:
   global:
   - secure: COiArMZvGwbz+MHM0jM3vNlyaJWGv9STLxJZhX39NiYHMOI6GfvpIxKgGSdQHxCbOHzNBxn+EnX6AdNkFyLQTUIphiW3T4/rnN0jy/MDSjStiHLhmKfLyQtS17JXFYtUAHVoKBnmA82R9lNOhGY3cO7gqO0pOxwQjJqIrCN/nwyGwfaQ1Gg4e34VV0s1AUdSp+eSVnv0RUmvHQ7aeUbzcgs7IEcXBdkz1vbDCq3EJgc3xpNy/AXXod3jkPKtkkFtZ7s/oJogD0v3N6vvGDocBuEGe2cKof9E3Oteub0Ugg+wUrOrerWG9yXENIuwaRbB+egRivI62efTVh1Fp/YB2eSLzxyRK1K0BitpDG9G8/efTophHiMV6r2hgXMv4W9wDWndVaQdP9abusSzyDoz3ta+JqUOYx5hnjVb0cXSO1QgOff751qJWdL1VimBvK9mHj09dQEETJgAggR9lsUPoPN0pof3XI00+Rngc6L1PqhTheUQl4J/FOt4tcllICjgs1BOMNlgJaYYmuKRdNvi9+OaWUiJWqALagtLVjZexP+vBhbVGdvUbhxHzWFJgS6NvyJIjonGyV9mUuhl0M1i65ZdIrD4momNlYwFHMArgAy8X5Whps+Z5zSZhgJVbsK8lHFHSbAYfRxpHEJSHUIjMzpLHW24NZ/IY1MRJkFI+Lk=
