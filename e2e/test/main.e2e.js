@@ -76,7 +76,6 @@ describe('main', function() {
 
     beforeEach(function() {
       page.open();
-      page.waitForLoginReady();
       page.login(USER, PASS);
       page.waitForSuccessLogin();
       page.removeAllPasses();
@@ -85,7 +84,6 @@ describe('main', function() {
 
     afterEach(function() {
       page.waitForNoPasses();
-      page.waitForLogoutReady();
       page.logout();
       page.waitForSuccessLogout();
     });

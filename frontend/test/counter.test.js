@@ -3,8 +3,8 @@ import _ from 'lodash';
 
 describe("counter tests", function() {
   it("should enable and disable", function() {
-    onEnable = jasmine.createSpy('onEnable');
-    onDisable = jasmine.createSpy('onDisable');
+    const onEnable = jasmine.createSpy('onEnable');
+    const onDisable = jasmine.createSpy('onDisable');
     const counter = new Counter({ onEnable, onDisable });
 
     counter.enable();
@@ -15,8 +15,8 @@ describe("counter tests", function() {
   });
 
   it("should enable several times", function() {
-    onEnable = jasmine.createSpy('onEnable');
-    onDisable = jasmine.createSpy('onDisable');
+    const onEnable = jasmine.createSpy('onEnable');
+    const onDisable = jasmine.createSpy('onDisable');
     const counter = new Counter({ onEnable, onDisable });
 
     counter.enable();
@@ -29,8 +29,8 @@ describe("counter tests", function() {
   });
 
   it("should chain enable and disable", function() {
-    onEnable = jasmine.createSpy('onEnable');
-    onDisable = jasmine.createSpy('onDisable');
+    const onEnable = jasmine.createSpy('onEnable');
+    const onDisable = jasmine.createSpy('onDisable');
     const counter = new Counter({ onEnable, onDisable });
 
     counter.enable();

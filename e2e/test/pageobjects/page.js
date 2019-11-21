@@ -40,12 +40,12 @@ class Page {
     this.waitForToastToHide();
   }
   logout() {
-    browser.$('.pk-btn-signout').waitForVisible();
+    this.waitForLogoutReady();
     browser.$('.pk-btn-signout').click();
   }
   waitForFailedLogin(...args) {
-        // this.waitForErrorNotification("No user with matched password.", ...args);
-        // TODO: make proper check for failed login
+    // this.waitForErrorNotification("No user with matched password.", ...args);
+    // TODO: make proper check for failed login
     browser.$('.pk-signin').waitForVisible();
   }
   waitForSuccessLogout() {
