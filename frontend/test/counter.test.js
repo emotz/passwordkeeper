@@ -1,5 +1,4 @@
 import { Counter } from 'src/counter';
-import _ from 'lodash';
 
 describe("counter tests", function() {
   it("should enable and disable", function() {
