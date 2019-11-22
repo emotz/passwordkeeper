@@ -39,7 +39,10 @@ export default {
     itemremoved_unknown: "Couldn't remove item.",
     itemsfetched: "Items fetched.",
     itemsfetched_timeout: "Request timed-out when fetching items.",
-    itemsfetched_unknown: "Couldn't fetch all items."
+    itemsfetched_unknown: "Couldn't fetch all items.",
+    itemssynced: "Items synced.",
+    itemssynced_timeout: "Request timed-out when syncing items.",
+    itemssynced_unknown: "Couldn't sync all items."
   },
   confirm_text: "Are you sure?",
   confirm_title: "Confirm",

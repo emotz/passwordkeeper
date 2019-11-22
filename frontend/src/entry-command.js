@@ -1,17 +1,17 @@
 import assert from 'assert';
-import { Command, execute, can_execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
+import { can_execute, Command, execute } from 'command-decorator'; // eslint-disable-line no-unused-vars
 import { http, parse_location } from 'src/plugins/http.js';
-import { notifier_error } from 'src/services/loader.js';
 import * as i18n from 'src/plugins/i18n.js';
 import * as auth from 'src/services/auth.js';
+import { notifier_error } from 'src/services/loader.js';
 
 // TODO: move it somewhere
 const API_ENTRIES_URL = 'api/entries';
 
 export class EntryCommand extends Command {
-    /**
-    * @param options.entry Must be reactive
-    */
+  /**
+  * @param options.entry Must be reactive
+  */
   constructor(options) {
     super();
 
@@ -21,6 +21,10 @@ export class EntryCommand extends Command {
     assert(this.entry._id);
   }
 
+  dirty() {
+    this.entry.synced = false;
+  }
+
   update(newitem) {
     this.entry.synced = false;
     this.entry.title = newitem.title;
@@ -28,8 +32,8 @@ export class EntryCommand extends Command {
     this.entry.password = newitem.password;
   }
 
-    @notifier_error(i18n.terror)
-    @execute
+  @notifier_error(i18n.terror)
+  @execute
   async save() {
     const dto = {
       title: this.entry.title,
@@ -50,7 +54,7 @@ export class EntryCommand extends Command {
     return response;
   }
 
-    @can_execute
+  @can_execute
   can_save() {
     if (!this.entry.synced) {
       return { canExecute: true };
@@ -61,8 +65,8 @@ export class EntryCommand extends Command {
     };
   }
 
-    @notifier_error(i18n.terror)
-    @execute
+  @notifier_error(i18n.terror)
+  @execute
   async delete() {
     if (auth.is_authenticated()) {
       if (this.entry.id !== undefined) {
@@ -72,7 +76,7 @@ export class EntryCommand extends Command {
     (this.ondelete || function() { })();
   }
 
-    @can_execute
+  @can_execute
   can_delete() {
     return { canExecute: true };
   }

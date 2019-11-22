@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as logger from 'src/services/logger';
 
 export class ClientStore {
   /**
@@ -12,12 +13,18 @@ export class ClientStore {
   get() {
     let val = window.localStorage.getItem(this.key);
     if (val === null) return undefined;
-    return val;
+    try {
+      const { value } = JSON.parse(val);
+      return value;
+    } catch (err) {
+      logger.error(err);
+      return undefined;
+    }
   }
 
   set(val) {
     if (val === undefined) this.remove(this.key);
-    else window.localStorage.setItem(this.key, val);
+    else window.localStorage.setItem(this.key, JSON.stringify({ value: val }));
   }
 
   remove() {

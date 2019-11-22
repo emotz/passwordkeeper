@@ -6,7 +6,8 @@ import { EntryCommand } from 'src/entry-command.js';
 import { http } from 'src/plugins/http.js';
 import * as i18n from 'src/plugins/i18n.js';
 import * as auth from 'src/services/auth.js';
-import { notifier } from 'src/services/loader';
+import { notifier } from 'src/services/loader.js';
+import * as logger from 'src/services/logger.js';
 import * as utls from 'src/utility.js';
 import { make_reactive, watch } from './watch.js';
 
@@ -30,10 +31,21 @@ export function get_entries() {
 export const { enable_login_update, disable_login_update } = (function() {
   const counter = new Counter({
     onEnable() {
-      return watch(auth.get_token, () => {
-        reset_entries();
-        if (pull_cmd.can_execute().canExecute) {
-          pull_cmd.execute();
+      return watch(auth.get_status, (new_status, old_status) => {
+        if (new_status === 'NEWLY_LOGGED') {
+          // do nothing
+        } else if (new_status === 'LOGGED') {
+          if (old_status === 'NEWLY_LOGGED') {
+            // do nothing
+          } else {
+            pull_cmd.execute();
+          }
+        } else if (new_status === 'GUEST') {
+          // do nothing
+        } else if (new_status === 'AWAITING_LOGIN') {
+          // do nothing
+        } else {
+          logger.error(new Error('impossibru'));
         }
       }, { immediate: true });
     }
@@ -45,6 +57,12 @@ export const { enable_login_update, disable_login_update } = (function() {
   };
 })();
 
+export function dirty() {
+  for (let entry_cmd of entry_cmds) {
+    entry_cmd.dirty();
+  }
+}
+
 export function reset_entries() {
   entry_cmds = [];
   data.entries = [];
@@ -55,6 +73,30 @@ export function get_entry_cmd(_id) {
   assert(entry_cmd !== undefined);
   return entry_cmd;
 }
+
+export const push_cmd = new (class PushCommand extends Command {
+  @notifier(i18n.t('notify.itemssynced'))
+  @execute
+  async execute() {
+    return Promise.all(entry_cmds.map(entry_cmd => {
+      return entry_cmd.save();
+    }));
+  }
+
+  @can_execute
+  can_execute() {
+    if (auth.is_authenticated()) {
+      return {
+        canExecute: true
+      };
+    } else {
+      return {
+        canExecute: false,
+        reason: "not authenticated"
+      };
+    }
+  }
+});
 
 export const pull_cmd = new (class PullCommand extends Command {
   @notifier(i18n.t('notify.itemsfetched'), i18n.terror)
@@ -97,12 +139,17 @@ export function add_entry(dto) {
   assert(data.entries.find(e => e._id === dto._id) === undefined);
   assert(entry_cmds.find(c => c.entry._id === dto._id) === undefined);
 
-  let entry = ctor_entry(dto);
-  let entry_cmd = ctor_entry_cmd(entry);
-  entry_cmds.push(entry_cmd);
-  data.entries.push(entry);
+  const entry = ctor_entry(dto);
+  const entry_cmd = do_add_entry(entry);
   entry_cmd.save();
   return entry;
+}
+
+export function do_add_entry(entry) {
+  const entry_cmd = ctor_entry_cmd(entry);
+  entry_cmds.push(entry_cmd);
+  data.entries.push(entry);
+  return entry_cmd;
 }
 
 function ctor_entry_cmd(entry) {

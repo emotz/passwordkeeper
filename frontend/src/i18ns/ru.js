@@ -39,7 +39,10 @@ export default {
     itemremoved_unknown: "Запись не была удалена.",
     itemsfetched: "Записи получены.",
     itemsfetched_timeout: "Время запроса истекло при попытке получить записи.",
-    itemsfetched_unknown: "Записи не были получены."
+    itemsfetched_unknown: "Записи не были получены.",
+    itemssynced: "Записи синхронизированы.",
+    itemssynced_timeout: "Время запроса истекло при попытке синхронизировать записи.",
+    itemssynced_unknown: "Записи не были синхронизированы."
   },
   confirm_text: "Вы уверены?",
   confirm_title: "Подтвердить",
