@@ -64,7 +64,7 @@ function errorPreparer(err, req, res, next) {
   }
   if (err.name === 'SequelizeDatabaseError') {
     if (err.original.code === '22P02') {
-            // invalid input syntax for integer
+      // invalid input syntax for integer
       throw {
         code: error.ErrorCode.Other,
         type: error.Other.BadRequest
@@ -93,61 +93,61 @@ function errorPreparer(err, req, res, next) {
 }
 
 function errorSender(err, req, res, next) {
-    // when you add something here, you should add corresponding handler
-    //  to frontend/src/plugins/error.js
+  // when you add something here, you should add corresponding handler
+  //  to frontend/src/plugins/error.js
   applyContext(err);
-    // TODO: winston skips a lot of info for large errors
+  // TODO: winston skips a lot of info for large errors
   if (config.isDev) log.info(err); // if dev env, log all errors
 
   switch (err.code) {
-  case error.ErrorCode.Other:
-    switch (err.type) {
-    case error.Other.BadRequest:
+    case error.ErrorCode.Other:
+      switch (err.type) {
+        case error.Other.BadRequest:
+          res.status(400);
+          res.send();
+          return;
+        case error.Other.NotFound:
+          res.status(404);
+          res.send();
+          return;
+      }
+      break;
+    case error.ErrorCode.Db:
+      switch (err.type) {
+        case error.Db.NotFound:
+          res.status(404);
+          res.send();
+          return;
+      }
+      break;
+    case error.ErrorCode.Auth:
+      switch (err.type) {
+        case error.Auth.NoUser:
+        case error.Auth.WrongPassword:
+          res.status(401);
+          res.send({
+            code: error.ErrorCode.Auth,
+            // TODO: fix magic string
+            type: "WrongPasswordOrUsername"
+          });
+          return;
+      }
+      break;
+    case error.ErrorCode.Validation:
       res.status(400);
-      res.send();
+      res.send(err);
       return;
-    case error.Other.NotFound:
-      res.status(404);
-      res.send();
+    case error.ErrorCode.Verification:
+      res.status(409);
+      res.send(err);
       return;
-    }
-    break;
-  case error.ErrorCode.Db:
-    switch (err.type) {
-    case error.Db.NotFound:
-      res.status(404);
-      res.send();
-      return;
-    }
-    break;
-  case error.ErrorCode.Auth:
-    switch (err.type) {
-    case error.Auth.NoUser:
-    case error.Auth.WrongPassword:
-      res.status(401);
-      res.send({
-        code: error.ErrorCode.Auth,
-                        // TODO: fix magic string
-        type: "WrongPasswordOrUsername"
-      });
-      return;
-    }
-    break;
-  case error.ErrorCode.Validation:
-    res.status(400);
-    res.send(err);
-    return;
-  case error.ErrorCode.Verification:
-    res.status(409);
-    res.send(err);
-    return;
   }
   if (!config.isDev) log.error(err); // if prod env, log only unhandled errors
 
   res.status(500);
   res.send({
     code: error.ErrorCode.Other,
-        // possible security hole - unknown error can provide sensitive info
+    // possible security hole - unknown error can provide sensitive info
     message: error.orig ? error.orig.toString() : undefined
   });
   return;
