@@ -11,6 +11,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.base
+      cache_from:
+        - passwordkeeper/base:0.5
     image: passwordkeeper/base:0.5
   postgres:
     restart: always
@@ -23,6 +25,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      cache_from:
+        - passwordkeeper/frontend
       args:
         - NODE_ENV
     image: passwordkeeper/frontend
@@ -35,6 +39,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
+      cache_from:
+        - passwordkeeper/backend
       args:
         - NODE_ENV
     image: passwordkeeper/backend
@@ -58,6 +64,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      cache_from:
+        - passwordkeeper/frontend
     image: passwordkeeper/frontend
     command: npm run test
     volumes:
@@ -69,6 +77,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.e2e
+      cache_from:
+        - passwordkeeper/e2e
     image: passwordkeeper/e2e
     # TODO: fix wait-for-it for several services - selenium+karma-server
     entrypoint:
@@ -91,6 +101,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
+      cache_from:
+        - passwordkeeper/backend
     image: passwordkeeper/backend
     volumes:
       - .:/usr/src/passwordkeeper
@@ -105,6 +117,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.e2e
+      cache_from:
+        - passwordkeeper/e2e
     image: passwordkeeper/e2e
     entrypoint:
       ["../scripts/wait-for-it.sh", "-t", "30", "test-server:1337", "--"]
