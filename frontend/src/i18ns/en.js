@@ -1,6 +1,8 @@
 export default {
   home: {
-    greeting: "Welcome to Password Keeper",
+    greeting: "Password Keeper",
+    about1: "Check out",
+    about2: "page for more info about the project",
     description: {
       nopasswords: "Start filling out fields below to store some passwords",
       fewpasswords: "You are doing great! Keep going! Store some more passwords!",
@@ -13,8 +15,41 @@ export default {
     panel_title: "Stored passwords"
   },
   about: {
-    greeting: "Hello, world!",
-    description: "App for storing login/passwords"
+    greeting: "About Password Keeper",
+    description1: "This is a demonstration project for Emotz group - application for storing login/password information. We created it to showcase some common features of the modern websites. The frontend is built using",
+    description2: ", a simple yet powerful declarative framework for great UI experience.",
+    features: {
+      title: "Features",
+      visualfeedback: {
+        title: "Visual feedback",
+        description: "each async interaction is indicated by progress bar at the top."
+      },
+      lazyloading: {
+        title: "Lazy loading",
+        description: "each page is loaded on-demand (check the progress bar at the top when you navigate through the website back and forth)."
+      },
+      latencycompensation: {
+        title: "Latency compensation",
+        description: "your changes are displayed immediately while being synchronized in the background (check how the website works when you pull your internet cable off)."
+      },
+      localization: {
+        title: "Localization",
+        description1: "at the",
+        description2: "page you can change the display language and the translation files are loaded on-demand."
+      },
+      guestfriendly: {
+        title: "Guest-friendly",
+        description: "you can use this website without authenticating and the data you enter are persisted in your browser's local storage."
+      },
+      datamigration: {
+        title: "Data migration",
+        description: "when you realize how awesome this project is and decide to signup, all the passwords you enter while being \"guest\" are automatically migrated to your newly created account."
+      },
+      cachefriendly: {
+        title: "Cache-friendly",
+        description: "the resource files have content-hash in their filenames, so browsers cache those resources and invalidate that cache as needed."
+      }
+    }
   },
   config: {
     greeting: "Configuration page",

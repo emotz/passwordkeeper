@@ -5,7 +5,6 @@ describe("about tests", function() {
   it("should contain greeting message", function() {
     const component = new Vue(PkAbout).$mount();
 
-    expect(component.$children).toEqual([]);
     expect(component.$el.innerHTML.length > 10).toBe(true);
   });
 });
