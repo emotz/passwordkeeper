@@ -1,3 +1,6 @@
 .git
+.vagrant
 node_modules
+e2e/node_modules
+frontend/node_modules
 e2e/errorShots

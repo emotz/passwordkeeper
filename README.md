@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/emotz/passwordkeeper.svg?branch=master)](https://travis-ci.org/emotz/passwordkeeper)
 
-[![pipeline status](https://gitlab.com/emotz/passwordkeeper/badges/master/pipeline.svg)](https://gitlab.com/emotz/passwordkeeper/commits/master)
-
 # PasswordKeeper
 
 Simple storage for passwords. Uses VueJS for front-end.
@@ -26,13 +24,11 @@ End-to-end tests specifications are located at `e2e`.
 End-to-end test Page Objects are located at `e2e/pageobjects`. These objects are
 helpers for the e2e-tests.
 
-`Webpack` is used to precompile js scripts and bundle them into single giant js
-at `frontend/dist/bundle.js`. This directory also contains a bunch of
-precompiled fonts required for `bootstrap` and `index.html` which is an entry
-point for our SPA app. Webpack config file is `frontend/webpack.config.js`.
+`Webpack` is used to precompile js scripts and bundle them into `frontend/dist`.
+This directory also contains a bunch of precompiled fonts required for `bootstrap`
+and `index.html` which is an entry point for our SPA app. Webpack config file is `frontend/webpack.config.js`.
 "Vendor" libraries are separated into its own bundle
-`frontend/dist/vendor.bundle.js` by using `frontend/vendor.webpack.config.js` as
-a config. This is done so that building times for our app is smaller and so that
+`frontend/dist/vendor.[hash].js`. This is done so that building times for our app is smaller and so that
 caching of infrequently changing lib files is possible for the future.
 
 There is also `frontend/test.webpack.config.js`. This is for building unit
@@ -44,8 +40,11 @@ Selenium as engine.
 
 ## Docker setup (for Windows host)
 
-If you already have *Docker* installed, you can
+If you already have _Docker_ installed, you can
 skip this section and move to `Build & Run`.
+
+If you don't want to "pollute" your system with _Docker_, you can skip this section
+and move to `Vagrant setup`.
 
 If your operation system is `Windows 10 Pro` and your processor supports `Hyper-V` technology,
 you can install `Docker for Windows` from [here](https://docs.docker.com/docker-for-windows/install/).
@@ -79,6 +78,48 @@ Then, for future commands instead of `docker-compose` write `docker-compose -f d
 
 E.g. instead of `docker-compose up frontend backend` do `docker-compose -f docker-compose.yml -f docker-compose.toolbox.yml up frontend backend`
 
+## Vagrant setup
+
+If you don't want to "pollute" your system with _Docker_, you can use _Vagrant_ instead to set up development
+environment for you in the virtual machine.
+
+(with administrator rights - it is needed for the symbolic links to work properly):
+
+```bat
+vagrant up
+```
+
+Log in to the vagrant
+
+```bat
+vagrant ssh
+```
+
+Then see the `Build & Run` section.
+
+### VSCode Remote SSH Over Vagrant
+
+Set up vscode to have vagrant ssh host:
+
+`F1 -> Remote-SSH: Open configuration File...`
+
+Put there result of `vagrant ssh-config` with replaced hostname `default` to `passwordkeeper` (or the name to your likings):
+
+```ssh
+Host default
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile <yourpath>/.vagrant/machines/default/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+```
+
+Open `/vagrant` directory.
+
 ## Build & Run
 
 Firstly finish `Docker setup` section.
@@ -111,13 +152,22 @@ server and other required services.
 
 You are ready to go! Open `http://localhost:1337` in your browser and enjoy!
 
+## Production mode build & run
+
+To check production build, do
+
+```bat
+docker-compose run --rm -e NODE_ENV=production backend
+docker-compose run --rm -e NODE_ENV=production frontend
+```
+
 ## Debug
 
 ### VSCode
 
 Install [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension.
 
-Open project in *VSCode*, press `ctrl-shift-d`, select `Both` for launch
+Open project in _VSCode_, press `ctrl-shift-d`, select `Both` for launch
 configuration and press `f5`.
 
 ## Linting
@@ -161,42 +211,29 @@ docker-compose up karma-server karma-runner
 
 ### Run e2e tests
 
+windows:
+
 ```bat
 docker-compose run --rm test-runner & docker-compose stop test-postgres test-server & docker-compose rm -f test-postgres
 ```
 
+linux:
+
 ```bash
 docker-compose run --rm test-runner ; docker-compose stop test-postgres test-server ; docker-compose rm -f test-postgres
 ```
-
-<!-- ### Production build -->
-
-<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
-
-<!-- ```bat -->
-<!-- NODE_ENV=production -->
-<!-- npm run build -->
-<!-- ``` -->
-
-<!-- ### Clean -->
-
-<!-- *Warn*: Don't forget to `docker exec -it passwordkeeper_passwordkeeper_1 bash` -->
-
-<!-- ```bat -->
-<!-- npm run clean -->
-<!-- ``` -->
 
 ## Deploy
 
 ### Build runner image
 
 ```sh
-docker-compose build runner
+docker-compose -f docker-compose.yml -f docker-compose.gitlab.yml build runner
 docker login registry.gitlab.com # it will ask for your gitlab credentials
-docker-compose push runner
+docker-compose -f docker-compose.yml -f docker-compose.gitlab.yml push runner
 ```
 
-### First !
+### First
 
 Only once:
 
@@ -210,7 +247,7 @@ Always:
 eval $(docker-machine env emotz)
 ```
 
-### Deploy
+### Manual Deploy
 
 Manual deploy is not supported. Deploy by pushing to github (which gets mirrored to gitlab and triggers deploy pipeline).
 

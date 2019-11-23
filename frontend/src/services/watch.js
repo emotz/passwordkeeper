@@ -7,6 +7,6 @@ export const watch = bus.$watch.bind(bus);
 // export const emit = vue.$emit.bind(vue);
 // export const on = vue.$on.bind(vue);
 export function make_reactive(obj) {
-    Vue.set(data.reactive, `data-${utls.generateUniqueId()}`, obj);
-    return obj;
+  Vue.set(data.reactive, `data-${utls.generateUniqueId()}`, obj);
+  return obj;
 }

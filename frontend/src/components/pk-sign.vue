@@ -2,7 +2,7 @@
     <ul class="pk-sign navbar-form navbar-right"
         :id="`pk-sign-${_uid}`">
         <div v-if="!authenticated"
-             style="display: inline">
+            style="display: inline">
             <button class="pk-btn-signin btn btn-success"
                     @click="signin">
                 <slot>{{ $t('signin') }}</slot>

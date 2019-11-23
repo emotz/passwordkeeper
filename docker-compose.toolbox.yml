@@ -3,21 +3,21 @@ version: '3.2'
 services:
   frontend:
     volumes:
-     - /var/pk:/usr/src/passwordkeeper
+    - /var/pk:/usr/src/passwordkeeper
   backend:
     volumes:
-     - /var/pk:/usr/src/passwordkeeper
+    - /var/pk:/usr/src/passwordkeeper
   # karma tests
   karma-server:
     volumes:
-     - /var/pk:/usr/src/passwordkeeper
+    - /var/pk:/usr/src/passwordkeeper
   karma-runner:
     volumes:
-     - /var/pk:/usr/src/passwordkeeper
+    - /var/pk:/usr/src/passwordkeeper
   # e2e tests
   test-server:
     volumes:
-     - /var/pk:/usr/src/passwordkeeper
+    - /var/pk:/usr/src/passwordkeeper
   test-runner:
     volumes:
-     - /var/pk:/usr/src/passwordkeeper
+    - /var/pk:/usr/src/passwordkeeper

@@ -1,12 +1,15 @@
 {
+  "private": true,
   "dependencies": {
-    "axios": "^0.16.2",
-    "chai": "^4.1.1",
-    "wdio-jasmine-framework": "^0.3.0",
-    "webdriverio": "^4.6.2"
+    "axios": "^0.19.0",
+    "chai": "^4.2.0",
+    "rimraf": "^3.0.0",
+    "wdio-jasmine-framework": "^0.3.8",
+    "webdriverio": "^4.14.4"
   },
   "scripts": {
-    "test": "wdio",
+    "clean": "rimraf errorShots",
+    "test": "npm run clean -s && wdio",
     "karma": "wdio karma.wdio.conf.js"
   }
 }

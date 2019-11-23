@@ -2,8 +2,8 @@
 
 exports.config = {
 
-    host: 'selenium',
-    port: 4444,
+  host: 'selenium',
+  port: 4444,
     //
     // ==================
     // Specify Test Files
@@ -13,15 +13,15 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs: [
-        './test/**/*.e2e.js',
+  specs: [
+    './test/**/*.e2e.js',
         // './test/**/export.e2e.js',
         // './test/rest/*.e2e.js'
-    ],
+  ],
     // Patterns to exclude.
-    exclude: [
+  exclude: [
         // 'path/to/excluded/files'
-    ],
+  ],
     //
     // ============
     // Capabilities
@@ -38,25 +38,25 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+  maxInstances: 10,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{
+  capabilities: [{
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
-        maxInstances: 1,
+    maxInstances: 1,
         //
-        browserName: 'chrome',
-        chromeOptions: {
-            args: [
-                "start-maximized"
-            ]
-        }
-    }],
+    browserName: 'chrome',
+    chromeOptions: {
+      args: [
+        "start-maximized"
+      ]
+    }
+  }],
     //
     // ===================
     // Test Configurations
@@ -66,35 +66,35 @@ exports.config = {
     // By default WebdriverIO commands are executed in a synchronous way using
     // the wdio-sync package. If you still want to run your tests in an async way
     // e.g. using promises you can set the sync option to false.
-    sync: true,
+  sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: 'silent',
+  logLevel: 'silent',
     //
     // Enables colors for log output.
-    coloredLogs: true,
+  coloredLogs: true,
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
-    bail: 1,
+  bail: 1,
     //
     // Saves a screenshot to a given path if a command fails.
-    screenshotPath: './errorShots/',
+  screenshotPath: './errorShots/',
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: 'http://test-server:1337',
+  baseUrl: 'http://test-server:1337',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 2000,
-    waitforInterval: 100,
+  waitforTimeout: 2000,
+  waitforInterval: 100,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
-    connectionRetryTimeout: 90000,
+  connectionRetryTimeout: 90000,
     //
     // Default request retries count
-    connectionRetryCount: 3,
+  connectionRetryCount: 3,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as properties. Make sure you have
@@ -126,30 +126,30 @@ exports.config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'jasmine',
+  framework: 'jasmine',
     //
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporters: ['dot'],
+  reporters: ['dot'],
 
     //
     // Options to be passed to Jasmine.
-    jasmineNodeOpts: {
+  jasmineNodeOpts: {
         // grep: ['can edit'],
         //
         // Jasmine default timeout
-        defaultTimeoutInterval: 60000 * 60,
+    defaultTimeoutInterval: 60000 * 60,
         //
         // The Jasmine framework allows interception of each assertion in order to log the state of the application
         // or website depending on the result. For example, it is pretty handy to take a screenshot every time
         // an assertion fails.
-        expectationResultHandler: function(passed, assertion) {
+    expectationResultHandler: function(passed, assertion) {
             // do something
-        }
-    },
+    }
+  },
 
-    singleton: true,
+  singleton: true,
     //
     // =====
     // Hooks

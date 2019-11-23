@@ -1,6 +1,6 @@
 <template>
     <div class="pk-config"
-         :id="`pk-config-${_uid}`">
+        :id="`pk-config-${_uid}`">
         <div class=" jumbotron">
             <h1 v-html="$t('config.greeting')"></h1>
             <p>{{ $t('config.description') }} </p>
@@ -13,7 +13,7 @@
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label :for="`pk-config-locale-${_uid}`"
-                               class="col-sm-2 control-label">{{ $t('config.label_language') }}</label>
+                              class="col-sm-2 control-label">{{ $t('config.label_language') }}</label>
                         <div class="col-sm-1">
                             <select class="form-control pk-config-locale-input"
                                     :id="`pk-config-locale-${_uid}`"
@@ -26,12 +26,12 @@
                     <button class="btn btn-primary pk-btn-export-csv"
                         @click="exportToCSV"
                         :disabled="!can_export()">
-                        Exports password to CSV file
+                        {{ $t('config.export.csv') }}
                     </button>
                     <button class="btn btn-primary pk-btn-export-xml"
                         @click="exportToXML"
                         :disabled="!can_export()">
-                        Exports password to XML file
+                        {{ $t('config.export.xml') }}
                     </button>
                 </div>
             </div>

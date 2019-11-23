@@ -12,21 +12,21 @@ require('express-async-errors');
 router.use(passport.authenticate('jwt'));
 
 router.get('/csv', async function(req, res) {
-    const user = req.user; // set by passport
+  const user = req.user; // set by passport
 
-    const filestr = await exportfile.ExportToCSV(user);
-    res.statusCode = 200;
-    res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filestr));
-    res.sendFile(filestr);
+  const filestr = await exportfile.ExportToCSV(user);
+  res.statusCode = 200;
+  res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filestr));
+  res.sendFile(filestr);
 });
 
 router.get('/xml', async function(req, res) {
-    const user = req.user; // set by passport
+  const user = req.user; // set by passport
 
-    const filestr = await exportfile.ExportToXML(user);
-    res.statusCode = 200;
-    res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filestr));
-    res.sendFile(filestr);
+  const filestr = await exportfile.ExportToXML(user);
+  res.statusCode = 200;
+  res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(filestr));
+  res.sendFile(filestr);
 });
 
 module.exports = router;

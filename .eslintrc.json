@@ -1,22 +1,33 @@
 {
-    "extends": "eslint:recommended",
-    "env": {
-        "es6": true
-    },
-    "parserOptions": {
-        "ecmaVersion": 8
-    },
-    "rules": {
-        "semi": [
-            "warn",
-            "always"
-        ],
-        "no-unused-vars": [
-            "warn",
-            {
-                "vars": "all",
-                "args": "none"
-            }
-        ]
-    }
+  "extends": "eslint:recommended",
+  "env": {
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "linebreak-style": [
+      "warn",
+      "unix"
+    ],
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "semi": [
+      "warn",
+      "always"
+    ],
+    "no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "none"
+      }
+    ]
+  }
 }

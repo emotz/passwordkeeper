@@ -1,0 +1,8 @@
+version: "3.2"
+
+services:
+  runner:
+    image: registry.gitlab.com/emotz/passwordkeeper/runner
+    build:
+      context: ./
+      dockerfile: Dockerfile.runner
