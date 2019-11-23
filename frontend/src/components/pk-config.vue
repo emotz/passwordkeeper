@@ -26,12 +26,12 @@
                     <button class="btn btn-primary pk-btn-export-csv"
                         @click="exportToCSV"
                         :disabled="!can_export()">
-                        Exports password to CSV file
+                        {{ $t('config.export.csv') }}
                     </button>
                     <button class="btn btn-primary pk-btn-export-xml"
                         @click="exportToXML"
                         :disabled="!can_export()">
-                        Exports password to XML file
+                        {{ $t('config.export.xml') }}
                     </button>
                 </div>
             </div>

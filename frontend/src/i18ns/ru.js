@@ -55,7 +55,11 @@ export default {
     greeting: "Конфигурация",
     description: "Здесь вы можете настроить работу приложения",
     panel_title: "Настройки",
-    label_language: "Язык"
+    label_language: "Язык",
+    export: {
+      csv: "Выгрузка паролей в CSV формате",
+      xml: "Выгрузка паролей в XML формате"
+    }
   },
   link: {
     home: "Главная",

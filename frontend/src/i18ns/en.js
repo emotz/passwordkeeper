@@ -55,7 +55,11 @@ export default {
     greeting: "Configuration page",
     description: "Here you can set up configuration parameters",
     panel_title: "Configration parameters",
-    label_language: "Language"
+    label_language: "Language",
+    export: {
+      csv: "Exports password to CSV file",
+      xml: "Exports password to XML file"
+    }
   },
   link: {
     home: "Home",
