@@ -1,6 +1,7 @@
 version: "3.2"
 
 volumes:
+  dbdata:
   node_modules:
   frontend_node_modules:
   e2e_node_modules:
@@ -17,6 +18,8 @@ services:
   postgres:
     restart: always
     image: postgres:latest
+    volumes:
+      - dbdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "vagrant"
       POSTGRES_PASSWORD: "vagrant"

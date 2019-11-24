@@ -50,23 +50,22 @@ production:
     - master
   variables:
     <<: *variables
-    DEPLOY_DIRECTORY: $PRODUCTION_DEPLOY_DIRECTORY
     JWT_SECRET: $PRODUCTION_JWT_SECRET
     PROJECT_NAME: 'passwordkeeper'
     IS_GITLAB: 'true'
     NODE_ENV: 'production'
   script:
-    - SERVICE_NAME=backend
     - alias custom-docker-compose="docker-compose -f docker-compose.yml -f docker-compose.novolumes.yml -p "$PROJECT_NAME""
-    - docker-compose pull base postgres frontend backend
-    # creating base docker image
+    - custom-docker-compose pull base postgres frontend backend
+    # creating docker image
+    - custom-docker-compose build base
     - custom-docker-compose build frontend
     - custom-docker-compose build backend
 
-    # restarting $SERVICE_NAME docker container
+    # restarting docker container
     - custom-docker-compose down
     - custom-docker-compose up --force-recreate -d backend
 
     # checking it is running
     - docker ps
-    - custom-docker-compose logs "$SERVICE_NAME"
+    - custom-docker-compose logs backend
