@@ -15,7 +15,7 @@
     "file-loader": "^4.2.0",
     "font-awesome": "^4.7.0",
     "font-awesome-loader": "^1.0.2",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "inject-loader": "^4.0.1",
     "jasmine-core": "^3.5.0",
     "jquery": "^3.2.0",
@@ -41,7 +41,7 @@
     "vue-template-compiler": "^2.6.10",
     "vuex": "^2.2.1",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
+    "webpack-cli": "^3.3.12",
     "webpack-livereload-plugin": "^2.2.0"
   },
   "scripts": {
